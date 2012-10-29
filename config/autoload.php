@@ -7,4 +7,5 @@ return array
 	'ICanBoogie\PropertyNotDefined' => $path . 'lib/object.php',
 	'ICanBoogie\PropertyNotReadable' => $path . 'lib/object.php',
 	'ICanBoogie\PropertyNotWritable' => $path . 'lib/object.php',
+	'ICanBoogie\PropertyIsReserved' => $path . 'lib/object.php'
 );

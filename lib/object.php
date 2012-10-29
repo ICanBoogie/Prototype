@@ -599,3 +599,30 @@ class PropertyNotWritable extends PropertyError
 		parent::__construct($message, $code, $previous);
 	}
 }
+
+/**
+ * Exception thrown when a property has a reserved name.
+ *
+ * @property-read string $property Name of the reserved property.
+ */
+class PropertyIsReserved extends PropertyError
+{
+	private $property;
+
+	public function __construct($property, $code=500, \Exception $previous=null)
+	{
+		$this->property = $property;
+
+		parent::__construct("Property <q>$property</q> is reserved.", $code, $previous);
+	}
+
+	public function __get($property)
+	{
+		if ($property === 'property')
+		{
+			return $this->property;
+		}
+
+		throw new PropertyNotDefined(array($property, $this));
+	}
+}
