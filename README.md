@@ -1,5 +1,4 @@
-Prototype [![Build Status](https://secure.travis-ci.org/ICanBoogie/Prototype.png?branch=master)](http://travis-ci.org/ICanBoogie/Prototype)
-=========
+# Prototype [![Build Status](https://secure.travis-ci.org/ICanBoogie/Prototype.png?branch=master)](http://travis-ci.org/ICanBoogie/Prototype)
 
 With the `Object` and `Prototype` classes, provided by the __Prototype__ package, you can easily
 implement getters and setters as well as define methods, getters and setters at runtime. These
@@ -417,35 +416,7 @@ return array
 
 ## Exceptions
 
-The following exceptions related to object properties are provided:
-
-* `PropertyError`: Exception thrown when there is something wrong with an object property.
-* `PropertyNotDefined`: Exception thrown when a property is not defined.
-* `PropertyNotReadable`: Exception thrown when a property is not readable.
-* `PropertyNotWritable`: Exception thrown when a property is not writable.
-
-```php
-<?php
-
-use ICanBoogie\PropertyNotDefined;
-
-class A
-{
-	protected $id;
-
-	public function __get($property)
-	{
-		if ($property == 'id')
-		{
-			return $this->id;
-		}
-		
-		throw new PropertyNotDefined(array($property, $this));
-	}
-}
-```
-
-The package also defines the `MethodNotDefined` exception which is thrown when one tries
+The package defines the `MethodNotDefined` exception which is thrown when one tries
 to access an undefined prototype method:
 
 ```php
