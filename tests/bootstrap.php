@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
+require_once __DIR__ . '/../vendor/icanboogie/common/bootstrap.php';
 require_once __DIR__ . '/../bootstrap.php';
 
-require_once ICanBoogie\Prototype\ROOT . 'lib/prototype.php';
-require_once ICanBoogie\Prototype\ROOT . 'lib/object.php';
+$loader = require __DIR__ . '/../vendor/autoload.php';
