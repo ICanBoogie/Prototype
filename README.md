@@ -5,32 +5,66 @@ implement getters and setters as well as define methods, getters and setters at 
 getters and setters are always mapped to a magic property and can be used to inject dependencies,
 reverse application control, lazy load resources, or create read-only and write-only properties.
 
-The package also includes useful exceptions related to properties or methods errors.
 
 
 
+## Requirements
 
-### Requirement
+The package requires PHP 5.3 or later. The package
+[icanboogie/common](https://packagist.org/packages/icanboogie/common) is required.
 
-PHP 5.3+ is required.
 
 
 
 
 ## Installation
 
-The easiest way to install the package is to use [composer](http://getcomposer.org/).
-Just create a `composer.json` file and run the `php composer.phar install` command:
+The recommended way to install this package is through [composer](http://getcomposer.org/).
+Create a `composer.json` file and run `php composer.phar install` command to install it:
 
 ```json
 {
-	"minium-stability": "dev",
-	"require":
-	{
+    "minimum-stability": "dev",
+    "require": {
 		"icanboogie/prototype": "1.0.*"
-	}
+    }
 }
 ```
+
+
+
+
+
+### Cloning the repository
+
+The package is [available on GitHub](https://github.com/ICanBoogie/Prototype), its repository can
+be cloned with the following command line:
+
+	$ git clone git://github.com/ICanBoogie/Prototype.git
+	
+
+
+
+
+## Documentation
+
+The package is documented as part of the [ICanBoogie](http://icanboogie.org/) framework
+[documentation](http://icanboogie.org/docs/). You can generate the documentation for the package
+and its dependencies with the `make doc` command. The documentation is generated in the `docs`
+directory. [ApiGen](http://apigen.org/) is required. You can later clean the directory with
+the `make clean` command.
+
+
+
+
+
+## Testing
+
+The test suite is ran with the `make test` command. [Composer]((http://getcomposer.org/)) is
+automatically installed as well as all dependencies required to run the suite. You can later
+clean the directory with the `make clean` command.
+
+
 
 
 
@@ -47,6 +81,7 @@ up to the getter. More over, you can define read-only or write-only properties u
 getters/setters.
 
 __Remember__: Getters/setters are only called when the property they _emulate_ is not accessible.
+
 
 
 
@@ -88,10 +123,11 @@ echo $time->seconds; // 240
 
 
 
+
 ### Read-only properties
 
 Read-only properties are created by setting their visibility to `protected` or `private` and
-defining a _volatile_ getter:
+defining only a _volatile_ getter:
 
 ```php
 <?php
@@ -120,12 +156,14 @@ $a->id = 13; // throws ICanBoogie\PropertyIsNotWritable
 
 
 
+
+
 ### Write-only properties
 
 Write-only properties are created by setting their visibility to `protected` or `private` and
-defining a _volatile_ setter:
+defining only a _volatile_ setter:
 
-```
+```php
 <?php
 
 use ICanBoogie\Object;
@@ -147,13 +185,15 @@ $v = $a->writeonly; // throws ICanBoogie\PropertyIsNotReadable
 
 
 
+
+
 ### Lazy loading
 
 Properties that only create their value the first time they are accessed can also be defined, they
 are often used for lazy loading.
 
 In the following example, the `get_pseudo_uniqid()` getter returns a unique value, but because the 
-`pseudo_uniqid` property is created with the `public` visibility after the getter is called,
+`pseudo_uniqid` property is created with the `public` visibility after the getter was called,
 any subsequent access to the property returns the same value, because the property is now
 accessible:
 
@@ -186,6 +226,8 @@ unset($a->pseudo_uniqid);
 echo $a->pseudo_uniqid; // 508949b5aaa00
 echo $a->pseudo_uniqid; // 508949b5aaa00
 ```
+
+
 
 
 
@@ -233,6 +275,8 @@ echo $second_fierce_cat->meow(); // MEOOOW !
 
 
 
+
+
 ### Defining getters and setters at runtime
 
 Because getters and setters are methods too, they are defined just like regular methods.
@@ -265,6 +309,8 @@ echo $time->minutes; // 2
 $time->minutes = 4;
 echo $time->seconds; // 240
 ```
+
+
 
 
 
@@ -301,12 +347,14 @@ echo $a->image->nid; // 12
 
 
 
+
 ## Defining prototypes methods
 
 Prototype methods can be defined using a global configuration; through the `prototype` property
 of an `Object` instance; or using the `Prototype` instance associated with an `Object` class.
 
- 
+
+
 
 
 ### Defining prototypes methods using a global configuration
@@ -344,8 +392,10 @@ ICanBoogie\Prototype::configure
 		)
 	)
 );
-
 ```
+
+
+
 
 
 ### Defining prototypes methods through the `prototype` property
@@ -372,6 +422,8 @@ echo $cat->meow();
 
 
 
+
+
 ### Defining prototypes methods using a prototype instance
 
 Prototype methods can be defined using the `Prototype` instance of a class:
@@ -387,8 +439,9 @@ $prototype['meow'] = function(Cat $cat)
 {
 	return 'Meow';
 }
-
 ```
+
+
 
 
 
@@ -413,30 +466,6 @@ return array
 ```
 
 
-
-## Exceptions
-
-The package defines the `MethodNotDefined` exception which is thrown when one tries
-to access an undefined prototype method:
-
-```php
-<?php
-
-use ICanBoogie\Prototype\MethodNotDefined;
-
-class A extends Object {}
-
-$a = new A;
-
-try
-{
-	return $a->call_undefined_method();
-}
-catch (MethodNotDefined)
-{
-	return $a->call_defined_method();
-}
-```
 
 
 
@@ -484,6 +513,8 @@ class Operation
 }
 ```
 
+
+
  
 
 ## Patching
@@ -521,6 +552,8 @@ Prototype\Helpers::patch('last_chance_get', function (Object $target, $property,
 	return $event->value;
 });
 ```
+
+
 
 
 

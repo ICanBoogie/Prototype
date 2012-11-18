@@ -11,31 +11,6 @@
 
 namespace ICanBoogie\Prototype;
 
-/**
- * Registers a simple autoloader for Prototype classes.
- */
-function register_autoloader()
-{
-	spl_autoload_register
-	(
-		function($name)
-		{
-			static $index;
-
-			if ($index === null)
-			{
-				$path = ROOT; // the $path variable is used within the config file
-				$index = require $path . 'config/autoload.php';
-			}
-
-			if (isset($index[$name]))
-			{
-				require_once $index[$name];
-			}
-		}
-	);
-}
-
 use ICanBoogie\Object;
 
 /**

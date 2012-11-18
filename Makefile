@@ -21,10 +21,8 @@ doc:
 	@mkdir -p "docs"
 	
 	@apigen \
-	--source ./vendor/icanboogie/common/ \
 	--source ./ \
 	--destination docs/ --title ICanBoogie/Prototype \
-	--exclude "*/build/*" \
 	--exclude "*/composer/*" \
 	--exclude "*/tests/*" \
 	--template-config /usr/share/php/data/ApiGen/templates/bootstrap/config.neon
@@ -32,3 +30,5 @@ doc:
 clean:
 	@rm -fR docs
 	@rm -fR vendor
+	@rm -f composer.lock
+	@rm -f composer.phar
