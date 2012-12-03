@@ -492,4 +492,17 @@ class Object
 	{
 		return method_exists($this, $method) || isset($this->prototype[$method]);
 	}
+
+	public function to_array()
+	{
+		$properties = $this->__sleep();
+		$values = get_object_vars($this);
+
+		return array_intersect_key($values, $properties);
+	}
+
+	public function to_json()
+	{
+		return json_encode($this->to_array());
+	}
 }
