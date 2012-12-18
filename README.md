@@ -10,8 +10,8 @@ reverse application control, lazy load resources, or create read-only and write-
 
 ## Requirements
 
-The package requires PHP 5.3 or later. The package
-[icanboogie/common](https://packagist.org/packages/icanboogie/common) is required.
+The package requires PHP 5.3 or later.  
+The package [icanboogie/common](https://packagist.org/packages/icanboogie/common) is required.
 
 
 
@@ -60,7 +60,7 @@ the `make clean` command.
 
 ## Testing
 
-The test suite is ran with the `make test` command. [Composer]((http://getcomposer.org/)) is
+The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
 automatically installed as well as all dependencies required to run the suite. You can later
 clean the directory with the `make clean` command.
 
