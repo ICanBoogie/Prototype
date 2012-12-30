@@ -9,135 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Prototype\Tests\Object;
+namespace Test\ICanBoogie\Prototype;
 
 use ICanBoogie\Object;
 
-class TimeFixture extends Object
-{
-	public $seconds;
-
-	protected function volatile_set_minutes($minutes)
-	{
-		$this->seconds = $minutes * 60;
-	}
-
-	protected function volatile_get_minutes()
-	{
-		return $this->seconds / 60;
-	}
-}
-
-class A extends Object
-{
-	public $a;
-	public $b;
-	public $unset;
-	protected $unset_protected;
-
-	public function __construct()
-	{
-		unset($this->a);
-		unset($this->b);
-		unset($this->unset);
-		unset($this->unset_protected);
-	}
-
-	protected function get_a()
-	{
-		return 'a';
-	}
-
-	protected function volatile_get_b()
-	{
-		return 'b';
-	}
-
-	protected $c;
-
-	protected function set_c($value)
-	{
-		return $value;
-	}
-
-	protected function get_c()
-	{
-		return $this->c;
-	}
-
-	protected $d;
-
-	protected function volatile_set_d($value)
-	{
-		$this->d = $value;
-	}
-
-	protected function volatile_get_d()
-	{
-		return $this->d;
-	}
-
-	private $e;
-
-	protected function set_e($value)
-	{
-		return $value;
-	}
-
-	protected function get_e()
-	{
-		return $this->e;
-	}
-
-	protected $f;
-
-	protected function volatile_set_f($value)
-	{
-		$this->f = $value;
-	}
-
-	protected function volatile_get_f()
-	{
-		return $this->f;
-	}
-
-	private $readonly = 'readonly';
-
-	protected function volatile_get_readonly()
-	{
-		return $this->readonly;
-	}
-
-	private $writeonly;
-
-	protected function volatile_set_writeonly($value)
-	{
-		$this->writeonly = $value;
-	}
-
-	protected function volatile_get_read_writeonly()
-	{
-		return $this->writeonly;
-	}
-
-	protected function get_pseudo_uniq()
-	{
-		return uniqid();
-	}
-
-	protected function set_with_parent($value)
-	{
-		return $value + 1;
-	}
-}
-
-class B extends A
-{
-	protected function set_with_parent($value)
-	{
-		return parent::set_with_parent($value) * 10;
-	}
-}
+use Test\ICanBoogie\Prototype\ObjectTest\A;
+use Test\ICanBoogie\Prototype\ObjectTest\B;
+use Test\ICanBoogie\Prototype\ObjectTest\TimeFixture;
+use Test\ICanBoogie\Prototype\ObjectTest\ToArrayFixture;
 
 class ObjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -320,5 +199,167 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$b = new B();
 		$b->with_parent = 3;
 		$this->assertEquals(40, $b->with_parent);
+	}
+
+	public function test_to_array()
+	{
+		$a = new ToArrayFixture(1, 2, 3);
+		$this->assertEquals(array('a' => 1, 'b' => 2, 'c' => 3), $a->to_array());
+	}
+
+	public function test_to_array_recursive()
+	{
+		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
+		$this->assertEquals(array('a' => 1, 'b' => array('a' => 11, 'b' => 12, 'c' => 13), 'c' => array(1, 2, 3)), $a->to_array_recursive());
+	}
+
+	public function test_to_json()
+	{
+		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
+		$this->assertEquals('{"a":1,"b":{"a":11,"b":12,"c":13},"c":[1,2,3]}', $a->to_json());
+	}
+}
+
+namespace Test\ICanBoogie\Prototype\ObjectTest;
+
+use ICanBoogie\Object;
+
+class TimeFixture extends Object
+{
+	public $seconds;
+
+	protected function volatile_set_minutes($minutes)
+	{
+		$this->seconds = $minutes * 60;
+	}
+
+	protected function volatile_get_minutes()
+	{
+		return $this->seconds / 60;
+	}
+}
+
+class A extends Object
+{
+	public $a;
+	public $b;
+	public $unset;
+	protected $unset_protected;
+
+	public function __construct()
+	{
+		unset($this->a);
+		unset($this->b);
+		unset($this->unset);
+		unset($this->unset_protected);
+	}
+
+	protected function get_a()
+	{
+		return 'a';
+	}
+
+	protected function volatile_get_b()
+	{
+		return 'b';
+	}
+
+	protected $c;
+
+	protected function set_c($value)
+	{
+		return $value;
+	}
+
+	protected function get_c()
+	{
+		return $this->c;
+	}
+
+	protected $d;
+
+	protected function volatile_set_d($value)
+	{
+		$this->d = $value;
+	}
+
+	protected function volatile_get_d()
+	{
+		return $this->d;
+	}
+
+	private $e;
+
+	protected function set_e($value)
+	{
+		return $value;
+	}
+
+	protected function get_e()
+	{
+		return $this->e;
+	}
+
+	protected $f;
+
+	protected function volatile_set_f($value)
+	{
+		$this->f = $value;
+	}
+
+	protected function volatile_get_f()
+	{
+		return $this->f;
+	}
+
+	private $readonly = 'readonly';
+
+	protected function volatile_get_readonly()
+	{
+		return $this->readonly;
+	}
+
+	private $writeonly;
+
+	protected function volatile_set_writeonly($value)
+	{
+		$this->writeonly = $value;
+	}
+
+	protected function volatile_get_read_writeonly()
+	{
+		return $this->writeonly;
+	}
+
+	protected function get_pseudo_uniq()
+	{
+		return uniqid();
+	}
+
+	protected function set_with_parent($value)
+	{
+		return $value + 1;
+	}
+}
+
+class B extends A
+{
+	protected function set_with_parent($value)
+	{
+		return parent::set_with_parent($value) * 10;
+	}
+}
+
+class ToArrayFixture extends Object
+{
+	public $a;
+	public $b;
+	public $c;
+
+	public function __construct($a, $b, $c)
+	{
+		$this->a = $a;
+		$this->b = $b;
+		$this->c = $c;
 	}
 }

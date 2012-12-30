@@ -9,16 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Prototype\Tests\Prototype;
+namespace Test\ICanBoogie\Prototype;
 
 use ICanBoogie\Object;
 
-class A extends Object {}
-class B extends A {}
-
-class Cat extends Object {}
-class NormalCat extends Cat {}
-class FierceCat extends Cat {}
+use Test\ICanBoogie\Prototype\PrototypeTest\A;
+use Test\ICanBoogie\Prototype\PrototypeTest\B;
+use Test\ICanBoogie\Prototype\PrototypeTest\Cat;
+use Test\ICanBoogie\Prototype\PrototypeTest\FierceCat;
+use Test\ICanBoogie\Prototype\PrototypeTest\NormalCat;
 
 class PrototypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -139,3 +138,14 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 		$this->a->undefined_method();
 	}
 }
+
+namespace Test\ICanBoogie\Prototype\PrototypeTest;
+
+use ICanBoogie\Object;
+
+class A extends Object {}
+class B extends A {}
+
+class Cat extends Object {}
+class NormalCat extends Cat {}
+class FierceCat extends Cat {}

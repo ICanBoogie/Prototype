@@ -26,7 +26,7 @@ Create a `composer.json` file and run `php composer.phar install` command to ins
 {
     "minimum-stability": "dev",
     "require": {
-		"icanboogie/prototype": "1.0.*"
+		"icanboogie/prototype": "*"
     }
 }
 ```
@@ -319,7 +319,7 @@ echo $time->seconds; // 240
 Dependency injection and inversion of control can be implemented using prototype _lazy_ getters.
 
 The following example demonstrates how a magic `image` property can be defined to lazy load a
-record from an Active Record model.
+record from an ActiveRecord model.
 
 ```php
 <?php
@@ -533,7 +533,7 @@ using an event:
 
 namespace ICanBoogie;
 
-Prototype\Helpers::patch('last_chance_get', function (Object $target, $property, &$success)
+Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, &$success)
 {
 	$event = new Object\PropertyEvent($target, array('property' => $property));
 

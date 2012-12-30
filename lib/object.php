@@ -223,19 +223,18 @@ class Object
 	}
 
 	/**
-	 * Defers calls for which methods are not defined to the {@link prototype}.
-	 *
-	 * If a property exists with the name $method and holds an object the object is called with
-	 * the arguments.
+	 * If a property exists with the name specified by `$method` and holds an object which class
+	 * implement `__invoke` then the object is called with the arguments. Otherwise, calls are
+	 * forwarded to the {@link prototype}.
 	 *
 	 * @param string $method
 	 * @param array $arguments
 	 *
-	 * @return mixed The result of the callback.
+	 * @return mixed
 	 */
 	public function __call($method, $arguments)
 	{
-		if (isset($this->$method) && is_object($this->$method))
+		if (isset($this->$method) && is_callable(array($this->$method, '__invoke')))
 		{
 			return call_user_func_array($this->$method, $arguments);
 		}
@@ -248,6 +247,8 @@ class Object
 	/**
 	 * The method is invoked as a last chance to get a property,
 	 * just before an exception is thrown.
+	 *
+	 * The method uses the helper {@link Prototype\last_chance_get()}.
 	 *
 	 * @param string $property Property to get.
 	 * @param bool $success If the _last chance get_ was successful.
@@ -262,6 +263,8 @@ class Object
 	/**
 	 * The method is invoked as a last chance to set a property,
 	 * just before an exception is thrown.
+	 *
+	 * The method uses the helper {@link Prototype\last_chance_set()}.
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed $value Value of the property.
@@ -493,16 +496,48 @@ class Object
 		return method_exists($this, $method) || isset($this->prototype[$method]);
 	}
 
+	/**
+	 * Converts the object into an array.
+	 *
+	 * The properties that make the final array are filtered using the properties returned by
+	 * the {@link __sleep()} method.
+	 *
+	 * @return array
+	 */
 	public function to_array()
 	{
-		$properties = $this->__sleep();
-		$values = get_object_vars($this);
-
-		return array_intersect_key($values, $properties);
+		return array_intersect_key(get_object_vars($this), $this->__sleep());
 	}
 
+	/**
+	 * Converts the object into an array recursively.
+	 *
+	 * Properties which are instances of the class converted to arrays recursively.
+	 *
+	 * @return array
+	 */
+	public function to_array_recursive()
+	{
+		$array = $this->to_array();
+
+		foreach ($array as &$value)
+		{
+			if ($value instanceof self)
+			{
+				$value = $value->to_array_recursive();
+			}
+		}
+
+		return $array;
+	}
+
+	/**
+	 * Converts the object into a JSON string.
+	 *
+	 * @return string
+	 */
 	public function to_json()
 	{
-		return json_encode($this->to_array());
+		return json_encode($this->to_array_recursive());
 	}
 }
