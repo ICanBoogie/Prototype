@@ -225,6 +225,8 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 			$prototype->consolidated_methods = null;
 		}
+
+		$this->consolidated_methods = null;
 	}
 
 	/**
