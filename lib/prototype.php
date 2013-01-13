@@ -282,7 +282,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 		if (!isset($methods[$method]))
 		{
-			throw new Prototype\MethodNotDefined(array($method, $this));
+			throw new Prototype\MethodNotDefined(array($method, $this->class));
 		}
 
 		return $methods[$method];
@@ -312,7 +312,7 @@ class MethodNotDefined extends \BadMethodCallException
 	{
 		if (is_array($message))
 		{
-			$message = sprintf('Method "%s" is not defined by the prototype of class "%s".', $message[0], get_class($message[1]));
+			$message = sprintf('Method "%s" is not defined by the prototype of class "%s".', $message[0], $message[1]);
 		}
 
 		parent::__construct($message, $code, $previous);
