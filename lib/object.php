@@ -163,7 +163,11 @@ class Object
 
 		$instance = unserialize($serialized);
 
-		if (is_callable(array($instance, '__construct')))
+		#
+		# for some reason is_callable() sometimes returns true event if the `__construct` method is not defined.
+		#
+
+		if (method_exists($instance, '__construct') && is_callable(array($instance, '__construct')))
 		{
 			call_user_func_array(array($instance, '__construct'), $construct_args);
 		}
