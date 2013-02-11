@@ -61,14 +61,12 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			$class = get_class($class);
 		}
 
-		if (isset(self::$prototypes[$class]))
+		if (empty(self::$prototypes[$class]))
 		{
-			return self::$prototypes[$class];
+			self::$prototypes[$class] = new static($class);
 		}
 
-		self::$prototypes[$class] = $prototype = new static($class);
-
-		return $prototype;
+		return self::$prototypes[$class];
 	}
 
 	static public function configure(array $config)

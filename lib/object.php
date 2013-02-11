@@ -195,7 +195,8 @@ class Object
 
 		foreach ($keys as $key)
 		{
-			if ($this->has_method('get_' . $key) || $this->has_method('volatile_get_' . $key))
+// 			if ($this->has_method('get_' . $key) || $this->has_method('volatile_get_' . $key)) // FIXME-20120204: this breaks PHP if the prototype was not initialized before the session is closed
+			if (method_exists($this, 'get_' . $key) || method_exists($this, 'volatile_get_' . $key))
 			{
 				unset($keys[$key]);
 			}
