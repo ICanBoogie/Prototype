@@ -503,14 +503,27 @@ class Object
 	/**
 	 * Converts the object into an array.
 	 *
-	 * The properties that make the final array are filtered using the properties returned by
-	 * the {@link __sleep()} method.
+	 * Protected and private properties are not returned, nor public properties created using
+	 * lazy loading (`get_*`).
 	 *
 	 * @return array
 	 */
 	public function to_array()
 	{
-		return array_intersect_key(get_object_vars($this), $this->__sleep());
+		$prototype = $this->prototype;
+		$properties = Object\get_public_object_vars($this);
+
+		foreach ($properties as $property => $value)
+		{
+			if (!$this->has_method('get_' . $property))
+			{
+				continue;
+			}
+
+			unset($properties[$property]);
+		}
+
+		return $properties;
 	}
 
 	/**
@@ -544,4 +557,11 @@ class Object
 	{
 		return json_encode($this->to_array_recursive());
 	}
+}
+
+namespace ICanBoogie\Object;
+
+function get_public_object_vars($object)
+{
+	return get_object_vars($object);
 }
