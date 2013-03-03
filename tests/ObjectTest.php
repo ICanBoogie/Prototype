@@ -9,14 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Test\ICanBoogie\Prototype;
+namespace ICanBoogie;
 
-use ICanBoogie\Object;
-
-use Test\ICanBoogie\Prototype\ObjectTest\A;
-use Test\ICanBoogie\Prototype\ObjectTest\B;
-use Test\ICanBoogie\Prototype\ObjectTest\TimeFixture;
-use Test\ICanBoogie\Prototype\ObjectTest\ToArrayFixture;
+use ICanBoogie\ObjectTest\A;
+use ICanBoogie\ObjectTest\B;
+use ICanBoogie\ObjectTest\TimeFixture;
+use ICanBoogie\ObjectTest\ToArrayFixture;
+use ICanBoogie\ObjectTest\Node;
 
 class ObjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -218,9 +217,46 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
 		$this->assertEquals('{"a":1,"b":{"a":11,"b":12,"c":13},"c":[1,2,3]}', $a->to_json());
 	}
+
+	/**
+	 * Checks the the defined slug is returned and not created from the title, and that the
+	 * slug is exported by {@link Node::to_array()}.
+	 */
+	public function test_slug()
+	{
+		$node = new Node;
+		$node->title = 'The quick brown fox';
+		$node->slug = 'madonna';
+		$this->assertEquals('madonna', $node->slug);
+		$this->assertArrayHasKey('slug', $node->to_array());
+		$this->assertContains('slug', $node->__sleep());
+
+		$node = Node::from(array('title' => 'The quick brown fox', 'slug' => 'madonna'));
+		$this->assertEquals('madonna', $node->slug);
+		$this->assertArrayHasKey('slug', $node->to_array());
+		$this->assertContains('slug', $node->__sleep());
+	}
+
+	/**
+	 * Checks that the {@link Node::$slug} property is created from {@link Node::$title} and that
+	 * it is not exported by {@link Node::to_array()} when it is created that way.
+	 */
+	public function test_lazy_slug()
+	{
+		$node = new Node;
+		$node->title = 'The quick brown fox';
+		$this->assertEquals('the-quick-brown-fox', $node->slug);
+		$this->assertArrayNotHasKey('slug', $node->to_array());
+		$this->assertNotContains('slug', $node->__sleep());
+
+		$node = Node::from(array('title' => 'The quick brown fox'));
+		$this->assertEquals('the-quick-brown-fox', $node->slug);
+		$this->assertArrayNotHasKey('slug', $node->to_array());
+		$this->assertNotContains('slug', $node->__sleep());
+	}
 }
 
-namespace Test\ICanBoogie\Prototype\ObjectTest;
+namespace ICanBoogie\ObjectTest;
 
 use ICanBoogie\Object;
 
@@ -361,5 +397,24 @@ class ToArrayFixture extends Object
 		$this->a = $a;
 		$this->b = $b;
 		$this->c = $c;
+	}
+}
+
+class Node extends Object
+{
+	public $title;
+	public $slug;
+
+	public function __construct()
+	{
+		if (empty($this->slug))
+		{
+			unset($this->slug);
+		}
+	}
+
+	protected function volatile_get_slug()
+	{
+		return \ICanBoogie\normalize($this->title);
 	}
 }

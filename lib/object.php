@@ -176,9 +176,19 @@ class Object
 	}
 
 	/**
-	 * Removes properties for which a getter is defined.
-	 *
 	 * The method returns an array of key/key pairs.
+	 *
+	 * Properties for which a lazy getter is defined are discarted. For instance, if the property
+	 * `next` is defined and the class of the instance defines the getter `get_next()`, the
+	 * property is discarted.
+	 *
+	 * This does *not* apply to volatile getters because classes that define both a property
+	 * and the corresponding volatile getter often use it to provide a fallback value. For
+	 * instance, a class might define a `slug` property which value is created from a `title`
+	 * property. The `slug` property is unset during construct if it is empty so that the
+	 * volatile getter is called when the property is accessed, and a slug is created from a
+	 * `title` property. Remember that volatile getters do not create properties, thus if the
+	 * property is defined that means that its value should persist.
 	 *
 	 * @return array
 	 */
@@ -195,8 +205,12 @@ class Object
 
 		foreach ($keys as $key)
 		{
-// 			if ($this->has_method('get_' . $key) || $this->has_method('volatile_get_' . $key)) // FIXME-20120204: this breaks PHP if the prototype was not initialized before the session is closed
-			if (method_exists($this, 'get_' . $key) || method_exists($this, 'volatile_get_' . $key))
+			#
+			# we don't use {@link has_method()} because using prototype during session write
+			# seams to corrupt PHP.
+			#
+
+			if (method_exists($this, 'get_' . $key))
 			{
 				unset($keys[$key]);
 			}
@@ -220,7 +234,7 @@ class Object
 				continue;
 			}
 
-			if ($this->has_method('get_' . $key)/* || $this->has_method('volatile_get_' . $key)*/)
+			if ($this->has_method('get_' . $key))
 			{
 				unset($this->$key);
 			}
@@ -229,8 +243,8 @@ class Object
 
 	/**
 	 * If a property exists with the name specified by `$method` and holds an object which class
-	 * implement `__invoke` then the object is called with the arguments. Otherwise, calls are
-	 * forwarded to the {@link prototype}.
+	 * implements `__invoke` then the object is called with the arguments. Otherwise, calls are
+	 * forwarded to the {@link $prototype}.
 	 *
 	 * @param string $method
 	 * @param array $arguments
@@ -504,27 +518,13 @@ class Object
 	/**
 	 * Converts the object into an array.
 	 *
-	 * Protected and private properties are not returned, nor public properties created using
-	 * lazy loading (`get_*`).
+	 * Protected and private properties are not returned
 	 *
 	 * @return array
 	 */
 	public function to_array()
 	{
-		$prototype = $this->prototype;
-		$properties = Object\get_public_object_vars($this);
-
-		foreach ($properties as $property => $value)
-		{
-			if (!$this->has_method('get_' . $property))
-			{
-				continue;
-			}
-
-			unset($properties[$property]);
-		}
-
-		return $properties;
+		return Object\get_public_object_vars($this);
 	}
 
 	/**

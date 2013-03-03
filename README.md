@@ -61,8 +61,10 @@ the `make clean` command.
 ## Testing
 
 The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
-automatically installed as well as all dependencies required to run the suite. You can later
-clean the directory with the `make clean` command.
+automatically installed as well as all the dependencies required to run the suite. The package
+directory can later be cleaned with the `make clean` command.
+
+The package is continuously tested by [Travis CI](http://about.travis-ci.org/): [![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=master)](https://travis-ci.org/ICanBoogie/Prototype)
 
 
 

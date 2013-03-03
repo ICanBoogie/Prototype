@@ -9,15 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Test\ICanBoogie\Prototype;
+namespace ICanBoogie;
 
-use ICanBoogie\Object;
-
-use Test\ICanBoogie\Prototype\PrototypeTest\A;
-use Test\ICanBoogie\Prototype\PrototypeTest\B;
-use Test\ICanBoogie\Prototype\PrototypeTest\Cat;
-use Test\ICanBoogie\Prototype\PrototypeTest\FierceCat;
-use Test\ICanBoogie\Prototype\PrototypeTest\NormalCat;
+use ICanBoogie\PrototypeTest\A;
+use ICanBoogie\PrototypeTest\B;
+use ICanBoogie\PrototypeTest\Cat;
+use ICanBoogie\PrototypeTest\FierceCat;
+use ICanBoogie\PrototypeTest\NormalCat;
 
 class PrototypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -139,7 +137,7 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 	}
 }
 
-namespace Test\ICanBoogie\Prototype\PrototypeTest;
+namespace ICanBoogie\PrototypeTest;
 
 use ICanBoogie\Object;
 
