@@ -105,7 +105,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 		$methods = array();
 		$debug = Debug::$mode == Debug::MODE_DEV;
 
-		foreach ($fragments as $root => $fragment)
+		foreach ($fragments as $pathname => $fragment)
 		{
 			if (empty($fragment['prototypes']))
 			{
@@ -118,7 +118,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 				{
 					throw new \InvalidArgumentException(sprintf
 					(
-						'Invalid method name "%s", must be <code>class_name::method_name</code> in "%s"', $method, $root . 'config/hooks.php'
+						'Invalid method name "%s", must be <code>class_name::method_name</code> in "%s"', $method, $pathname
 					));
 				}
 
