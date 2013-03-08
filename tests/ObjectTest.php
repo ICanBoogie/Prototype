@@ -13,12 +13,247 @@ namespace ICanBoogie;
 
 use ICanBoogie\ObjectTest\A;
 use ICanBoogie\ObjectTest\B;
-use ICanBoogie\ObjectTest\TimeFixture;
 use ICanBoogie\ObjectTest\ToArrayFixture;
-use ICanBoogie\ObjectTest\Node;
+
+require_once 'ObjectClasses.php';
 
 class ObjectTest extends \PHPUnit_Framework_TestCase
 {
+	public function testSetGet()
+	{
+		$o = new Object;
+		$o->a = __FUNCTION__;
+		$this->assertEquals(__FUNCTION__, $o->a);
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotDefined
+	 */
+	public function testInvalidGet()
+	{
+		$o = new Object;
+		$a = $o->undefined;
+	}
+
+	public function testReadOnlyProperty()
+	{
+		$o = new ObjectTest\ReadOnlyProperty;
+		$this->assertEquals('value', $o->value);
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function testInvalidUseOfReadOnlyProperty()
+	{
+		$o = new ObjectTest\ReadOnlyProperty;
+		$o->value = 'value';
+	}
+
+	public function testWriteOnlyProperty()
+	{
+		$o = new ObjectTest\WriteOnlyProperty;
+		$o->value = 'value';
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotReadable
+	 */
+	public function testInvalidUseOfWriteOnlyProperty()
+	{
+		$o = new ObjectTest\WriteOnlyProperty;
+		$a = $o->value;
+	}
+
+	public function testDefaultValueForUnsetProperty()
+	{
+		$o = new ObjectTest\DefaultValueForUnsetProperty;
+		$o->title = 'The quick brown fox';
+		$this->assertEquals('the-quick-brown-fox', $o->slug);
+		$this->assertArrayNotHasKey('slug', (array) $o);
+		$this->assertArrayNotHasKey('slug', $o->to_array());
+		$this->assertNotContains('slug', $o->__sleep());
+
+		$o = ObjectTest\DefaultValueForUnsetProperty::from(array('title' => 'The quick brown fox'));
+		$this->assertEquals('the-quick-brown-fox', $o->slug);
+		$this->assertArrayNotHasKey('slug', (array) $o);
+		$this->assertArrayNotHasKey('slug', $o->to_array());
+		$this->assertNotContains('slug', $o->__sleep());
+
+		$o = new ObjectTest\DefaultValueForUnsetProperty;
+		$o->title = 'The quick brown fox';
+		$o->slug = 'brown-fox';
+		$this->assertEquals('brown-fox', $o->slug);
+		$this->assertArrayHasKey('slug', (array) $o);
+		$this->assertArrayHasKey('slug', $o->to_array());
+		$this->assertContains('slug', $o->__sleep());
+
+		$o = ObjectTest\DefaultValueForUnsetProperty::from(array('title' => 'The quick brown fox', 'slug' => 'brown-fox'));
+		$this->assertEquals('brown-fox', $o->slug);
+		$this->assertArrayHasKey('slug', (array) $o);
+		$this->assertArrayHasKey('slug', $o->to_array());
+		$this->assertContains('slug', $o->__sleep());
+	}
+
+	public function testDefaultValueForUnsetProtectedProperty()
+	{
+		$o = new ObjectTest\DefaultValueForUnsetProtectedProperty;
+		$o->title = 'Testing';
+		$this->assertEquals('testing', $o->slug);
+		# slug comes from the volatile getter, the property must *not* be set.
+		$this->assertArrayNotHasKey('slug', (array) $o);
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function testInvalidUseOfDefaultValueForUnsetProtectedProperty()
+	{
+		$o = new ObjectTest\DefaultValueForUnsetProtectedProperty;
+		$o->slug = 'madonna';
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function testInvalidProtectedPropertyGetter()
+	{
+		$o = new ObjectTest\InvalidProtectedPropertyGetter;
+		$a = $o->value;
+	}
+
+	public function testValidProtectedPropertyGetter()
+	{
+		$o = new ObjectTest\ValidProtectedPropertyGetter;
+		$this->assertNotNull($o->value);
+	}
+
+	public function testVirtualProperty()
+	{
+		$o = new ObjectTest\VirtualProperty();
+
+		$o->minutes = 1;
+		$this->assertEquals(1, $o->minutes);
+		$this->assertEquals(60, $o->seconds);
+
+		$o->seconds = 120;
+		$this->assertEquals(2, $o->minutes);
+
+		$o->minutes *= 2;
+		$this->assertEquals(240, $o->seconds);
+		$this->assertEquals(4, $o->minutes);
+
+		$this->assertArrayNotHasKey('minutes', (array) $o);
+		$this->assertArrayNotHasKey('minutes', $o->__sleep());
+		$this->assertArrayNotHasKey('minutes', $o->to_array());
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function testObjectWithAVolatileGetterButNoCorrespondingProperty()
+	{
+		$a = new ObjectTest\ObjectWithAVolatileGetterButNoCorrespondingProperty;
+		$this->assertEquals('value', $a->value);
+		$a->value = 'value';
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function testObjectWithAVolatileGetterAndACorrespondingPrivateProperty()
+	{
+		$a = new ObjectTest\ObjectWithAVolatileGetterAndACorrespondingPrivateProperty;
+		$this->assertEquals('value', $a->value);
+		$a->value = 'value';
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function testObjectWithAVolatileGetterAndACorrespondingProtectedProperty()
+	{
+		$a = new ObjectTest\ObjectWithAVolatileGetterAndACorrespondingProtectedProperty;
+		$this->assertEquals('value', $a->value);
+		$a->value = 'value';
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotReadable
+	 */
+	public function testObjectWithAVolatileSetterButNoCorrespondingProperty()
+	{
+		$a = new ObjectTest\ObjectWithAVolatileSetterButNoCorrespondingProperty;
+		$a->value = 'value';
+		$b = $a->value;
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotReadable
+	 */
+	public function testObjectWithAVolatileSetterAndACorrespondingPrivateProperty()
+	{
+		$a = new ObjectTest\ObjectWithAVolatileSetterAndACorrespondingPrivateProperty;
+		$a->value = 'value';
+		$b = $a->value;
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotReadable
+	 */
+	public function testObjectWithAVolatileSetterAndACorrespondingProtectedProperty()
+	{
+		$a = new ObjectTest\ObjectWithAVolatileSetterAndACorrespondingProtectedProperty;
+		$a->value = 'value';
+		$b = $a->value;
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotReadable
+	 */
+	public function testExtendedObjectWithAVolatileSetterAndACorrespondingProtectedPropertyGet()
+	{
+		$a = new ObjectTest\ExtendedObjectWithAVolatileSetterAndACorrespondingProtectedProperty;
+		$this->assertEquals('construct', $a->value);
+	}
+
+	public function testExtendedObjectWithAVolatileSetterAndACorrespondingProtectedPropertySet()
+	{
+		$a = new ObjectTest\ExtendedObjectWithAVolatileSetterAndACorrespondingProtectedProperty;
+		$a->value = 'value';
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	/**
 	 * @expectedException ICanBoogie\PropertyNotDefined
 	 */
@@ -83,25 +318,6 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$fixture->f = 'f';
 
 		$this->assertEquals('f', $fixture->f);
-	}
-
-	/**
-	 * The `minute` property is virtual and works with seconds.
-	 */
-	public function testVolatile()
-	{
-		$time = new TimeFixture();
-
-		$time->minutes = 1;
-		$this->assertEquals(1, $time->minutes);
-		$this->assertEquals(60, $time->seconds);
-
-		$time->seconds = 120;
-		$this->assertEquals(2, $time->minutes);
-
-		$time->minutes *= 2;
-		$this->assertEquals(240, $time->seconds);
-		$this->assertEquals(4, $time->minutes);
 	}
 
 	public function testReadingReadOnlyProperty()
@@ -218,41 +434,11 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('{"a":1,"b":{"a":11,"b":12,"c":13},"c":[1,2,3]}', $a->to_json());
 	}
 
-	/**
-	 * Checks the the defined slug is returned and not created from the title, and that the
-	 * slug is exported by {@link Node::to_array()}.
-	 */
-	public function test_slug()
+	public function test_prototype_is_not_exported()
 	{
-		$node = new Node;
-		$node->title = 'The quick brown fox';
-		$node->slug = 'madonna';
-		$this->assertEquals('madonna', $node->slug);
-		$this->assertArrayHasKey('slug', $node->to_array());
-		$this->assertContains('slug', $node->__sleep());
-
-		$node = Node::from(array('title' => 'The quick brown fox', 'slug' => 'madonna'));
-		$this->assertEquals('madonna', $node->slug);
-		$this->assertArrayHasKey('slug', $node->to_array());
-		$this->assertContains('slug', $node->__sleep());
-	}
-
-	/**
-	 * Checks that the {@link Node::$slug} property is created from {@link Node::$title} and that
-	 * it is not exported by {@link Node::to_array()} when it is created that way.
-	 */
-	public function test_lazy_slug()
-	{
-		$node = new Node;
-		$node->title = 'The quick brown fox';
-		$this->assertEquals('the-quick-brown-fox', $node->slug);
-		$this->assertArrayNotHasKey('slug', $node->to_array());
-		$this->assertNotContains('slug', $node->__sleep());
-
-		$node = Node::from(array('title' => 'The quick brown fox'));
-		$this->assertEquals('the-quick-brown-fox', $node->slug);
-		$this->assertArrayNotHasKey('slug', $node->to_array());
-		$this->assertNotContains('slug', $node->__sleep());
+		$o = new Object();
+		$this->assertNotContains('prototype', $o->__sleep());
+		$this->assertArrayNotHasKey('prototype', $o->to_array());
 	}
 }
 
@@ -260,20 +446,123 @@ namespace ICanBoogie\ObjectTest;
 
 use ICanBoogie\Object;
 
-class TimeFixture extends Object
+/*
+ * One should be able to get the `value` property, but setting it should throw a
+ * `PropertyNotWritable` exception.
+ */
+class ObjectWithAVolatileGetterButNoCorrespondingProperty extends Object
 {
-	public $seconds;
-
-	protected function volatile_set_minutes($minutes)
+	protected function volatile_get_value()
 	{
-		$this->seconds = $minutes * 60;
-	}
-
-	protected function volatile_get_minutes()
-	{
-		return $this->seconds / 60;
+		return 'value';
 	}
 }
+
+/*
+ * One should be able to get the `value` property, but setting it should throw a
+ * `PropertyNotWritable` exception.
+ */
+class ObjectWithAVolatileGetterAndACorrespondingPrivateProperty extends Object
+{
+	private $value;
+
+	protected function volatile_get_value()
+	{
+		return 'value';
+	}
+}
+
+/*
+ * One should be able to get the `value` property, but setting it should throw a
+ * `PropertyNotWritable` exception. The property is accessible within the class.
+ */
+class ObjectWithAVolatileGetterAndACorrespondingProtectedProperty extends Object
+{
+	protected $value;
+
+	protected function volatile_get_value()
+	{
+		return 'value';
+	}
+}
+
+class ExtendedObjectWithAVolatileGetterAndACorrespondingProtectedProperty extends ObjectWithAVolatileGetterAndACorrespondingProtectedProperty
+{
+	public function __construct()
+	{
+		$this->value = 'construct';
+	}
+}
+
+/*
+ * One should be able to set the `value` property, but getting it should throw a
+ * `PropertyNotReadable` exception.
+ */
+class ObjectWithAVolatileSetterButNoCorrespondingProperty extends Object
+{
+	protected function volatile_set_value($value)
+	{
+
+	}
+}
+
+/*
+ * One should be able to set the `value` property, but setting it should throw a
+ * `PropertyNotReadable` exception.
+ */
+class ObjectWithAVolatileSetterAndACorrespondingPrivateProperty extends Object
+{
+	private $value;
+
+	protected function volatile_set_value($value)
+	{
+		$this->value = $value;
+	}
+}
+
+/*
+ * One should be able to set the `value` property, but setting it should throw a
+ * `PropertyNotReadable` exception. The property is accessible within the class.
+ */
+class ObjectWithAVolatileSetterAndACorrespondingProtectedProperty extends Object
+{
+	protected $value;
+
+	protected function volatile_set_value($value)
+	{
+		$this->value = $value;
+	}
+}
+
+class ExtendedObjectWithAVolatileSetterAndACorrespondingProtectedProperty extends ObjectWithAVolatileSetterAndACorrespondingProtectedProperty
+{
+	public function __construct()
+	{
+		$this->value = 'construct';
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class A extends Object
 {
@@ -397,24 +686,5 @@ class ToArrayFixture extends Object
 		$this->a = $a;
 		$this->b = $b;
 		$this->c = $c;
-	}
-}
-
-class Node extends Object
-{
-	public $title;
-	public $slug;
-
-	public function __construct()
-	{
-		if (empty($this->slug))
-		{
-			unset($this->slug);
-		}
-	}
-
-	protected function volatile_get_slug()
-	{
-		return \ICanBoogie\normalize($this->title);
 	}
 }

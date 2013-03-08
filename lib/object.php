@@ -203,6 +203,8 @@ class Object
 
 		$keys = array_combine($keys, $keys);
 
+		unset($keys['prototype']);
+
 		foreach ($keys as $key)
 		{
 			#
@@ -388,6 +390,11 @@ class Object
 		}
 		catch (\ReflectionException $e) { }
 
+		if ($this->has_method('volatile_set_' . $property))
+		{
+			throw new PropertyNotReadable(array($property, $this));
+		}
+
 		$properties = array_keys(get_object_vars($this));
 
 		if ($properties)
@@ -468,6 +475,15 @@ class Object
 			{
 				throw new PropertyNotWritable(array($property, $this));
 			}
+
+			$this->$property = $value;
+
+			return;
+		}
+
+		if ($this->has_method('volatile_get_' . $property))
+		{
+			throw new PropertyNotWritable(array($property, $this));
 		}
 
 		$this->$property = $value;
@@ -524,7 +540,11 @@ class Object
 	 */
 	public function to_array()
 	{
-		return Object\get_public_object_vars($this);
+		$array = Object\get_public_object_vars($this);
+
+		unset($array['prototype']);
+
+		return $array;
 	}
 
 	/**
