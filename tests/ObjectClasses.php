@@ -131,3 +131,30 @@ class VirtualProperty extends Object
 		return $this->seconds / 60;
 	}
 }
+
+class CreatedAtCase extends Object
+{
+	private $created_at;
+
+	protected function volatile_get_created_at()
+	{
+		$created_at = $this->created_at;
+
+		if ($created_at instanceof \DateTime)
+		{
+			return $created_at;
+		}
+
+		return new \DateTime($created_at);
+	}
+
+	protected function volatile_set_created_at($created_at)
+	{
+		$this->created_at = $created_at;
+	}
+}
+
+class CreatedAtCaseExtended extends CreatedAtCase
+{
+
+}

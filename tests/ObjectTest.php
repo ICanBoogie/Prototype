@@ -440,6 +440,57 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertNotContains('prototype', $o->__sleep());
 		$this->assertArrayNotHasKey('prototype', $o->to_array());
 	}
+
+
+
+
+
+	/**
+	 * - A string or a DateTime can be set to `created_at`
+	 * - A \DateTime instance is always obtained through `created_at`.
+	 * - The `created_at` property MUST be preserved by serialization.
+	 */
+	public function test_created_at_case()
+	{
+		$o = new ObjectTest\CreatedAtCase();
+
+		$o->created_at = "2013-06-06";
+		$this->assertInstanceOf('DateTime', $o->created_at);
+		$this->assertEquals('2013-06-06', $o->created_at->format('Y-m-d'));
+
+		$o->created_at = new \DateTime("2013-06-06");
+		$this->assertInstanceOf('DateTime', $o->created_at);
+		$this->assertEquals('2013-06-06', $o->created_at->format('Y-m-d'));
+
+		$this->assertArrayHasKey('created_at', $o->__sleep());
+		$this->assertContains("\x00" . __CLASS__ . '\CreatedAtCase' . "\x00created_at", $o->__sleep());
+
+		$serialized = serialize($o);
+		$unserialized = unserialize($serialized);
+
+		$this->assertInstanceOf('DateTime', $unserialized->created_at);
+		$this->assertEquals('2013-06-06', $unserialized->created_at->format('Y-m-d'));
+	}
+
+	/**
+	 * @depends test_created_at_case
+	 */
+	public function test_created_at_case_extended()
+	{
+		$o = new ObjectTest\CreatedAtCaseExtended();
+		$o->created_at = "2013-06-06";
+
+		$this->assertInstanceOf('DateTime', $o->created_at);
+		$this->assertEquals('2013-06-06', $o->created_at->format('Y-m-d'));
+		$this->assertArrayHasKey('created_at', $o->__sleep());
+		$this->assertContains("\x00" . __CLASS__ . '\CreatedAtCase' . "\x00created_at", $o->__sleep());
+
+		$serialized = serialize($o);
+		$unserialized = unserialize($serialized);
+
+		$this->assertInstanceOf('DateTime', $unserialized->created_at);
+		$this->assertEquals('2013-06-06', $unserialized->created_at->format('Y-m-d'));
+	}
 }
 
 namespace ICanBoogie\ObjectTest;

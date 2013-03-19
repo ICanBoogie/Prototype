@@ -190,32 +190,80 @@ class Object
 	 * `title` property. Remember that volatile getters do not create properties, thus if the
 	 * property is defined that means that its value should persist.
 	 *
+	 * Private properties which have a corresponding volatile getter and volatile setter are
+	 * exported too, because this setup is usually used to control the type of the property.
+	 *
 	 * @return array
 	 */
 	public function __sleep()
 	{
 		$keys = array_keys(get_object_vars($this));
 
-		if (!$keys)
+		if ($keys)
 		{
-			return array();
+			$keys = array_combine($keys, $keys);
+
+			unset($keys['prototype']);
+
+			foreach ($keys as $key)
+			{
+				#
+				# we don't use {@link has_method()} because using prototype during session write
+				# seams to corrupt PHP.
+				#
+
+				if (method_exists($this, 'get_' . $key))
+				{
+					unset($keys[$key]);
+				}
+			}
 		}
 
-		$keys = array_combine($keys, $keys);
+		#
+		# Add private properties with a volatile getter and a volatile setter.
+		#
 
-		unset($keys['prototype']);
+		$r_class = new \ReflectionClass($this);
+		$getters = array();
+		$setters = array();
 
-		foreach ($keys as $key)
+		foreach ($r_class->getMethods(\ReflectionMethod::IS_PROTECTED) as $method)
 		{
-			#
-			# we don't use {@link has_method()} because using prototype during session write
-			# seams to corrupt PHP.
-			#
+			$name = $method->name;
 
-			if (method_exists($this, 'get_' . $key))
+			if (strpos($name, 'volatile_get_') === 0)
 			{
-				unset($keys[$key]);
+				$getters[substr($name, 13)] = $method;
 			}
+			else if (strpos($name, 'volatile_set_') === 0)
+			{
+				$setters[substr($name, 13)] = $method;
+			}
+		}
+
+		foreach ($getters as $getter => $method)
+		{
+			if (empty($setters[$getter]))
+			{
+				continue;
+			}
+
+			$r_class = new \ReflectionClass($method->class);
+
+			try
+			{
+				/* @var $property \ReflectionProperty */
+
+				$property = $r_class->getProperty($getter);
+
+				if (!$property || $property->isStatic() || !$property->isPrivate())
+				{
+					continue;
+				}
+
+				$keys[$getter] = "\x00" . $property->class . "\x00" . $getter;
+			}
+			catch (\ReflectionException $e) {}
 		}
 
 		return $keys;
