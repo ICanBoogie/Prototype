@@ -19,7 +19,7 @@ The package [icanboogie/common](https://packagist.org/packages/icanboogie/common
 
 ## Installation
 
-The recommended way to install this package is through [composer](http://getcomposer.org/).
+The recommended way to install this package is through [Composer](http://getcomposer.org/).
 Create a `composer.json` file and run `php composer.phar install` command to install it:
 
 ```json
@@ -70,6 +70,14 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/): 
 
 
 
+## License
+
+Prototype is licensed under the New BSD License - See the LICENSE file for details.
+
+
+
+
+
 ## Getters and setters
 
 Getters and setters are available by extending the `Object` class. They are defined
@@ -77,8 +85,8 @@ as `protected` functions and are mapped to magic properties. Thus, you don't cal
 `set_minutes()` method to set _minutes_ or a `get_minutes()` method to get them, but simply use
 a magic `minutes` property, just like you would with any property.
 
-Two types of getters/setters are available. The _lazy_ type creates properties when they
-are first accessed while the _volatile_ type leaves the persistence of the property value
+Two types of getters are available. _Lazy_ getters creates properties when they
+are first accessed while _volatile_ getters leave the persistence of the property value
 up to the getter. More over, you can define read-only or write-only properties using _volatile_
 getters/setters.
 
@@ -554,11 +562,3 @@ Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, 
 	return $event->value;
 });
 ```
-
-
-
-
-
-## License
-
-Prototype is licensed under the New BSD License - See the LICENSE file for details.

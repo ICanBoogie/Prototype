@@ -193,6 +193,10 @@ class Object
 	 * Private properties which have a corresponding volatile getter and volatile setter are
 	 * exported too, because this setup is usually used to control the type of the property.
 	 *
+	 * Warning: The code used to export private properties seams to produce frameless exception on
+	 * session close :( If you encounter this problem you might want to override the method. Don't
+	 * forget to remove the prototype property !
+	 *
 	 * @return array
 	 */
 	public function __sleep()
@@ -243,27 +247,20 @@ class Object
 
 		foreach ($getters as $getter => $method)
 		{
-			if (empty($setters[$getter]))
+			if (empty($setters[$getter]) || !property_exists($method->class, $getter))
 			{
 				continue;
 			}
 
 			$r_class = new \ReflectionClass($method->class);
+			$property = $r_class->getProperty($getter);
 
-			try
+			if (!$property || $property->isStatic() || !$property->isPrivate())
 			{
-				/* @var $property \ReflectionProperty */
-
-				$property = $r_class->getProperty($getter);
-
-				if (!$property || $property->isStatic() || !$property->isPrivate())
-				{
-					continue;
-				}
-
-				$keys[$getter] = "\x00" . $property->class . "\x00" . $getter;
+				continue;
 			}
-			catch (\ReflectionException $e) {}
+
+			$keys[$getter] = "\x00" . $property->class . "\x00" . $getter;
 		}
 
 		return $keys;
