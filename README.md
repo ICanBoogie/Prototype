@@ -410,6 +410,62 @@ return array
 
 
 
+## Getting an array representation of an object
+
+An array representation of an `Object` instance can be obtained using the `to_array()` method. Only
+public and private properties with corresponding getters and setters are exported, but one can
+implement the method to export additionnal properties.
+
+```php
+<?php
+
+class A extends \ICanBoogie\Object
+{
+	public $a;
+	protected $b;
+	private $c;
+
+	public function __construct($a, $b, $c)
+	{
+		$this->a = $a;
+		$this->b = $b;
+		$this->c = $c;
+	}
+
+	protected function volatile_get_c()
+	{
+		return $this->c;
+	}
+
+	protected function volatile_set_c($value)
+	{
+		$this->c = $value;
+	}
+}
+
+$a = new A('a', 'b', 'c');
+
+var_dump($a->to_array());
+
+// array(2) {
+//  ["a"]=>
+//  string(1) "a"
+//  ["c"]=>
+//  string(1) "c"
+//}
+```
+
+Private properties with corresponding getters and setters are exported because this type of
+implementation is considered as a _façade_ to a property. The `to_array()` method should be
+implemented to override this behaviour, or remove the properties from the array.
+
+Also note that a `to_array_recursive()` method is also available, it calls the `to_array()`
+method to all the `Object` instances of the array tree.
+
+
+
+
+
 ## Creating an instance from an array of properties
 
 The `Object::from()` method creates an instance from an array of properties:

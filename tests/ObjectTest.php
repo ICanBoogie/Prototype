@@ -14,6 +14,7 @@ namespace ICanBoogie;
 use ICanBoogie\ObjectTest\A;
 use ICanBoogie\ObjectTest\B;
 use ICanBoogie\ObjectTest\ToArrayFixture;
+use ICanBoogie\ObjectTest\ToArrayWithPropertyFacadeFixture;
 
 require_once 'ObjectClasses.php';
 
@@ -422,6 +423,12 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(array('a' => 1, 'b' => 2, 'c' => 3), $a->to_array());
 	}
 
+	public function test_to_array_with_property_facade()
+	{
+		$a = new ToArrayWithPropertyFacadeFixture(1, 2, 3);
+		$this->assertEquals(array('a' => 1, 'c' => 3), $a->to_array());
+	}
+
 	public function test_to_array_recursive()
 	{
 		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
@@ -731,6 +738,30 @@ class ToArrayFixture extends Object
 	public $a;
 	public $b;
 	public $c;
+
+	public function __construct($a, $b, $c)
+	{
+		$this->a = $a;
+		$this->b = $b;
+		$this->c = $c;
+	}
+}
+
+class ToArrayWithPropertyFacadeFixture extends Object
+{
+	public $a;
+	protected $b;
+	private $c;
+
+	protected function volatile_get_c()
+	{
+		return $this->c;
+	}
+
+	protected function volatile_set_c($value)
+	{
+		$this->c = $value;
+	}
 
 	public function __construct($a, $b, $c)
 	{

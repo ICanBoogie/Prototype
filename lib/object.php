@@ -579,13 +579,34 @@ class Object
 	/**
 	 * Converts the object into an array.
 	 *
-	 * Protected and private properties are not returned
+	 * Only public properties and private properties with a matching getter and setter are
+	 * returned.
 	 *
 	 * @return array
 	 */
 	public function to_array()
 	{
 		$array = Object\get_public_object_vars($this);
+
+		#
+		# Including private properties with matching getter and setter.
+		#
+
+		$reflection = new \ReflectionClass($this);
+		$properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE);
+
+		if ($properties)
+		{
+			foreach ($properties as $property)
+			{
+				$name = $property->name;
+
+				if ($reflection->hasMethod("volatile_get_{$name}") && $reflection->hasMethod("volatile_set_{$name}"))
+				{
+					$array[$name] = $this->$name;
+				}
+			}
+		}
 
 		unset($array['prototype']);
 
