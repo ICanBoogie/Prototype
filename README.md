@@ -8,75 +8,6 @@ reverse application control, lazy load resources, or create read-only and write-
 
 
 
-## Requirements
-
-The package requires PHP 5.3 or later.  
-The package [icanboogie/common](https://packagist.org/packages/icanboogie/common) is required.
-
-
-
-
-
-## Installation
-
-The recommended way to install this package is through [Composer](http://getcomposer.org/).
-Create a `composer.json` file and run `php composer.phar install` command to install it:
-
-```json
-{
-    "minimum-stability": "dev",
-    "require": {
-		"icanboogie/prototype": "*"
-    }
-}
-```
-
-
-
-
-
-### Cloning the repository
-
-The package is [available on GitHub](https://github.com/ICanBoogie/Prototype), its repository can
-be cloned with the following command line:
-
-	$ git clone git://github.com/ICanBoogie/Prototype.git
-	
-
-
-
-
-## Documentation
-
-The package is documented as part of the [ICanBoogie](http://icanboogie.org/) framework
-[documentation](http://icanboogie.org/docs/). You can generate the documentation for the package
-and its dependencies with the `make doc` command. The documentation is generated in the `docs`
-directory. [ApiGen](http://apigen.org/) is required. You can later clean the directory with
-the `make clean` command.
-
-
-
-
-
-## Testing
-
-The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
-automatically installed as well as all the dependencies required to run the suite. The package
-directory can later be cleaned with the `make clean` command.
-
-The package is continuously tested by [Travis CI](http://about.travis-ci.org/): [![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=master)](https://travis-ci.org/ICanBoogie/Prototype)
-
-
-
-
-
-## License
-
-Prototype is licensed under the New BSD License - See the LICENSE file for details.
-
-
-
-
 
 ## Getters and setters
 
@@ -147,7 +78,7 @@ use ICanBoogie\Object;
 class A extends Object
 {
 	protected $id;
-	
+
 	public function __construct($id)
 	{
 		$this->id = $id;
@@ -388,14 +319,14 @@ ICanBoogie\Prototype::configure
 			'meow' => function(Cat $cat) {
 
 				return 'Meow';
-			
+
 			}
 		),
-		
+
 		'FierceCat' => array
 		(
 			'meow' => function(Cat $cat) {
-			
+
 				return 'MEOOOW !';
 
 			}
@@ -425,7 +356,7 @@ $cat = new Cat;
 $cat->prototype['meow'] = function(Cat $cat)
 {
 	return 'Meow';
-}  
+}
 
 echo $cat->meow();
 ```
@@ -467,11 +398,11 @@ using the `hooks` config and the `prototypes` namespace:
 
 return array
 (
-    'prototypes' => array
-    (
-        'Icybee\Modules\Pages\Page::my_additional_method' => 'Website\Hooks::my_additional_method',
-        'Icybee\Modules\Pages\Page::get_my_property' => 'Website\Hooks::get_my_property'
-    )
+	'prototypes' => array
+	(
+		'Icybee\Modules\Pages\Page::my_additional_method' => 'Website\Hooks::my_additional_method',
+		'Icybee\Modules\Pages\Page::get_my_property' => 'Website\Hooks::get_my_property'
+	)
 );
 ```
 
@@ -562,3 +493,73 @@ Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, 
 	return $event->value;
 });
 ```
+
+
+
+
+
+## Requirements
+
+The package requires PHP 5.3 or later.  
+The package [icanboogie/common](https://packagist.org/packages/icanboogie/common) is required.
+
+
+
+
+
+## Installation
+
+The recommended way to install this package is through [Composer](http://getcomposer.org/).
+Create a `composer.json` file and run `php composer.phar install` command to install it:
+
+```json
+{
+	"minimum-stability": "dev",
+	"require": {
+		"icanboogie/prototype": "*"
+	}
+}
+```
+
+
+
+
+
+### Cloning the repository
+
+The package is [available on GitHub](https://github.com/ICanBoogie/Prototype), its repository can
+be cloned with the following command line:
+
+	$ git clone git://github.com/ICanBoogie/Prototype.git
+
+
+
+
+
+## Documentation
+
+The package is documented as part of the [ICanBoogie](http://icanboogie.org/) framework
+[documentation](http://icanboogie.org/docs/). You can generate the documentation for the package
+and its dependencies with the `make doc` command. The documentation is generated in the `docs`
+directory. [ApiGen](http://apigen.org/) is required. You can later clean the directory with
+the `make clean` command.
+
+
+
+
+
+## Testing
+
+The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
+automatically installed as well as all the dependencies required to run the suite. The package
+directory can later be cleaned with the `make clean` command.
+
+The package is continuously tested by [Travis CI](http://about.travis-ci.org/): [![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=master)](https://travis-ci.org/ICanBoogie/Prototype)
+
+
+
+
+
+## License
+
+Prototype is licensed under the New BSD License - See the LICENSE file for details.
