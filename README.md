@@ -27,44 +27,6 @@ __Remember__: Getters/setters are only called when the property they _emulate_ i
 
 
 
-### Volatile getters and setters
-
-Volatile getters/setters can be used to create interfaces to other properties. For
-instance, the following getters and setters provide a magic `minutes` property which stores its
-value in the `seconds` property.
-
-```php
-<?php
-
-use ICanBoogie\Object;
-
-class Time extends Object
-{
-	public $seconds;
-
-	protected function volatile_set_minutes($minutes)
-	{
-		$this->seconds = $minutes * 60;
-	}
-
-	protected function volatile_get_minutes()
-	{
-		return $this->seconds / 60;
-	}
-}
-
-$time = new Time;
-$time->seconds = 120;
-echo $time->minutes; // 2
-
-$time->minutes = 4;
-echo $time->seconds; // 240
-```
-
-
-
-
-
 ### Read-only properties
 
 Read-only properties are created by setting their visibility to `protected` or `private` and
@@ -123,6 +85,116 @@ $a = new A;
 $a->writeonly = 'test'; // test
 $v = $a->writeonly; // throws ICanBoogie\PropertyIsNotReadable
 ```
+
+
+
+
+
+### Virtual properties
+
+Volatile getters/setters can be used to create interfaces to other properties. For
+instance, the following getters and setters provide the virtual property `minutes`, which
+retrieves and stores its value in the `seconds` property.
+
+```php
+<?php
+
+use ICanBoogie\Object;
+
+class Time extends Object
+{
+	public $seconds;
+
+	protected function volatile_set_minutes($minutes)
+	{
+		$this->seconds = $minutes * 60;
+	}
+
+	protected function volatile_get_minutes()
+	{
+		return $this->seconds / 60;
+	}
+}
+
+$time = new Time;
+$time->seconds = 120;
+echo $time->minutes; // 2
+
+$time->minutes = 4;
+echo $time->seconds; // 240
+```
+
+
+
+
+
+### Façade properties
+
+Sometimes you want to be able to manage the type of a property, what you can store, what you
+can retrieve, the most transparently possible. This can be achieved with _façade properties_.
+
+Façade properties are made by defining a private property along with its volatile getter and
+setter. The following examples demonstrates how a `created_at` property can be created,
+that can be set to a `DateTime` instance, a string, an integer or null, while always returning
+a `DateTime` instance.
+
+```php
+<?php
+
+use ICanBoogie\DateTime;
+
+class CreatedAtProperty extends \ICanBoogie\Object
+{
+	private $created_at;
+
+	protected function volatile_set_created_at($datetime)
+	{
+		$this->created_at = $datetime;
+	}
+
+	protected function volatile_get_created_at()
+	{
+		$datetime = $this->created_at;
+
+		if ($datetime instanceof DateTime)
+		{
+			return $datetime;
+		}
+
+		return $this->created_at = ($datetime === null) ? DateTime::none() : new DateTime($datetime, 'utc');
+	}
+}
+```
+
+
+
+
+
+
+#### Façade properties are exported
+
+The value of façade properties is exported when the instance is serialized or transformed into an
+array.
+
+The following example demonstrates how a `created_at` property is exported both by `__sleep()`
+(which is invoked during `serialize()`) and `to_array()`.
+
+```php
+<?php
+
+$a = new CreatedAtProperty;
+$a->created_at = 'now';
+
+echo get_class($a->created_at);                      // ICanBoogie\ActiveRecord
+echo array_key_exists('created_at', $a->__sleep());  // true
+echo array_key_exists('created_at', $a->to_array()); // true
+
+serialize($a);
+// O:17:"CreatedAtProperty":1:{s:29:"\x00CreatedAtProperty\x00created_at";O:19:"ICanBoogie\DateTime":3:{s:4:"date";s:19:"2013-11-18 22:20:00";s:13:"timezone_type";i:3;s:8:"timezone";s:3:"UTC";}}
+```
+
+Notice how the `created_at` property is exported during `serialize()` while preserving its
+visibility.
 
 
 
