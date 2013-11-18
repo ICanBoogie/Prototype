@@ -176,6 +176,59 @@ class Object
 	}
 
 	/**
+	 * Returns the private properties defined by the reference, this includes the private
+	 * properties defined by the whole class inheritance.
+	 *
+	 * @param string|object $reference Class name or instance.
+	 *
+	 * @return array
+	 */
+	static private function resolve_private_properties($reference)
+	{
+		$private_properties = array();
+		$class_reflection = new \ReflectionClass($reference);
+
+		while ($class_reflection)
+		{
+			$private_properties = array_merge($private_properties, $class_reflection->getProperties(\ReflectionProperty::IS_PRIVATE));
+
+			$class_reflection = $class_reflection->getParentClass();
+		}
+
+		return $private_properties;
+	}
+
+	/**
+	 * Returns the façade properties implemented by the specified reference.
+	 *
+	 * A façade property is a combination of a private property with the corresponding volatile
+	 * getter and setter.
+	 *
+	 * @param string|object $reference Class name of instance.
+	 *
+	 * @return array[string]\ReflectionProperty
+	 */
+	static private function resolve_facade_properties($reference)
+	{
+		$facade_properties = array();
+
+		foreach (self::resolve_private_properties($reference) as $property)
+		{
+			$name = $property->name;
+
+			if (!method_exists($reference, "volatile_get_{$name}")
+			|| !method_exists($reference, "volatile_set_{$name}"))
+			{
+				continue;
+			}
+
+			$facade_properties[$name] = $property;
+		}
+
+		return $facade_properties;
+	}
+
+	/**
 	 * The method returns an array of key/key pairs.
 	 *
 	 * Properties for which a lazy getter is defined are discarted. For instance, if the property
@@ -190,12 +243,11 @@ class Object
 	 * `title` property. Remember that volatile getters do not create properties, thus if the
 	 * property is defined that means that its value should persist.
 	 *
-	 * Private properties which have a corresponding volatile getter and volatile setter are
-	 * exported too, because this setup is usually used to control the type of the property.
+	 * Façade properties are also included.
 	 *
 	 * Warning: The code used to export private properties seams to produce frameless exception on
-	 * session close :( If you encounter this problem you might want to override the method. Don't
-	 * forget to remove the prototype property !
+	 * session close. If you encounter this problem you might want to override the method. Don't
+	 * forget to remove the prototype property!
 	 *
 	 * @return array
 	 */
@@ -213,7 +265,7 @@ class Object
 			{
 				#
 				# we don't use {@link has_method()} because using prototype during session write
-				# seams to corrupt PHP.
+				# seams to corrupt PHP (tested with PHP 5.3.3).
 				#
 
 				if (method_exists($this, 'get_' . $key))
@@ -224,43 +276,12 @@ class Object
 		}
 
 		#
-		# Add private properties with a volatile getter and a volatile setter.
+		# Add façade properties.
 		#
 
-		$r_class = new \ReflectionClass($this);
-		$getters = array();
-		$setters = array();
-
-		foreach ($r_class->getMethods(\ReflectionMethod::IS_PROTECTED) as $method)
+		foreach (self::resolve_facade_properties($this) as $name => $property)
 		{
-			$name = $method->name;
-
-			if (strpos($name, 'volatile_get_') === 0)
-			{
-				$getters[substr($name, 13)] = $method;
-			}
-			else if (strpos($name, 'volatile_set_') === 0)
-			{
-				$setters[substr($name, 13)] = $method;
-			}
-		}
-
-		foreach ($getters as $getter => $method)
-		{
-			if (empty($setters[$getter]) || !property_exists($method->class, $getter))
-			{
-				continue;
-			}
-
-			$r_class = new \ReflectionClass($method->class);
-			$property = $r_class->getProperty($getter);
-
-			if (!$property || $property->isStatic() || !$property->isPrivate())
-			{
-				continue;
-			}
-
-			$keys[$getter] = "\x00" . $property->class . "\x00" . $getter;
+			$keys[$name] = "\x00" . $property->class . "\x00" . $name;
 		}
 
 		return $keys;
@@ -361,8 +382,8 @@ class Object
 	 * are created as public the callback is only called once which is ideal for lazy loading.
 	 * 3. The prototype is queried for callbacks for the `volatile_get_<property>` and
 	 * `get_<property>` methods.
-	 * 4.Finally, the `ICanBoogie\Object::property` event is fired to try and retrieve the value of
-	 * the property.
+	 * 4. Finally, the `ICanBoogie\Object::property` event is fired to try and retrieve the value
+	 * of the property.
 	 *
 	 * @param string $property
 	 *
@@ -537,7 +558,7 @@ class Object
 	/**
 	 * Checks if the object has the specified property.
 	 *
-	 * The difference with the `property_exists()` function is that the method also checks for
+	 * The difference with the `property_exists()` function is that this method also checks for
 	 * getters defined by the class or the prototype.
 	 *
 	 * @param string $property The property to check.
@@ -579,8 +600,7 @@ class Object
 	/**
 	 * Converts the object into an array.
 	 *
-	 * Only public properties and private properties with a matching getter and setter are
-	 * returned.
+	 * Only public properties and façade properties are included.
 	 *
 	 * @return array
 	 */
@@ -588,24 +608,9 @@ class Object
 	{
 		$array = Object\get_public_object_vars($this);
 
-		#
-		# Including private properties with matching getter and setter.
-		#
-
-		$reflection = new \ReflectionClass($this);
-		$properties = $reflection->getProperties(\ReflectionProperty::IS_PRIVATE);
-
-		if ($properties)
+		foreach (array_keys(self::resolve_facade_properties($this)) as $name)
 		{
-			foreach ($properties as $property)
-			{
-				$name = $property->name;
-
-				if ($reflection->hasMethod("volatile_get_{$name}") && $reflection->hasMethod("volatile_set_{$name}"))
-				{
-					$array[$name] = $this->$name;
-				}
-			}
+			$array[$name] = $this->$name;
 		}
 
 		unset($array['prototype']);
