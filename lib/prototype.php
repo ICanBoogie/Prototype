@@ -26,7 +26,7 @@ namespace ICanBoogie;
  *     'prototypes' => array
  *     (
  *         'Icybee\Modules\Pages\Page::my_additional_method' => 'MyHookClass::my_additional_method',
- *         'Icybee\Modules\Pages\Page::get_my_property' => 'MyHookClass::get_my_property'
+ *         'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'MyHookClass::lazy_get_my_property'
  *     )
  * );
  * </pre>

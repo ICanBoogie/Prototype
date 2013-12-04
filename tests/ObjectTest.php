@@ -15,55 +15,163 @@ use ICanBoogie\ObjectTest\A;
 use ICanBoogie\ObjectTest\B;
 use ICanBoogie\ObjectTest\ToArrayFixture;
 use ICanBoogie\ObjectTest\ToArrayWithPropertyFacadeFixture;
+use ICanBoogie\ObjectTest\ExportCase;
 
-require_once 'ObjectClasses.php';
+require_once 'cases.php';
 
 class ObjectTest extends \PHPUnit_Framework_TestCase
 {
-	public function testSetGet()
+	public function test_get_prototype()
 	{
 		$o = new Object;
-		$o->a = __FUNCTION__;
-		$this->assertEquals(__FUNCTION__, $o->a);
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotDefined
-	 */
-	public function testInvalidGet()
-	{
-		$o = new Object;
-		$a = $o->undefined;
-	}
-
-	public function testReadOnlyProperty()
-	{
-		$o = new ObjectTest\ReadOnlyProperty;
-		$this->assertEquals('value', $o->value);
+		$this->assertInstanceOf('ICanBoogie\Prototype', $o->prototype);
 	}
 
 	/**
 	 * @expectedException ICanBoogie\PropertyNotWritable
 	 */
-	public function testInvalidUseOfReadOnlyProperty()
+	public function test_set_prototype()
 	{
-		$o = new ObjectTest\ReadOnlyProperty;
-		$o->value = 'value';
+		$o = new Object;
+		$o->prototype = null;
 	}
 
-	public function testWriteOnlyProperty()
+	public function test_export_empty()
 	{
-		$o = new ObjectTest\WriteOnlyProperty;
-		$o->value = 'value';
+		$o = new Object;
+
+		$this->assertEmpty($o->__sleep());
+		$this->assertEmpty($o->to_array());
 	}
 
 	/**
+	 * @dataProvider provide_test_readonly
+	 * @expectedException ICanBoogie\PropertyNotWritable
+	 */
+	public function test_readonly($class)
+	{
+		$o = new $class;
+		$this->assertEquals('value', $o->property);
+		$o->property = true;
+	}
+
+	public function provide_test_readonly()
+	{
+		return array
+		(
+			array('ICanBoogie\ObjectTest\ReadOnlyProperty'),
+			array('ICanBoogie\ObjectTest\ReadOnlyPropertyExtended'),
+			array('ICanBoogie\ObjectTest\ReadOnlyPropertyProtected'),
+			array('ICanBoogie\ObjectTest\ReadOnlyPropertyProtectedExtended'),
+			array('ICanBoogie\ObjectTest\ReadOnlyPropertyPrivate'),
+			array('ICanBoogie\ObjectTest\ReadOnlyPropertyPrivateExtended')
+		);
+	}
+
+	/**
+	 * @dataProvider provide_test_writeonly
 	 * @expectedException ICanBoogie\PropertyNotReadable
 	 */
-	public function testInvalidUseOfWriteOnlyProperty()
+	public function test_writeonly($class)
 	{
-		$o = new ObjectTest\WriteOnlyProperty;
-		$a = $o->value;
+		$o = new $class;
+		$o->property = true;
+		$a = $o->property;
+	}
+
+	public function provide_test_writeonly()
+	{
+		return array
+		(
+			array('ICanBoogie\ObjectTest\WriteOnlyProperty'),
+			array('ICanBoogie\ObjectTest\WriteOnlyPropertyExtended'),
+			array('ICanBoogie\ObjectTest\WriteOnlyPropertyProtected'),
+			array('ICanBoogie\ObjectTest\WriteOnlyPropertyProtectedExtended'),
+			array('ICanBoogie\ObjectTest\WriteOnlyPropertyPrivate'),
+			array('ICanBoogie\ObjectTest\WriteOnlyPropertyPrivateExtended')
+		);
+	}
+
+	public function test_set_undefined()
+	{
+		$o = new Object;
+		$v = mt_rand();
+		$o->property = $v;
+		$this->assertEquals($v, $o->property);
+	}
+
+	/**
+	 * @expectedException ICanBoogie\PropertyNotDefined
+	 */
+	public function test_get_undefined()
+	{
+		$o = new Object;
+		$a = $o->undefined;
+	}
+
+	public function test_to_array()
+	{
+		$o = new Object;
+		$this->assertEmpty($o->to_array());
+
+		$o = new ExportCase;
+		$array = $o->to_array();
+		$this->assertArrayHasKey('public', $array);
+		$this->assertArrayHasKey('public_with_lazy_getter', $array);
+		$this->assertArrayNotHasKey('protected', $array);
+		$this->assertArrayNotHasKey('protected_with_getter', $array);
+		$this->assertArrayNotHasKey('protected_with_setter', $array);
+		$this->assertArrayNotHasKey('protected_with_getter_and_setter', $array);
+		$this->assertArrayNotHasKey('protected_with_lazy_getter', $array);
+		$this->assertArrayNotHasKey('private', $array);
+		$this->assertArrayNotHasKey('private_with_getter', $array);
+		$this->assertArrayNotHasKey('private_with_setter', $array);
+		$this->assertArrayHasKey('private_with_getter_and_setter', $array);
+	}
+
+	public function test_sleep()
+	{
+		$o = new Object;
+		$this->assertEmpty($o->__sleep());
+
+		$o = new ExportCase;
+		$properties = $o->__sleep();
+		$this->assertArrayHasKey('public', $properties);
+		$this->assertArrayNotHasKey('public_with_lazy_getter', $properties);
+		$this->assertArrayHasKey('protected', $properties);
+		$this->assertArrayHasKey('protected_with_getter', $properties);
+		$this->assertArrayHasKey('protected_with_setter', $properties);
+		$this->assertArrayHasKey('protected_with_getter_and_setter', $properties);
+		$this->assertArrayNotHasKey('protected_with_lazy_getter', $properties);
+		$this->assertArrayNotHasKey('private', $properties);
+		$this->assertArrayNotHasKey('private_with_getter', $properties);
+		$this->assertArrayNotHasKey('private_with_setter', $properties);
+		$this->assertArrayHasKey('private_with_getter_and_setter', $properties);
+		$this->assertArrayNotHasKey('private_with_lazy_getter', $properties);
+	}
+
+	public function test_to_array2()
+	{
+		$a = new ToArrayFixture(1, 2, 3);
+		$this->assertEquals(array('a' => 1, 'b' => 2, 'c' => 3), $a->to_array());
+	}
+
+	public function test_to_array_with_property_facade()
+	{
+		$a = new ToArrayWithPropertyFacadeFixture(1, 2, 3);
+		$this->assertEquals(array('a' => 1, 'c' => 3), $a->to_array());
+	}
+
+	public function test_to_array_recursive()
+	{
+		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
+		$this->assertEquals(array('a' => 1, 'b' => array('a' => 11, 'b' => 12, 'c' => 13), 'c' => array(1, 2, 3)), $a->to_array_recursive());
+	}
+
+	public function test_to_json()
+	{
+		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
+		$this->assertEquals('{"a":1,"b":{"a":11,"b":12,"c":13},"c":[1,2,3]}', $a->to_json());
 	}
 
 	public function testDefaultValueForUnsetProperty()
@@ -162,100 +270,6 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function testObjectWithAVolatileGetterButNoCorrespondingProperty()
-	{
-		$a = new ObjectTest\ObjectWithAVolatileGetterButNoCorrespondingProperty;
-		$this->assertEquals('value', $a->value);
-		$a->value = 'value';
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function testObjectWithAVolatileGetterAndACorrespondingPrivateProperty()
-	{
-		$a = new ObjectTest\ObjectWithAVolatileGetterAndACorrespondingPrivateProperty;
-		$this->assertEquals('value', $a->value);
-		$a->value = 'value';
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function testObjectWithAVolatileGetterAndACorrespondingProtectedProperty()
-	{
-		$a = new ObjectTest\ObjectWithAVolatileGetterAndACorrespondingProtectedProperty;
-		$this->assertEquals('value', $a->value);
-		$a->value = 'value';
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotReadable
-	 */
-	public function testObjectWithAVolatileSetterButNoCorrespondingProperty()
-	{
-		$a = new ObjectTest\ObjectWithAVolatileSetterButNoCorrespondingProperty;
-		$a->value = 'value';
-		$b = $a->value;
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotReadable
-	 */
-	public function testObjectWithAVolatileSetterAndACorrespondingPrivateProperty()
-	{
-		$a = new ObjectTest\ObjectWithAVolatileSetterAndACorrespondingPrivateProperty;
-		$a->value = 'value';
-		$b = $a->value;
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotReadable
-	 */
-	public function testObjectWithAVolatileSetterAndACorrespondingProtectedProperty()
-	{
-		$a = new ObjectTest\ObjectWithAVolatileSetterAndACorrespondingProtectedProperty;
-		$a->value = 'value';
-		$b = $a->value;
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotReadable
-	 */
-	public function testExtendedObjectWithAVolatileSetterAndACorrespondingProtectedPropertyGet()
-	{
-		$a = new ObjectTest\ExtendedObjectWithAVolatileSetterAndACorrespondingProtectedProperty;
-		$this->assertEquals('construct', $a->value);
-	}
-
-	public function testExtendedObjectWithAVolatileSetterAndACorrespondingProtectedPropertySet()
-	{
-		$a = new ObjectTest\ExtendedObjectWithAVolatileSetterAndACorrespondingProtectedProperty;
-		$a->value = 'value';
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	/**
 	 * @expectedException ICanBoogie\PropertyNotDefined
 	 */
 	public function testGetUnsetPublicProperty()
@@ -329,36 +343,6 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
-	 */
-	public function testWritingReadOnlyProperty()
-	{
-		$fixture = new A();
-		$fixture->readonly = 'readandwrite';
-	}
-
-	/**
-	 * @expectedException ICanBoogie\PropertyNotReadable
-	 */
-	public function testReadingWriteOnlyProperty()
-	{
-		$fixture = new A();
-
-		$fixture->writeonly = 'writeonly';
-
-		$this->assertEquals('writeonly', $fixture->writeonly);
-	}
-
-	public function testWritingWriteOnlyProperty()
-	{
-		$fixture = new A();
-
-		$fixture->writeonly = 'writeonly';
-
-		$this->assertEquals('writeonly', $fixture->read_writeonly);
-	}
-
-	/**
 	 * Properties with getters should be removed before serialization.
 	 */
 	public function testSleepAndGetters()
@@ -415,30 +399,6 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$b = new B();
 		$b->with_parent = 3;
 		$this->assertEquals(40, $b->with_parent);
-	}
-
-	public function test_to_array()
-	{
-		$a = new ToArrayFixture(1, 2, 3);
-		$this->assertEquals(array('a' => 1, 'b' => 2, 'c' => 3), $a->to_array());
-	}
-
-	public function test_to_array_with_property_facade()
-	{
-		$a = new ToArrayWithPropertyFacadeFixture(1, 2, 3);
-		$this->assertEquals(array('a' => 1, 'c' => 3), $a->to_array());
-	}
-
-	public function test_to_array_recursive()
-	{
-		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
-		$this->assertEquals(array('a' => 1, 'b' => array('a' => 11, 'b' => 12, 'c' => 13), 'c' => array(1, 2, 3)), $a->to_array_recursive());
-	}
-
-	public function test_to_json()
-	{
-		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
-		$this->assertEquals('{"a":1,"b":{"a":11,"b":12,"c":13},"c":[1,2,3]}', $a->to_json());
 	}
 
 	public function test_prototype_is_not_exported()
@@ -504,124 +464,6 @@ namespace ICanBoogie\ObjectTest;
 
 use ICanBoogie\Object;
 
-/*
- * One should be able to get the `value` property, but setting it should throw a
- * `PropertyNotWritable` exception.
- */
-class ObjectWithAVolatileGetterButNoCorrespondingProperty extends Object
-{
-	protected function volatile_get_value()
-	{
-		return 'value';
-	}
-}
-
-/*
- * One should be able to get the `value` property, but setting it should throw a
- * `PropertyNotWritable` exception.
- */
-class ObjectWithAVolatileGetterAndACorrespondingPrivateProperty extends Object
-{
-	private $value;
-
-	protected function volatile_get_value()
-	{
-		return 'value';
-	}
-}
-
-/*
- * One should be able to get the `value` property, but setting it should throw a
- * `PropertyNotWritable` exception. The property is accessible within the class.
- */
-class ObjectWithAVolatileGetterAndACorrespondingProtectedProperty extends Object
-{
-	protected $value;
-
-	protected function volatile_get_value()
-	{
-		return 'value';
-	}
-}
-
-class ExtendedObjectWithAVolatileGetterAndACorrespondingProtectedProperty extends ObjectWithAVolatileGetterAndACorrespondingProtectedProperty
-{
-	public function __construct()
-	{
-		$this->value = 'construct';
-	}
-}
-
-/*
- * One should be able to set the `value` property, but getting it should throw a
- * `PropertyNotReadable` exception.
- */
-class ObjectWithAVolatileSetterButNoCorrespondingProperty extends Object
-{
-	protected function volatile_set_value($value)
-	{
-
-	}
-}
-
-/*
- * One should be able to set the `value` property, but setting it should throw a
- * `PropertyNotReadable` exception.
- */
-class ObjectWithAVolatileSetterAndACorrespondingPrivateProperty extends Object
-{
-	private $value;
-
-	protected function volatile_set_value($value)
-	{
-		$this->value = $value;
-	}
-}
-
-/*
- * One should be able to set the `value` property, but setting it should throw a
- * `PropertyNotReadable` exception. The property is accessible within the class.
- */
-class ObjectWithAVolatileSetterAndACorrespondingProtectedProperty extends Object
-{
-	protected $value;
-
-	protected function volatile_set_value($value)
-	{
-		$this->value = $value;
-	}
-}
-
-class ExtendedObjectWithAVolatileSetterAndACorrespondingProtectedProperty extends ObjectWithAVolatileSetterAndACorrespondingProtectedProperty
-{
-	public function __construct()
-	{
-		$this->value = 'construct';
-	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class A extends Object
 {
 	public $a;
@@ -637,89 +479,89 @@ class A extends Object
 		unset($this->unset_protected);
 	}
 
-	protected function get_a()
+	protected function lazy_get_a()
 	{
 		return 'a';
 	}
 
-	protected function volatile_get_b()
+	protected function get_b()
 	{
 		return 'b';
 	}
 
 	protected $c;
 
-	protected function set_c($value)
+	protected function lazy_set_c($value)
 	{
 		return $value;
 	}
 
-	protected function get_c()
+	protected function lazy_get_c()
 	{
 		return $this->c;
 	}
 
 	protected $d;
 
-	protected function volatile_set_d($value)
+	protected function set_d($value)
 	{
 		$this->d = $value;
 	}
 
-	protected function volatile_get_d()
+	protected function get_d()
 	{
 		return $this->d;
 	}
 
 	private $e;
 
-	protected function set_e($value)
+	protected function lazy_set_e($value)
 	{
 		return $value;
 	}
 
-	protected function get_e()
+	protected function lazy_get_e()
 	{
 		return $this->e;
 	}
 
 	protected $f;
 
-	protected function volatile_set_f($value)
+	protected function set_f($value)
 	{
 		$this->f = $value;
 	}
 
-	protected function volatile_get_f()
+	protected function get_f()
 	{
 		return $this->f;
 	}
 
 	private $readonly = 'readonly';
 
-	protected function volatile_get_readonly()
+	protected function get_readonly()
 	{
 		return $this->readonly;
 	}
 
 	private $writeonly;
 
-	protected function volatile_set_writeonly($value)
+	protected function set_writeonly($value)
 	{
 		$this->writeonly = $value;
 	}
 
-	protected function volatile_get_read_writeonly()
+	protected function get_read_writeonly()
 	{
 		return $this->writeonly;
 	}
 
-	protected function get_pseudo_uniq()
+	protected function lazy_get_pseudo_uniq()
 	{
 		return uniqid();
 	}
 
-	protected function set_with_parent($value)
+	protected function lazy_set_with_parent($value)
 	{
 		return $value + 1;
 	}
@@ -727,9 +569,9 @@ class A extends Object
 
 class B extends A
 {
-	protected function set_with_parent($value)
+	protected function lazy_set_with_parent($value)
 	{
-		return parent::set_with_parent($value) * 10;
+		return parent::lazy_set_with_parent($value) * 10;
 	}
 }
 
@@ -753,12 +595,12 @@ class ToArrayWithPropertyFacadeFixture extends Object
 	protected $b;
 	private $c;
 
-	protected function volatile_get_c()
+	protected function get_c()
 	{
 		return $this->c;
 	}
 
-	protected function volatile_set_c($value)
+	protected function set_c($value)
 	{
 		$this->c = $value;
 	}

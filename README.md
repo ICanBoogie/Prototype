@@ -9,19 +9,19 @@ reverse application control, lazy load resources, or create read-only and write-
 
 
 
-## Getters and setters
+## Defining getters and setters
 
-Getters and setters are available by extending the `Object` class. They are defined
-as `protected` functions and are mapped to magic properties. Thus, you don't call a
-`set_minutes()` method to set _minutes_ or a `get_minutes()` method to get them, but simply use
-a magic `minutes` property, just like you would with any property.
+A getter is a method that gets the value of a specific property. A setter is a method that sets
+the value of a specific property. You can define getters and setters on sub-classes of the
+[Object][] class, using either the inheritance of the class or the prototype associated with it.
 
-Two types of getters are available. _Lazy_ getters creates properties when they
-are first accessed while _volatile_ getters leave the persistence of the property value
-up to the getter. More over, you can define read-only or write-only properties using _volatile_
-getters/setters.
+Using a combination of getters, setters, properties, and properties visibility you can create
+read-only properties, write-only properties, virtual properties, façade properties, and implement
+lazy loading.
 
-__Remember__: Getters/setters are only called when the property they _emulate_ is not accessible.
+__Something to remember__: The getter or the setter is only called when the corresponding property
+is not accessible. This is most notably important to remember when using lazy loading, which
+creates the associated property when called.
 
 
 
@@ -29,32 +29,45 @@ __Remember__: Getters/setters are only called when the property they _emulate_ i
 
 ### Read-only properties
 
-Read-only properties are created by setting their visibility to `protected` or `private` and
-defining only a _volatile_ getter:
+Read-only properties are created by defining a getter. A [PropertyNotWritable][] exception is
+thrown in attempt to set a read-only property.
+
+The following example demonstrates how a `property` read-only property can be implemented:
 
 ```php
 <?php
 
-use ICanBoogie\Object;
-
-class A extends Object
+class ReadOnlyProperty extends \ICanBoogie\Object
 {
-	protected $id;
-
-	public function __construct($id)
+	protected function get_property()
 	{
-		$this->id = $id;
-	}
-
-	protected function volatile_get_id()
-	{
-		return $this->id;
+		return 'value';
 	}
 }
 
-$a = new A(6);
-echo $a->id; // 6
-$a->id = 13; // throws ICanBoogie\PropertyIsNotWritable
+$a = new ReadOnlyProperty;
+echo $a->property; // value
+$a->property = null; // throws ICanBoogie\PropertyNotWritable
+```
+
+An existing property can be made read-only by setting its visibility to `protected` or `private`:
+
+```php
+<?php
+
+class ReadOnlyProperty extends \ICanBoogie\Object
+{
+	private $property = 'value';
+
+	protected function get_property()
+	{
+		return $this->property;
+	}
+}
+
+$a = new ReadOnlyProperty;
+echo $a->property; // value
+$a->property = null; // throws ICanBoogie\PropertyNotWritable
 ```
 
 
@@ -63,27 +76,45 @@ $a->id = 13; // throws ICanBoogie\PropertyIsNotWritable
 
 ### Write-only properties
 
-Write-only properties are created by setting their visibility to `protected` or `private` and
-defining only a _volatile_ setter:
+Write-only properties are created by defining a setter. A [PropertyNotReadable][] exception is
+thrown in attempt to get a write-only property.
+
+The following example demonstrates how a `property` write-only property can be implemented:
 
 ```php
 <?php
 
-use ICanBoogie\Object;
-
-class A extends Object
+class WriteOnlyProperty extends \ICanBoogie\Object
 {
-	private $writeonly;
-
-	protected function volatile_set_writeonly($value)
+	protected function set_property($value)
 	{
-		$this->writeonly = $value;
+		// …
 	}
 }
 
-$a = new A;
-$a->writeonly = 'test'; // test
-$v = $a->writeonly; // throws ICanBoogie\PropertyIsNotReadable
+$a = new WriteOnlyProperty;
+$a->property = 'value';
+echo $a->property; // throws ICanBoogie\PropertyNotReadable
+```
+
+An existing property can be made write-only by setting its visibility to `protected` or `private`:
+
+```php
+<?php
+
+class WriteOnlyProperty extends \ICanBoogie\Object
+{
+	private $property = 'value';
+
+	protected function set_property($value)
+	{
+		$this->property = $value;
+	}
+}
+
+$a = new WriteOnlyProperty;
+$a->property = 'value';
+echo $a->property; // throws ICanBoogie\PropertyNotReadable
 ```
 
 
@@ -92,9 +123,11 @@ $v = $a->writeonly; // throws ICanBoogie\PropertyIsNotReadable
 
 ### Virtual properties
 
-Volatile getters/setters can be used to create interfaces to other properties. For
-instance, the following getters and setters provide the virtual property `minutes`, which
-retrieves and stores its value in the `seconds` property.
+A virtual property is created by defining both its getter and setter. Such a property
+can provide an interface to another property or data structure.
+
+The following example demonstrates how a `minutes` virtual property can be implemented as an
+interface to a `seconds` property.
 
 ```php
 <?php
@@ -105,12 +138,12 @@ class Time extends Object
 {
 	public $seconds;
 
-	protected function volatile_set_minutes($minutes)
+	protected function set_minutes($minutes)
 	{
 		$this->seconds = $minutes * 60;
 	}
 
-	protected function volatile_get_minutes()
+	protected function get_minutes()
 	{
 		return $this->seconds / 60;
 	}
@@ -134,7 +167,7 @@ Sometimes you want to be able to manage the type of a property, what you can sto
 can retrieve, the most transparently possible. This can be achieved with _façade properties_.
 
 Façade properties are made by defining a private property along with its volatile getter and
-setter. The following examples demonstrates how a `created_at` property can be created,
+setter. The following example demonstrates how a `created_at` property is created,
 that can be set to a `DateTime` instance, a string, an integer or null, while always returning
 a `DateTime` instance.
 
@@ -143,16 +176,16 @@ a `DateTime` instance.
 
 use ICanBoogie\DateTime;
 
-class CreatedAtProperty extends \ICanBoogie\Object
+class Article extends \ICanBoogie\Object
 {
 	private $created_at;
 
-	protected function volatile_set_created_at($datetime)
+	protected function set_created_at($datetime)
 	{
 		$this->created_at = $datetime;
 	}
 
-	protected function volatile_get_created_at()
+	protected function get_created_at()
 	{
 		$datetime = $this->created_at;
 
@@ -182,15 +215,15 @@ The following example demonstrates how a `created_at` property is exported both 
 ```php
 <?php
 
-$a = new CreatedAtProperty;
+$a = new Article;
 $a->created_at = 'now';
 
-echo get_class($a->created_at);                      // ICanBoogie\ActiveRecord
+echo get_class($a->created_at);                      // ICanBoogie\DateTime
 echo array_key_exists('created_at', $a->__sleep());  // true
 echo array_key_exists('created_at', $a->to_array()); // true
 
 serialize($a);
-// O:17:"CreatedAtProperty":1:{s:29:"\x00CreatedAtProperty\x00created_at";O:19:"ICanBoogie\DateTime":3:{s:4:"date";s:19:"2013-11-18 22:20:00";s:13:"timezone_type";i:3;s:8:"timezone";s:3:"UTC";}}
+// O:7:"Article":1:{s:19:"\x00Article\x00created_at";O:19:"ICanBoogie\DateTime":3:{s:4:"date";s:19:"2013-11-18 22:20:00";s:13:"timezone_type";i:3;s:8:"timezone";s:3:"UTC";}}
 ```
 
 Notice how the `created_at` property is exported during `serialize()` while preserving its
@@ -205,31 +238,30 @@ visibility.
 Properties that only create their value the first time they are accessed can also be defined, they
 are often used for lazy loading.
 
-In the following example, the `get_pseudo_uniqid()` getter returns a unique value, but because the 
+In the following example, the `lazy_get_pseudo_uniqid()` getter returns a unique value, but because the 
 `pseudo_uniqid` property is created with the `public` visibility after the getter was called,
-any subsequent access to the property returns the same value, because the property is now
-accessible:
+any subsequent access to the property returns the same value:
 
 ```php
 <?php
 
 use ICanBoogie\Object;
 
-class A extends Object
+class PseudoUniqID extends Object
 {
-	protected function get_pseudo_uniqid()
+	protected function lazy_get_pseudo_uniqid()
 	{
 		return uniqid();
 	}
 }
 
-$a = new A;
+$a = new PseudoUniqID;
 
 echo $a->pseudo_uniqid; // 5089497a540f8
 echo $a->pseudo_uniqid; // 5089497a540f8
 ```
 
-Of course, unsetting the property resets the process.
+Of course, unsetting the created property resets the process.
 
 ```php
 <?php
@@ -244,11 +276,54 @@ echo $a->pseudo_uniqid; // 508949b5aaa00
 
 
 
+## More examples
+
+### Providing a default value until a property is set
+
+The following exemple demonstrates how a default value can be provided when the value of a
+property is missing. When the value of the `slug` property is empty the property is unset,
+making it inaccessible. Thus, until the property is actualy set, the getter will be invoked
+and will return a default value created from the `title` property.
+
+```php
+<?php
+
+use ICanBoogie\Object;
+
+class Article extends Object
+{
+	public $title;
+	public $slug;
+
+	public function __construct($title, $slug=null)
+	{
+		$this->title = $tile;
+
+		if ($slug)
+		{
+			$this->slug = $slug;
+		}
+		else
+		{
+			unset($this->slug);
+		}
+	}
+
+	protected function get_slug()
+	{
+		return \ICanBoogie\normalize($this->slug);
+	}
+}
+```
+
+
+
+
+
 ## Defining methods at runtime
 
-Methods can be defined at runtime using the _prototype_ of a class.
-
-Methods defined by the prototype of a class are inherited by the sub-classes of that class.
+Methods can be defined at runtime using the _prototype_ of a class. They are immediately
+available to every instance of the class and are inherited by the sub-classes of that class.
 
 ```php
 <?php
@@ -306,12 +381,12 @@ class Time extends Object
 
 $time = new Time;
 
-$time->prototype['volatile_set_minutes'] = function(Time $time, $minutes) {
+$time->prototype['set_minutes'] = function(Time $time, $minutes) {
 
 	$time->seconds = $minutes * 60;
 };
 
-$time->prototype['volatile_get_minutes'] = function(Time $time, $minutes) {
+$time->prototype['get_minutes'] = function(Time $time, $minutes) {
 
 	return $time->seconds / 60;
 };
@@ -340,22 +415,28 @@ record from an ActiveRecord model.
 use ICanBoogie\Object;
 use ICanBoogie\ActiveRecord;
 
-class A extends Object
+class Article extends Object
 {
-	public $imageid;
+	public $image_id;
 }
 
-$model = $core->models['images'];
-$prototype = Prototype::get('A');
+$prototype = Prototype::get('Article');
 
-$prototype['get_image'] = function(A $target) use ($model)
+$prototype['get_image'] = function(Article $target)
 {
-	return $target->imageid ? $model[$target->imageid] : null;
+	static $model;
+
+	if (!$model)
+	{
+		$model = ActiveRecord\get_model('images');
+	}
+
+	return $target->image_id ? $model[$target->image_id] : null;
 };
 
-$a = new A();
-$a->imageid = 12;
-echo $a->image->nid; // 12
+$article = new Article();
+$article->image_id = 12;
+echo $article->image->nid; // 12
 ```
 
 
@@ -473,7 +554,7 @@ return array
 	'prototypes' => array
 	(
 		'Icybee\Modules\Pages\Page::my_additional_method' => 'Website\Hooks::my_additional_method',
-		'Icybee\Modules\Pages\Page::get_my_property' => 'Website\Hooks::get_my_property'
+		'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'Website\Hooks::lazy_get_my_property'
 	)
 );
 ```
@@ -504,12 +585,12 @@ class A extends \ICanBoogie\Object
 		$this->c = $c;
 	}
 
-	protected function volatile_get_c()
+	protected function get_c()
 	{
 		return $this->c;
 	}
 
-	protected function volatile_set_c($value)
+	protected function set_c($value)
 	{
 		$this->c = $value;
 	}
@@ -527,12 +608,28 @@ var_dump($a->to_array());
 //}
 ```
 
-Private properties with corresponding getters and setters are exported because this type of
-implementation is considered as a _façade_ to a property. The `to_array()` method should be
-implemented to override this behaviour, or remove the properties from the array.
+Note that _façade_ properties are also exported. The `to_array()` method should be
+implemented to override this behaviour, or to remove properties from the array.
 
-Also note that a `to_array_recursive()` method is also available, it calls the `to_array()`
-method to all the `Object` instances of the array tree.
+Also note that a `to_array_recursive()` method is also available. It calls the
+`to_array_recursive()` method recursively to all the `Object` instances of the array
+tree.
+
+
+
+
+
+## Getting a JSON representation of an object
+
+The `to_json()` method can be used to get a JSON representation of an object. The method is
+really straight forward, it invokes `to_array_recursive()` and pass the result to
+`json_encode()`.
+
+```php
+<?php
+
+echo $a->to_json(); // {"a":"a","c":"c"}
+```
 
 
 
@@ -604,7 +701,7 @@ namespace ICanBoogie;
 
 Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, &$success)
 {
-	$event = new Object\PropertyEvent($target, array('property' => $property));
+	$event = new Object\GetPropertyEvent($target, array('property' => $property));
 
 	#
 	# The operation is considered a success if the `value` property exists in the event
@@ -628,8 +725,7 @@ Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, 
 
 ## Requirements
 
-The package requires PHP 5.3 or later.  
-The package [icanboogie/common](https://packagist.org/packages/icanboogie/common) is required.
+The package requires PHP 5.3 or later.
 
 
 
@@ -648,6 +744,11 @@ Create a `composer.json` file and run `php composer.phar install` command to ins
 	}
 }
 ```
+
+The following packages are required, you might want to check them out:
+
+* [icanboogie/common](https://packagist.org/packages/icanboogie/common)
+
 
 
 
@@ -682,7 +783,9 @@ The test suite is ran with the `make test` command. [Composer](http://getcompose
 automatically installed as well as all the dependencies required to run the suite. The package
 directory can later be cleaned with the `make clean` command.
 
-The package is continuously tested by [Travis CI](http://about.travis-ci.org/): [![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=master)](https://travis-ci.org/ICanBoogie/Prototype)
+The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
+
+[![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=master)](https://travis-ci.org/ICanBoogie/Prototype)
 
 
 
@@ -691,3 +794,11 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/): 
 ## License
 
 Prototype is licensed under the New BSD License - See the LICENSE file for details.
+
+
+
+
+
+[Object]: http://icanboogie.org/docs/class-ICanBoogie.Object.html
+[PropertyNotWritable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotWritable.html
+[PropertyNotReadable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotReadable.html

@@ -13,64 +13,11 @@ namespace ICanBoogie;
 
 /**
  * Together with the {@link Prototype} class the {@link Object} class provides means to
- * modify methods as well as define getters and setters for magic properties.
+ * define getters and setters, as well as define getters, setters, and method at runtime.
  *
  * The class also provides a method to create instances in the same fashion PDO creates instances
  * with the `FETCH_CLASS` mode, that is the properties of the instance are set *before* its
  * constructor is invoked.
- *
- * Getters and setters
- * -------------------
- *
- * When an inaccessible property is read or written the {@link Object} tries to find a method
- * suitable to read or write the property. Theses methods are called getters and setters. They
- * can be defined by the class or its prototype. For instance, a `connection` property could
- * have the following getter and setter:
- *
- * <pre>
- * <?php
- *
- * protected function get_connection()
- * {
- *     return new Connection($this->username, $this->password);
- * }
- *
- * protected function set_connection(Connection $connection)
- * {
- *     return $connection;
- * }
- * </pre>
- *
- * In this example the `connection` property is created after `get_connection()` is called,
- * which is ideal to implement lazy loading.
- *
- * Another type of getter/setter is available that does not create the requested property. They are
- * called _volatile_, because their result is not automatically stored in the corresponding
- * property, this choice is up to the setter:
- *
- * <pre>
- * <?php
- *
- * namespace ICanBoogie;
- *
- * class Time extends Object
- * {
- *     public $seconds;
- *
- *     protected function volatile_get_minutes()
- *     {
- *         return $this->seconds / 60;
- *     }
- *
- *     protected function volatile_set_minutes($minutes)
- *     {
- *         $this->seconds = $minutes * 60;
- *     }
- * }
- * </pre>
- *
- * In this example the result of the `minutes` getter is only returned, the property is not
- * created.
  *
  * @property-read Prototype $prototype The prototype associated with the class.
  */
@@ -216,8 +163,7 @@ class Object
 		{
 			$name = $property->name;
 
-			if (!method_exists($reference, "volatile_get_{$name}")
-			|| !method_exists($reference, "volatile_set_{$name}"))
+			if (!method_exists($reference, "get_{$name}") || !method_exists($reference, "set_{$name}"))
 			{
 				continue;
 			}
@@ -232,18 +178,10 @@ class Object
 	 * The method returns an array of key/key pairs.
 	 *
 	 * Properties for which a lazy getter is defined are discarted. For instance, if the property
-	 * `next` is defined and the class of the instance defines the getter `get_next()`, the
+	 * `next` is defined and the class of the instance defines the getter `lazy_get_next()`, the
 	 * property is discarted.
 	 *
-	 * This does *not* apply to volatile getters because classes that define both a property
-	 * and the corresponding volatile getter often use it to provide a fallback value. For
-	 * instance, a class might define a `slug` property which value is created from a `title`
-	 * property. The `slug` property is unset during construct if it is empty so that the
-	 * volatile getter is called when the property is accessed, and a slug is created from a
-	 * `title` property. Remember that volatile getters do not create properties, thus if the
-	 * property is defined that means that its value should persist.
-	 *
-	 * Façade properties are also included.
+	 * Note that façade properties are also included.
 	 *
 	 * Warning: The code used to export private properties seams to produce frameless exception on
 	 * session close. If you encounter this problem you might want to override the method. Don't
@@ -268,16 +206,12 @@ class Object
 				# seams to corrupt PHP (tested with PHP 5.3.3).
 				#
 
-				if (method_exists($this, 'get_' . $key))
+				if (method_exists($this, 'lazy_get_' . $key))
 				{
 					unset($keys[$key]);
 				}
 			}
 		}
-
-		#
-		# Add façade properties.
-		#
 
 		foreach (self::resolve_facade_properties($this) as $name => $property)
 		{
@@ -302,7 +236,7 @@ class Object
 				continue;
 			}
 
-			if ($this->has_method('get_' . $key))
+			if ($this->has_method('lazy_get_' . $key))
 			{
 				unset($this->$key);
 			}
@@ -328,7 +262,9 @@ class Object
 
 		array_unshift($arguments, $this);
 
-		return call_user_func_array($this->prototype[$method], $arguments);
+		$prototype = $this->prototype ?: $this->get_prototype();
+
+		return call_user_func_array($prototype[$method], $arguments);
 	}
 
 	/**
@@ -362,6 +298,8 @@ class Object
 		Prototype\last_chance_set($this, $property, $value, $success);
 	}
 
+	private $prototype;
+
 	/**
 	 * Returns the prototype associated with the class.
 	 *
@@ -369,7 +307,12 @@ class Object
 	 */
 	protected function get_prototype()
 	{
-		return Prototype::get($this);
+		if (!$this->prototype)
+		{
+			$this->prototype = Prototype::get($this);
+		}
+
+		return $this->prototype;
 	}
 
 	/**
@@ -377,11 +320,12 @@ class Object
 	 *
 	 * Multiple callbacks are tried in order to retrieve the value of the property:
 	 *
-	 * 1. `volatile_get_<property>`: Get and return the value of the property.
-	 * 2. `get_<property>`: Get, set and return the value of the property. Because new properties
-	 * are created as public the callback is only called once which is ideal for lazy loading.
-	 * 3. The prototype is queried for callbacks for the `volatile_get_<property>` and
-	 * `get_<property>` methods.
+	 * 1. `get_<property>`: Get and return the value of the property.
+	 * 2. `lazy_get_<property>`: Get, set and return the value of the property. Because new
+	 * properties are created as public the callback is only called once which is ideal for lazy
+	 * loading.
+	 * 3. The prototype is queried for callbacks for the `get_<property>` and
+	 * `lazy_get_<property>` methods.
 	 * 4. Finally, the `ICanBoogie\Object::property` event is fired to try and retrieve the value
 	 * of the property.
 	 *
@@ -397,14 +341,14 @@ class Object
 	 */
 	public function __get($property)
 	{
-		$method = 'volatile_get_' . $property;
+		$method = 'get_' . $property;
 
 		if (method_exists($this, $method))
 		{
 			return $this->$method();
 		}
 
-		$method = 'get_' . $property;
+		$method = 'lazy_get_' . $property;
 
 		if (method_exists($this, $method))
 		{
@@ -415,16 +359,16 @@ class Object
 		# we didn't find a suitable method in the class, maybe the prototype has one.
 		#
 
-		$prototype = $this->prototype;
+		$prototype = $this->prototype ?: $this->get_prototype();
 
-		$method = 'volatile_get_' . $property;
+		$method = 'get_' . $property;
 
 		if (isset($prototype[$method]))
 		{
 			return call_user_func($prototype[$method], $this, $property);
 		}
 
-		$method  = 'get_' . $property;
+		$method  = 'lazy_get_' . $property;
 
 		if (isset($prototype[$method]))
 		{
@@ -456,7 +400,7 @@ class Object
 		}
 		catch (\ReflectionException $e) { }
 
-		if ($this->has_method('volatile_set_' . $property))
+		if ($this->has_method('set_' . $property))
 		{
 			throw new PropertyNotReadable(array($property, $this));
 		}
@@ -489,7 +433,7 @@ class Object
 	 *
 	 * The setters can be defined by the class or its prototype.
 	 *
-	 * Note: Permission is granted if a `get_<property>` getter is defined by the class or
+	 * Note: Permission is granted if a `lazy_get_<property>` getter is defined by the class or
 	 * its prototype.
 	 *
 	 * @param string $property
@@ -499,21 +443,14 @@ class Object
 	 */
 	public function __set($property, $value)
 	{
-		if ($property == 'prototype')
-		{
-			$this->prototype = $value;
-
-			return;
-		}
-
-		$method = 'volatile_set_' . $property;
+		$method = 'set_' . $property;
 
 		if ($this->has_method($method))
 		{
 			return $this->$method($value);
 		}
 
-		$method = 'set_' . $property;
+		$method = 'lazy_set_' . $property;
 
 		if ($this->has_method($method))
 		{
@@ -532,7 +469,7 @@ class Object
 		# We tried, but the property really is unaccessible.
 		#
 
-		if (property_exists($this, $property) && !$this->has_method('get_' . $property))
+		if (property_exists($this, $property) && !$this->has_method('lazy_get_' . $property))
 		{
 			$reflection = new \ReflectionObject($this);
 			$property_reflection = $reflection->getProperty($property);
@@ -547,7 +484,7 @@ class Object
 			return;
 		}
 
-		if ($this->has_method('volatile_get_' . $property))
+		if ($this->has_method('get_' . $property))
 		{
 			throw new PropertyNotWritable(array($property, $this));
 		}
@@ -572,7 +509,7 @@ class Object
 			return true;
 		}
 
-		if ($this->has_method('get_' . $property) || $this->has_method('volatile_get_' . $property))
+		if ($this->has_method('get_' . $property) || $this->has_method('lazy_get_' . $property))
 		{
 			return true;
 		}
@@ -594,7 +531,14 @@ class Object
 	 */
 	public function has_method($method)
 	{
-		return method_exists($this, $method) || isset($this->prototype[$method]);
+		if (method_exists($this, $method))
+		{
+			return true;
+		}
+
+		$prototype = $this->prototype ?: $this->get_prototype();
+
+		return isset($prototype[$method]);
 	}
 
 	/**
@@ -612,8 +556,6 @@ class Object
 		{
 			$array[$name] = $this->$name;
 		}
-
-		unset($array['prototype']);
 
 		return $array;
 	}
