@@ -21,14 +21,15 @@ namespace ICanBoogie;
  * <pre>
  * <?php
  *
- * return array
- * (
- *     'prototypes' => array
- *     (
+ * return [
+ *
+ *     'prototypes' => [
+ *
  *         'Icybee\Modules\Pages\Page::my_additional_method' => 'MyHookClass::my_additional_method',
  *         'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'MyHookClass::lazy_get_my_property'
- *     )
- * );
+ *
+ *     ]
+ * ];
  * </pre>
  */
 class Prototype implements \ArrayAccess, \IteratorAggregate
@@ -38,7 +39,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var array[string]Prototype
 	 */
-	static protected $prototypes = array();
+	static protected $prototypes = [];
 
 	/**
 	 * Pool of prototype methods per class.
@@ -102,7 +103,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	static public function synthesize_config(array $fragments)
 	{
-		$methods = array();
+		$methods = [];
 		$debug = Debug::$mode == Debug::MODE_DEV;
 
 		foreach ($fragments as $pathname => $fragment)
@@ -151,7 +152,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			return self::$resolve_private_properties_cache[$reference];
 		}
 
-		$private_properties = array();
+		$private_properties = [];
 		$class_reflection = new \ReflectionClass($reference);
 
 		while ($class_reflection)
@@ -164,7 +165,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 		return self::$resolve_private_properties_cache[$reference] = $private_properties;
 	}
 
-	static private $resolve_private_properties_cache = array();
+	static private $resolve_private_properties_cache = [];
 
 	/**
 	 * Returns the façade properties implemented by the specified reference.
@@ -188,7 +189,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			return self::$resolve_facade_properties_cache[$reference];
 		}
 
-		$facade_properties = array();
+		$facade_properties = [];
 
 		foreach (self::resolve_private_properties($reference) as $property)
 		{
@@ -205,7 +206,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 		return self::$resolve_facade_properties_cache[$reference] = $facade_properties;
 	}
 
-	static private $resolve_facade_properties_cache = array();
+	static private $resolve_facade_properties_cache = [];
 
 	/**
 	 * Class associated with the prototype.
@@ -226,7 +227,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var array[string]callable
 	 */
-	protected $methods = array();
+	protected $methods = [];
 
 	/**
 	 * Methods defined by the prototypes chain.
@@ -358,7 +359,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 		if (!isset($methods[$method]))
 		{
-			throw new Prototype\MethodNotDefined(array($method, $this->class));
+			throw new Prototype\MethodNotDefined([ $method, $this->class ]);
 		}
 
 		return $methods[$method];

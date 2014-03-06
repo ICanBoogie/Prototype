@@ -69,15 +69,16 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	public function provide_test_readonly()
 	{
-		return array
-		(
-			array('ICanBoogie\ObjectTest\ReadOnlyProperty'),
-			array('ICanBoogie\ObjectTest\ReadOnlyPropertyExtended'),
-			array('ICanBoogie\ObjectTest\ReadOnlyPropertyProtected'),
-			array('ICanBoogie\ObjectTest\ReadOnlyPropertyProtectedExtended'),
-			array('ICanBoogie\ObjectTest\ReadOnlyPropertyPrivate'),
-			array('ICanBoogie\ObjectTest\ReadOnlyPropertyPrivateExtended')
-		);
+		return [
+
+			[ 'ICanBoogie\ObjectTest\ReadOnlyProperty' ],
+			[ 'ICanBoogie\ObjectTest\ReadOnlyPropertyExtended' ],
+			[ 'ICanBoogie\ObjectTest\ReadOnlyPropertyProtected' ],
+			[ 'ICanBoogie\ObjectTest\ReadOnlyPropertyProtectedExtended' ],
+			[ 'ICanBoogie\ObjectTest\ReadOnlyPropertyPrivate' ],
+			[ 'ICanBoogie\ObjectTest\ReadOnlyPropertyPrivateExtended' ]
+
+		];
 	}
 
 	/**
@@ -93,15 +94,16 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	public function provide_test_writeonly()
 	{
-		return array
-		(
-			array('ICanBoogie\ObjectTest\WriteOnlyProperty'),
-			array('ICanBoogie\ObjectTest\WriteOnlyPropertyExtended'),
-			array('ICanBoogie\ObjectTest\WriteOnlyPropertyProtected'),
-			array('ICanBoogie\ObjectTest\WriteOnlyPropertyProtectedExtended'),
-			array('ICanBoogie\ObjectTest\WriteOnlyPropertyPrivate'),
-			array('ICanBoogie\ObjectTest\WriteOnlyPropertyPrivateExtended')
-		);
+		return [
+
+			[ 'ICanBoogie\ObjectTest\WriteOnlyProperty' ],
+			[ 'ICanBoogie\ObjectTest\WriteOnlyPropertyExtended' ],
+			[ 'ICanBoogie\ObjectTest\WriteOnlyPropertyProtected' ],
+			[ 'ICanBoogie\ObjectTest\WriteOnlyPropertyProtectedExtended' ],
+			[ 'ICanBoogie\ObjectTest\WriteOnlyPropertyPrivate' ],
+			[ 'ICanBoogie\ObjectTest\WriteOnlyPropertyPrivateExtended' ]
+
+		];
 	}
 
 	public function test_set_undefined()
@@ -165,24 +167,24 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	public function test_to_array2()
 	{
 		$a = new ToArrayFixture(1, 2, 3);
-		$this->assertEquals(array('a' => 1, 'b' => 2, 'c' => 3), $a->to_array());
+		$this->assertEquals([ 'a' => 1, 'b' => 2, 'c' => 3 ], $a->to_array());
 	}
 
 	public function test_to_array_with_property_facade()
 	{
 		$a = new ToArrayWithPropertyFacadeFixture(1, 2, 3);
-		$this->assertEquals(array('a' => 1, 'c' => 3), $a->to_array());
+		$this->assertEquals([ 'a' => 1, 'c' => 3 ], $a->to_array());
 	}
 
 	public function test_to_array_recursive()
 	{
-		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
-		$this->assertEquals(array('a' => 1, 'b' => array('a' => 11, 'b' => 12, 'c' => 13), 'c' => array(1, 2, 3)), $a->to_array_recursive());
+		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), [ 1, 2, 3 ]);
+		$this->assertEquals([ 'a' => 1, 'b' => [ 'a' => 11, 'b' => 12, 'c' => 13 ], 'c' => [ 1, 2, 3 ] ], $a->to_array_recursive());
 	}
 
 	public function test_to_json()
 	{
-		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), array(1, 2, 3));
+		$a = new ToArrayFixture(1, new ToArrayFixture(11, 12, 13), [ 1, 2, 3 ]);
 		$this->assertEquals('{"a":1,"b":{"a":11,"b":12,"c":13},"c":[1,2,3]}', $a->to_json());
 	}
 
@@ -195,7 +197,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayNotHasKey('slug', $o->to_array());
 		$this->assertNotContains('slug', $o->__sleep());
 
-		$o = ObjectTest\DefaultValueForUnsetProperty::from(array('title' => 'The quick brown fox'));
+		$o = ObjectTest\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox' ]);
 		$this->assertEquals('the-quick-brown-fox', $o->slug);
 		$this->assertArrayNotHasKey('slug', (array) $o);
 		$this->assertArrayNotHasKey('slug', $o->to_array());
@@ -209,7 +211,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('slug', $o->to_array());
 		$this->assertContains('slug', $o->__sleep());
 
-		$o = ObjectTest\DefaultValueForUnsetProperty::from(array('title' => 'The quick brown fox', 'slug' => 'brown-fox'));
+		$o = ObjectTest\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox', 'slug' => 'brown-fox' ]);
 		$this->assertEquals('brown-fox', $o->slug);
 		$this->assertArrayHasKey('slug', (array) $o);
 		$this->assertArrayHasKey('slug', $o->to_array());

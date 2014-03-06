@@ -49,7 +49,7 @@ function last_chance_set($target, $property, $value, &$success)
 {
 	# this code is needed to preserve arguments passed by reference
 
-	return call_user_func_array(__NAMESPACE__ . '\Helpers::last_chance_set', array($target, $property, $value, &$success));
+	return call_user_func_array(__NAMESPACE__ . '\Helpers::last_chance_set', [ $target, $property, $value, &$success ]);
 }
 
 /**
@@ -57,11 +57,12 @@ function last_chance_set($target, $property, $value, &$success)
  */
 class Helpers
 {
-	static private $jumptable = array
-	(
-		'last_chance_get' => array(__CLASS__, 'last_chance_get'),
-		'last_chance_set' => array(__CLASS__, 'last_chance_set')
-	);
+	static private $jumptable = [
+
+		'last_chance_get' => [ __CLASS__, 'last_chance_get' ],
+		'last_chance_set' => [ __CLASS__, 'last_chance_set' ]
+
+	];
 
 	/**
 	 * Calls the callback of a patchable function.

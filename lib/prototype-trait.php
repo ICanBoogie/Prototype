@@ -111,7 +111,7 @@ trait PrototypeTrait
 	 */
 	public function __call($method, $arguments)
 	{
-		if (isset($this->$method) && is_callable(array($this->$method, '__invoke')))
+		if (isset($this->$method) && is_callable([ $this->$method, '__invoke' ]))
 		{
 			return call_user_func_array($this->$method, $arguments);
 		}
@@ -203,14 +203,14 @@ trait PrototypeTrait
 
 			if (!$reflexion_property->isPublic())
 			{
-				throw new PropertyNotReadable(array($property, $this));
+				throw new PropertyNotReadable([ $property, $this ]);
 			}
 		}
 		catch (\ReflectionException $e) { }
 
 		if ($this->has_method('set_' . $property))
 		{
-			throw new PropertyNotReadable(array($property, $this));
+			throw new PropertyNotReadable([ $property, $this ]);
 		}
 
 		$properties = array_keys(get_object_vars($this));
@@ -220,7 +220,7 @@ trait PrototypeTrait
 			throw new PropertyNotDefined(sprintf('Unknown or inaccessible property "%s" for object of class "%s" (available properties: %s).', $property, get_class($this), implode(', ', $properties)));
 		}
 
-		throw new PropertyNotDefined(array($property, $this));
+		throw new PropertyNotDefined([ $property, $this ]);
 	}
 
 	/**
@@ -284,7 +284,7 @@ trait PrototypeTrait
 
 			if (!$property_reflection->isPublic())
 			{
-				throw new PropertyNotWritable(array($property, $this));
+				throw new PropertyNotWritable([ $property, $this ]);
 			}
 
 			$this->$property = $value;
@@ -294,7 +294,7 @@ trait PrototypeTrait
 
 		if ($this->has_method('get_' . $property))
 		{
-			throw new PropertyNotWritable(array($property, $this));
+			throw new PropertyNotWritable([ $property, $this ]);
 		}
 
 		$this->$property = $value;

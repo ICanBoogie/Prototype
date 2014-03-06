@@ -47,7 +47,7 @@ class Object implements ToArrayRecursive
 	 *
 	 * @return mixed The new instance.
 	 */
-	static public function from($properties=null, array $construct_args=array(), $class_name=null)
+	static public function from($properties=null, array $construct_args=[], $class_name=null)
 	{
 		if (!$class_name)
 		{
@@ -63,7 +63,7 @@ class Object implements ToArrayRecursive
 			$class_properties = $class_reflection->getProperties();
 			$defaults = $class_reflection->getDefaultProperties();
 
-			$done = array();
+			$done = [];
 
 			foreach ($class_properties as $property)
 			{
@@ -117,9 +117,9 @@ class Object implements ToArrayRecursive
 		# for some reason is_callable() sometimes returns true event if the `__construct` method is not defined.
 		#
 
-		if (method_exists($instance, '__construct') && is_callable(array($instance, '__construct')))
+		if (method_exists($instance, '__construct') && is_callable([ $instance, '__construct' ]))
 		{
-			call_user_func_array(array($instance, '__construct'), $construct_args);
+			call_user_func_array([ $instance, '__construct' ], $construct_args);
 		}
 
 		return $instance;

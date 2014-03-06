@@ -473,28 +473,27 @@ defined using any callable such as `"Website\Hooks::cat_meow"`.
 <?php
 
 ICanBoogie\Prototype::configure
-(
-	array
-	(
-		'Cat' => array
-		(
-			'meow' => function(Cat $cat) {
+([
 
-				return 'Meow';
+	'Cat' => [
 
-			}
-		),
+		'meow' => function(Cat $cat) {
 
-		'FierceCat' => array
-		(
-			'meow' => function(Cat $cat) {
+			return 'Meow';
 
-				return 'MEOOOW !';
+		}
+	],
 
-			}
-		)
-	)
-);
+	'FierceCat' => [
+
+		'meow' => function(Cat $cat) {
+
+			return 'MEOOOW !';
+
+		}
+	]
+
+]);
 ```
 
 
@@ -558,14 +557,15 @@ using the `hooks` config and the `prototypes` namespace:
 
 // config/hooks.php
 
-return array
-(
-	'prototypes' => array
-	(
+return [
+
+	'prototypes' => [
+
 		'Icybee\Modules\Pages\Page::my_additional_method' => 'Website\Hooks::my_additional_method',
 		'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'Website\Hooks::lazy_get_my_property'
-	)
-);
+
+	]
+];
 ```
 
 
@@ -657,7 +657,7 @@ class A extends Object
 	public $c;
 }
 
-$a = A::from(array('a' => 1, 'b' => 2, 'c' => 3));
+$a = A::from([ 'a' => 1, 'b' => 2, 'c' => 3 ]);
 ```
 
 Instances are created in the same fashion [PDO](http://www.php.net/manual/en/book.pdo.php)
@@ -675,7 +675,7 @@ namespace ICanboogie;
 
 class Operation
 {
-	static public function from($properties=null, array $construct_args=array(), $class_name=null)
+	static public function from($properties=null, array $construct_args=[], $class_name=null)
 	{
 		if ($properties instanceof Request)
 		{
@@ -763,7 +763,7 @@ namespace ICanBoogie;
 
 Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, &$success)
 {
-	$event = new Object\GetPropertyEvent($target, array('property' => $property));
+	$event = new Object\GetPropertyEvent($target, [ 'property' => $property ]);
 
 	#
 	# The operation is considered a success if the `value` property exists in the event
