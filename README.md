@@ -517,7 +517,7 @@ $cat = new Cat;
 $cat->prototype['meow'] = function(Cat $cat)
 {
 	return 'Meow';
-}
+};
 
 echo $cat->meow();
 ```
@@ -540,7 +540,7 @@ $prototype = Prototype::from('Cat');
 $prototype['meow'] = function(Cat $cat)
 {
 	return 'Meow';
-}
+};
 ```
 
 
@@ -696,7 +696,7 @@ class Operation
 The prototype features are avaiable as a [trait](http://php.net/traits). Any class can implement
 them simply by using the [PrototypeTrait][] trait.
 
-```
+```php
 <?php
 
 use ICanBoogie\PrototypeTrait;
