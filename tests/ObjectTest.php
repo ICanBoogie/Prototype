@@ -21,6 +21,18 @@ require_once 'cases.php';
 
 class ObjectTest extends \PHPUnit_Framework_TestCase
 {
+	public function test_implements_to_array()
+	{
+		$o = new Object;
+		$this->assertInstanceOf('ICanBoogie\ToArray', $o);
+	}
+
+	public function test_implements_to_array_recursive()
+	{
+		$o = new Object;
+		$this->assertInstanceOf('ICanBoogie\ToArrayRecursive', $o);
+	}
+
 	public function test_get_prototype()
 	{
 		$o = new Object;

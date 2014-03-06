@@ -1,9 +1,14 @@
-# Prototype [![Build Status](https://secure.travis-ci.org/ICanBoogie/Prototype.png?branch=master)](http://travis-ci.org/ICanBoogie/Prototype)
+# Prototype [![Build Status](https://secure.travis-ci.org/ICanBoogie/Prototype.png?branch=2.0)](http://travis-ci.org/ICanBoogie/Prototype)
 
 With the `Object` and `Prototype` classes, provided by the __Prototype__ package, you can easily
 implement getters and setters as well as define methods, getters and setters at runtime. These
-getters and setters are always mapped to a magic property and can be used to inject dependencies,
-reverse application control, lazy load resources, or create read-only and write-only properties.
+getters and setters are always mapped to a magic property and can be used to create façade
+to properties, inject dependencies, reverse application control, lazy load resources,
+or create read-only and write-only properties.
+
+Note: Although the following examples extend the [Object][] class to demonstrate the capability
+of the prototype features, these features are available as a trait and thus can be used
+by any class, without requiring direct inheritance from [Object][].
 
 
 
@@ -12,16 +17,17 @@ reverse application control, lazy load resources, or create read-only and write-
 ## Defining getters and setters
 
 A getter is a method that gets the value of a specific property. A setter is a method that sets
-the value of a specific property. You can define getters and setters on sub-classes of the
-[Object][] class, using either the inheritance of the class or the prototype associated with it.
+the value of a specific property. You can define getters and setters on classes using
+the [PrototypeTrait][] trait, such as the [Object][] class, with either the inheritance
+of the class or the prototype associated with it.
 
 Using a combination of getters, setters, properties, and properties visibility you can create
-read-only properties, write-only properties, virtual properties, façade properties, and implement
+read-only properties, write-only properties, virtual properties, façade properties, or implement
 lazy loading.
 
 __Something to remember__: The getter or the setter is only called when the corresponding property
 is not accessible. This is most notably important to remember when using lazy loading, which
-creates the associated property when called.
+creates the associated property once called.
 
 
 
@@ -166,9 +172,9 @@ echo $time->seconds; // 240
 Sometimes you want to be able to manage the type of a property, what you can store, what you
 can retrieve, the most transparently possible. This can be achieved with _façade properties_.
 
-Façade properties are made by defining a private property along with its volatile getter and
-setter. The following example demonstrates how a `created_at` property is created,
-that can be set to a `DateTime` instance, a string, an integer or null, while always returning
+Façade properties are setup by defining a private property along with its getter and setter.
+The following example demonstrates how a `created_at` property is created, that can be set
+to a `DateTime` instance, a string, an integer or null, while always returning
 a `DateTime` instance.
 
 ```php
@@ -235,7 +241,7 @@ visibility.
 
 ### Lazy loading
 
-Properties that only create their value the first time they are accessed can also be defined, they
+Properties that only create their value once they have been accessed can also be defined, they
 are often used for lazy loading.
 
 In the following example, the `lazy_get_pseudo_uniqid()` getter returns a unique value, but because the 
@@ -384,11 +390,13 @@ $time = new Time;
 $time->prototype['set_minutes'] = function(Time $time, $minutes) {
 
 	$time->seconds = $minutes * 60;
+
 };
 
 $time->prototype['get_minutes'] = function(Time $time, $minutes) {
 
 	return $time->seconds / 60;
+
 };
 
 $time->seconds = 120;
@@ -445,7 +453,8 @@ echo $article->image->nid; // 12
 ## Defining prototypes methods
 
 Prototype methods can be defined using a global configuration; through the `prototype` property
-of an `Object` instance; or using the `Prototype` instance associated with an `Object` class.
+of an `Object` instance; or using the `Prototype` instance associated with classes using
+the [PrototypeTrait][] trait.
 
 
 
@@ -494,8 +503,8 @@ ICanBoogie\Prototype::configure
 
 ### Defining prototypes methods through the `prototype` property
 
-As we have seen in previous examples, prototype methods can be defined using the `prototype`
-property of `Object` instances:
+As we have seen in previous examples, prototype methods can be defined using
+the `prototype` property:
 
 ```php
 <?php
@@ -566,8 +575,7 @@ return array
 ## Getting an array representation of an object
 
 An array representation of an `Object` instance can be obtained using the `to_array()` method. Only
-public and private properties with corresponding getters and setters are exported, but one can
-implement the method to export additionnal properties.
+public and façade properties are exported.
 
 ```php
 <?php
@@ -608,12 +616,12 @@ var_dump($a->to_array());
 //}
 ```
 
-Note that _façade_ properties are also exported. The `to_array()` method should be
-implemented to override this behaviour, or to remove properties from the array.
+As mentionned before, _façade_ properties are also exported. The `to_array()` method should be
+overrode to alter this behaviour.
 
-Also note that a `to_array_recursive()` method is also available. It calls the
-`to_array_recursive()` method recursively to all the `Object` instances of the array
-tree.
+Additionnaly the `to_array_recursive()` method can be used to recursively convert an instance
+into an array, in which case all the instances of the tree implementing [ToArray][]
+or [ToArrayRecursive][] are converted into arrays.
 
 
 
@@ -683,6 +691,60 @@ class Operation
 
  
 
+## Using the Prototype trait
+
+The prototype features are avaiable as a [trait](http://php.net/traits). Any class can implement
+them simply by using the [PrototypeTrait][] trait.
+
+```
+<?php
+
+use ICanBoogie\PrototypeTrait;
+
+class MyException extends Exception
+{
+	use PrototypeTrait;
+
+	private $a;
+	private $b;
+
+	public function __construct($a, $b, $message, $code=500, Exception $previous=null)
+	{
+		$this->a = $a;
+		$this->b = $b;
+
+		parent::__construct($message, $code, $previous);
+	}
+
+	protected function get_a()
+	{
+		return $this->a;
+	}
+
+	protected function get_b()
+	{
+		return $this->b;
+	}
+
+	protected function get_code()
+	{
+		return $this->getCode();
+	}
+}
+
+$e = new MyException(12, 34, "Damned!", 404);
+
+echo $e->a;    // 12
+echo $e->b;    // 34
+echo $e->code; // 404
+
+$e->a = 34; // throws PropertyNotWritable
+```
+
+
+
+
+
 ## Patching
 
 The `last_chance_get()` and `last_chance_set()` helpers are called in attempt to get or set the
@@ -723,9 +785,15 @@ Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, 
 
 
 
+----------
+
+
+
+
+
 ## Requirements
 
-The package requires PHP 5.3 or later.
+The package requires PHP 5.4 or later.
 
 
 
@@ -740,7 +808,7 @@ Create a `composer.json` file and run `php composer.phar install` command to ins
 {
 	"minimum-stability": "dev",
 	"require": {
-		"icanboogie/prototype": "*"
+		"icanboogie/prototype": "2.x"
 	}
 }
 ```
@@ -759,7 +827,7 @@ The following packages are required, you might want to check them out:
 The package is [available on GitHub](https://github.com/ICanBoogie/Prototype), its repository can
 be cloned with the following command line:
 
-	$ git clone git://github.com/ICanBoogie/Prototype.git
+	$ git clone https://github.com/ICanBoogie/Prototype.git
 
 
 
@@ -770,7 +838,7 @@ be cloned with the following command line:
 The package is documented as part of the [ICanBoogie](http://icanboogie.org/) framework
 [documentation](http://icanboogie.org/docs/). You can generate the documentation for the package
 and its dependencies with the `make doc` command. The documentation is generated in the `docs`
-directory. [ApiGen](http://apigen.org/) is required. You can later clean the directory with
+directory. [ApiGen](http://apigen.org/) is required. The directory can later by cleaned with
 the `make clean` command.
 
 
@@ -780,12 +848,12 @@ the `make clean` command.
 ## Testing
 
 The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
-automatically installed as well as all the dependencies required to run the suite. The package
-directory can later be cleaned with the `make clean` command.
+automatically installed as well as all the dependencies required to run the suite.
+The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=master)](https://travis-ci.org/ICanBoogie/Prototype)
+[![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=2.0)](https://travis-ci.org/ICanBoogie/Prototype)
 
 
 
@@ -793,7 +861,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 ## License
 
-Prototype is licensed under the New BSD License - See the LICENSE file for details.
+The pakcage is licensed under the New BSD License. See the [LICENSE](LICENSE) file for details.
 
 
 
@@ -802,3 +870,6 @@ Prototype is licensed under the New BSD License - See the LICENSE file for detai
 [Object]: http://icanboogie.org/docs/class-ICanBoogie.Object.html
 [PropertyNotWritable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotWritable.html
 [PropertyNotReadable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotReadable.html
+[PrototypeTrait]: http://icanboogie.org/docs/class-ICanBoogie.PrototypeTrait.html
+[ToArray]: http://icanboogie.org/docs/class-ICanBoogie.ToArray.html
+[ToArrayRecursive]: http://icanboogie.org/docs/class-ICanBoogie.ToArrayRecursive.html

@@ -25,7 +25,7 @@ use ICanBoogie\Object;
  *
  * @return mixed
  */
-function last_chance_get(Object $target, $property, &$success)
+function last_chance_get($target, $property, &$success)
 {
 	# this code is needed to preserve arguments passed by reference
 
@@ -45,7 +45,7 @@ function last_chance_get(Object $target, $property, &$success)
  *
  * @return mixed
  */
-function last_chance_set(Object $target, $property, $value, &$success)
+function last_chance_set($target, $property, $value, &$success)
 {
 	# this code is needed to preserve arguments passed by reference
 
@@ -98,12 +98,12 @@ class Helpers
 	 * Default implementations
 	 */
 
-	static private function last_chance_get(Object $target, $property, &$success=false)
+	static private function last_chance_get($target, $property, &$success=false)
 	{
 
 	}
 
-	static private function last_chance_set(Object $target, $property, $value, &$success=false)
+	static private function last_chance_set($target, $property, $value, &$success=false)
 	{
 
 	}
