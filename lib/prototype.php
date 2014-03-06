@@ -50,11 +50,11 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Returns the prototype associated with the specified class or object.
 	 *
-	 * @param string|object $class
+	 * @param string|object $class Class name or instance.
 	 *
 	 * @return Prototype
 	 */
-	static public function get($class)
+	static public function from($class)
 	{
 		if (is_object($class))
 		{
@@ -248,7 +248,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 		if ($parent_class)
 		{
-			$this->parent = static::get($parent_class);
+			$this->parent = static::from($parent_class);
 		}
 
 		if (isset(self::$pool[$class]))

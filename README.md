@@ -428,7 +428,7 @@ class Article extends Object
 	public $image_id;
 }
 
-$prototype = Prototype::get('Article');
+$prototype = Prototype::from('Article');
 
 $prototype['get_image'] = function(Article $target)
 {
@@ -536,7 +536,7 @@ Prototype methods can be defined using the `Prototype` instance of a class:
 
 use ICanBoogie\Prototype;
 
-$prototype = Prototype::get('Cat');
+$prototype = Prototype::from('Cat');
 
 $prototype['meow'] = function(Cat $cat)
 {

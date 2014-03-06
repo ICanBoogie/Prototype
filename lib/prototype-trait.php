@@ -24,7 +24,7 @@ trait PrototypeTrait
 	{
 		if (!$this->prototype)
 		{
-			$this->prototype = Prototype::get($this);
+			$this->prototype = Prototype::from($this);
 		}
 
 		return $this->prototype;
