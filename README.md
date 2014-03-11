@@ -745,6 +745,21 @@ $e->a = 34; // throws PropertyNotWritable
 
 
 
+## ICanBoogie auto-config
+
+The package supports the auto-config feature of the framework [ICanBoogie][] and provides a
+config constructor for the "prototypes" config:
+
+```php
+$core = new ICanBoogie\Core(ICanBoogie\AUTOCONFIG_PATHNAME);
+
+$core->configs['prototypes']; // obtain the "prototypes" config
+```
+
+
+
+
+
 ## Patching
 
 The `last_chance_get()` and `last_chance_set()` helpers are called in attempt to get or set the
@@ -835,7 +850,7 @@ be cloned with the following command line:
 
 ## Documentation
 
-The package is documented as part of the [ICanBoogie](http://icanboogie.org/) framework
+The package is documented as part of the [ICanBoogie][] framework
 [documentation](http://icanboogie.org/docs/). You can generate the documentation for the package
 and its dependencies with the `make doc` command. The documentation is generated in the `docs`
 directory. [ApiGen](http://apigen.org/) is required. The directory can later by cleaned with
@@ -866,7 +881,7 @@ The pakcage is licensed under the New BSD License. See the [LICENSE](LICENSE) fi
 
 
 
-
+[ICanBoogie]: http://icanboogie.org
 [Object]: http://icanboogie.org/docs/class-ICanBoogie.Object.html
 [PropertyNotWritable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotWritable.html
 [PropertyNotReadable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotReadable.html

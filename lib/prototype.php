@@ -93,46 +93,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Synthesizes the prototype methods from the "hooks" config.
-	 *
-	 * @param array $fragments
-	 *
-	 * @return array[string]callable
-	 *
-	 * @throws \InvalidArgumentException if a method definition is missing the '::' separator.
-	 */
-	static public function synthesize_config(array $fragments)
-	{
-		$methods = [];
-		$debug = Debug::$mode == Debug::MODE_DEV;
-
-		foreach ($fragments as $pathname => $fragment)
-		{
-			if (empty($fragment['prototypes']))
-			{
-				continue;
-			}
-
-			foreach ($fragment['prototypes'] as $method => $callback)
-			{
-				if ($debug && strpos($method, '::') === false)
-				{
-					throw new \InvalidArgumentException(sprintf
-					(
-						'Invalid method name "%s", must be <code>class_name::method_name</code> in "%s"', $method, $pathname
-					));
-				}
-
-				list($class, $method) = explode('::', $method);
-
-				$methods[$class][$method] = $callback;
-			}
-		}
-
-		return $methods;
-	}
-
-	/**
 	 * Returns the private properties defined by the reference, this includes the private
 	 * properties defined by the whole class inheritance.
 	 *
