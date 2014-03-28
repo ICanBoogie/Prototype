@@ -69,7 +69,7 @@ trait PrototypeTrait
 			}
 		}
 
-		foreach (Prototype::resolve_facade_properties($this) as $name => $property)
+		foreach (Object::resolve_facade_properties($this) as $name => $property)
 		{
 			$keys[$name] = "\x00" . $property->class . "\x00" . $name;
 		}
