@@ -83,11 +83,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 				continue;
 			}
 
-			if ($prototype->methods)
-			{
-				echo "overriding prototype methods:"; var_dump($prototype->methods);
-			}
-
 			$prototype->methods = $config[$class];
 		}
 	}
