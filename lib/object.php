@@ -210,7 +210,7 @@ class Object implements ToArrayRecursive
 	 */
 	public function to_array()
 	{
-		$array = Object\get_public_object_vars($this);
+		$array = \ICanBoogie\Prototype\get_public_object_vars($this);
 
 		foreach (array_keys(self::resolve_facade_properties($this)) as $name)
 		{
@@ -229,11 +229,4 @@ class Object implements ToArrayRecursive
 	{
 		return json_encode($this->to_array_recursive());
 	}
-}
-
-namespace ICanBoogie\Object;
-
-function get_public_object_vars($object)
-{
-	return get_object_vars($object);
 }

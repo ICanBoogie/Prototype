@@ -52,6 +52,11 @@ function last_chance_set($target, $property, $value, &$success)
 	return call_user_func_array(__NAMESPACE__ . '\Helpers::last_chance_set', [ $target, $property, $value, &$success ]);
 }
 
+function get_public_object_vars($object)
+{
+	return get_object_vars($object);
+}
+
 /**
  * Patchable helpers.
  */
