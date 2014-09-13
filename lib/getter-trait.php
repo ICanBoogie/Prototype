@@ -56,6 +56,11 @@ trait GetterTrait
 {
 	public function __get($property)
 	{
+		return $this->__object_get($property);
+	}
+
+	private function __object_get($property)
+	{
 		$method = 'get_' . $property;
 
 		if (method_exists($this, $method))
