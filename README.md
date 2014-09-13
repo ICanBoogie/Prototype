@@ -1,4 +1,4 @@
-# Prototype [![Build Status](https://secure.travis-ci.org/ICanBoogie/Prototype.png?branch=2.0)](http://travis-ci.org/ICanBoogie/Prototype)
+# Prototype [![Build Status](https://secure.travis-ci.org/ICanBoogie/Prototype.svg?branch=2.0)](http://travis-ci.org/ICanBoogie/Prototype)
 
 With the `Object` and `Prototype` classes, provided by the __Prototype__ package, you can easily
 implement getters and setters as well as define methods, getters and setters at runtime. These
@@ -868,7 +868,7 @@ The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://travis-ci.org/ICanBoogie/Prototype.png?branch=2.0)](https://travis-ci.org/ICanBoogie/Prototype)
+[![Build Status](https://travis-ci.org/ICanBoogie/Prototype.svg?branch=2.0)](https://travis-ci.org/ICanBoogie/Prototype)
 
 
 
