@@ -1,7 +1,0 @@
-{
-	"config-constructor": {
-
-		"prototypes": "ICanBoogie\\Prototype\\Hooks::synthesize_config#hooks"
-
-	}
-}
