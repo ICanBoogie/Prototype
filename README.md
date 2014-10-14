@@ -286,9 +286,9 @@ echo $a->pseudo_uniqid; // 508949b5aaa00
 
 ### Providing a default value until a property is set
 
-The following exemple demonstrates how a default value can be provided when the value of a
+The following example demonstrates how a default value can be provided when the value of a
 property is missing. When the value of the `slug` property is empty the property is unset,
-making it inaccessible. Thus, until the property is actualy set, the getter will be invoked
+making it inaccessible. Thus, until the property is actually set, the getter will be invoked
 and will return a default value created from the `title` property.
 
 ```php

@@ -35,9 +35,9 @@ trait PrototypeTrait
 	/**
 	 * The method returns an array of key/key pairs.
 	 *
-	 * Properties for which a lazy getter is defined are discarted. For instance, if the property
+	 * Properties for which a lazy getter is defined are discarded. For instance, if the property
 	 * `next` is defined and the class of the instance defines the getter `lazy_get_next()`, the
-	 * property is discarted.
+	 * property is discarded.
 	 *
 	 * Note that façade properties are also included.
 	 *
@@ -238,7 +238,7 @@ trait PrototypeTrait
 	 * and is now inaccessible.
 	 *
 	 * The method only sets the property if it isn't defined by the class or its visibility is
-	 * "public", but one can provide setters to override this behaviour:
+	 * "public", but one can provide setters to override this behavior:
 	 *
 	 * The `set_<property>` setter can be used to set properties that are protected or private,
 	 * which can be used to make properties write-only for example.
