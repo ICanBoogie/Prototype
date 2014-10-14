@@ -11,6 +11,8 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\Prototype\MethodNotDefined;
+
 /**
  * Subclasses of the {@link Object} class are associated with a prototype, which can be used to
  * add methods as well as getters and setters to classes.
@@ -228,7 +230,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param string $method The name of the method.
 	 *
-	 * @throws Prototype\MethodNotDefined if the method is not defined.
+	 * @throws MethodNotDefined if the method is not defined.
 	 *
 	 * @return callable
 	 */
@@ -238,7 +240,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 		if (!isset($methods[$method]))
 		{
-			throw new Prototype\MethodNotDefined([ $method, $this->class ]);
+			throw new MethodNotDefined([ $method, $this->class ]);
 		}
 
 		return $methods[$method];
@@ -246,31 +248,11 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 	/**
 	 * Returns an iterator for the prototype methods.
-	 *
-	 * @see IteratorAggregate::getIterator()
 	 */
 	public function getIterator()
 	{
 		$methods = $this->get_consolidated_methods();
 
 		return new \ArrayIterator($methods);
-	}
-}
-
-namespace ICanBoogie\Prototype;
-
-/**
- * This exception is thrown when one tries to access an undefined prototype method.
- */
-class MethodNotDefined extends \BadMethodCallException
-{
-	public function __construct($message, $code=500, \Exception $previous=null)
-	{
-		if (is_array($message))
-		{
-			$message = sprintf('Method "%s" is not defined by the prototype of class "%s".', $message[0], $message[1]);
-		}
-
-		parent::__construct($message, $code, $previous);
 	}
 }

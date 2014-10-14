@@ -17,14 +17,25 @@
 		"issues": "https://github.com/ICanBoogie/Prototype/issues",
 		"source": "https://github.com/ICanBoogie/Prototype"
 	},
+
 	"minimum-stability": "dev",
+
 	"require": {
 		"php": ">=5.4.0",
-		"icanboogie/common": ">=1.2"
+		"icanboogie/common": "~1.2"
 	},
+
 	"autoload": {
-		"classmap": [ "lib/" ],
-		"files": [ "lib/helpers.php" ]
+
+		"psr-4": {
+
+			"ICanBoogie\\Prototype\\": "lib"
+
+		},
+
+		"classmap": [ "lib/GetterTrait.php", "lib/Object.php", "lib/Prototype.php", "lib/PrototypeTrait.php" ],
+
+		"files": [ "helpers.php" ]
 	},
 
 	"extra": {
