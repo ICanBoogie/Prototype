@@ -29,6 +29,7 @@
 
 		"psr-4": {
 
+			"ICanBoogie\\Object\\": "lib/Object",
 			"ICanBoogie\\Prototype\\": "lib"
 
 		},
