@@ -11,10 +11,13 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\Prototype\HasMethod;
 use ICanBoogie\Prototype\MethodOutOfScope;
 
 trait PrototypeTrait
 {
+	use HasMethod;
+
 	private $prototype;
 
 	/**
@@ -333,27 +336,6 @@ trait PrototypeTrait
 		$this->last_chance_get($property, $success);
 
 		return $success;
-	}
-
-	/**
-	 * Checks whether this object supports the specified method.
-	 *
-	 * The method checks for method defined by the class and the prototype.
-	 *
-	 * @param string $method Name of the method.
-	 *
-	 * @return bool
-	 */
-	public function has_method($method)
-	{
-		if (method_exists($this, $method))
-		{
-			return true;
-		}
-
-		$prototype = $this->prototype ?: $this->get_prototype();
-
-		return isset($prototype[$method]);
 	}
 
 	/**

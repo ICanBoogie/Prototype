@@ -19,6 +19,8 @@ use ICanBoogie\PropertyNotDefined;
  */
 trait SetterTrait
 {
+	use HasMethod;
+
 	public function __set($property, $value)
 	{
 		$this->__object_set($property, $value);
@@ -28,7 +30,7 @@ trait SetterTrait
 	{
 		$method = 'set_' . $property;
 
-		if (method_exists($this, $method))
+		if ($this->has_method($method))
 		{
 			# prevent the setter from being called twice if the property doesn't exists.
 			$this->$property = null;
@@ -38,7 +40,7 @@ trait SetterTrait
 
 		$method = 'lazy_set_' . $property;
 
-		if (method_exists($this, $method))
+		if ($this->has_method($method))
 		{
 			return $this->$property = $this->$method($value);
 		}
@@ -55,7 +57,7 @@ trait SetterTrait
 		# We tried, but the property really is unaccessible.
 		#
 
-		if (property_exists($this, $property) && !method_exists($this, 'lazy_get_' . $property))
+		if (property_exists($this, $property) && !$this->has_method('lazy_get_' . $property))
 		{
 			$reflection = new \ReflectionObject($this);
 
@@ -82,7 +84,7 @@ trait SetterTrait
 			return;
 		}
 
-		if (method_exists($this, 'get_' . $property))
+		if ($this->has_method('get_' . $property))
 		{
 			throw new PropertyNotWritable([ $property, $this ]);
 		}

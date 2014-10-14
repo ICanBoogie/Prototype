@@ -11,6 +11,8 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\Object\HasMethod;
+
 /**
  * Simple implementation of getters.
  *
@@ -54,6 +56,8 @@ namespace ICanBoogie;
  */
 trait GetterTrait
 {
+	use HasMethod;
+
 	public function __get($property)
 	{
 		return $this->__object_get($property);
@@ -63,14 +67,14 @@ trait GetterTrait
 	{
 		$method = 'get_' . $property;
 
-		if (method_exists($this, $method))
+		if ($this->has_method($method))
 		{
 			return $this->$method();
 		}
 
 		$method = 'lazy_get_' . $property;
 
-		if (method_exists($this, $method))
+		if ($this->has_method($method))
 		{
 			return $this->$property = $this->$method();
 		}
@@ -93,7 +97,7 @@ trait GetterTrait
 		}
 		catch (\ReflectionException $e) { }
 
-		if (method_exists($this, 'set_' . $property))
+		if ($this->has_method('set_' . $property))
 		{
 			throw new PropertyNotReadable([ $property, $this ]);
 		}
