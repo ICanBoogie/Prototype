@@ -11,6 +11,8 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\Prototype\MethodOutOfScope;
+
 trait PrototypeTrait
 {
 	private $prototype;
@@ -114,6 +116,11 @@ trait PrototypeTrait
 		if (isset($this->$method) && is_callable([ $this->$method, '__invoke' ]))
 		{
 			return call_user_func_array($this->$method, $arguments);
+		}
+
+		if (method_exists($this, $method))
+		{
+			throw new MethodOutOfScope($method, $this);
 		}
 
 		array_unshift($arguments, $this);

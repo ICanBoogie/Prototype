@@ -616,10 +616,10 @@ var_dump($a->to_array());
 //}
 ```
 
-As mentionned before, _façade_ properties are also exported. The `to_array()` method should be
-overrode to alter this behaviour.
+As mentioned before, _façade_ properties are also exported. The `to_array()` method should be
+overrode to alter this behavior.
 
-Additionnaly the `to_array_recursive()` method can be used to recursively convert an instance
+Additionally the `to_array_recursive()` method can be used to recursively convert an instance
 into an array, in which case all the instances of the tree implementing [ToArray][]
 or [ToArrayRecursive][] are converted into arrays.
 
@@ -693,7 +693,7 @@ class Operation
 
 ## Using the Prototype trait
 
-The prototype features are avaiable as a [trait](http://php.net/traits). Any class can implement
+The prototype features are available as a [trait](http://php.net/traits). Any class can implement
 them simply by using the [PrototypeTrait][] trait.
 
 ```php
@@ -745,15 +745,26 @@ $e->a = 34; // throws PropertyNotWritable
 
 
 
+## Exceptions
+
+The following exceptions are defined:
+
+- [MethodNotDefined][]: Exception thrown in attempt to access a method that is not defined.
+- [MethodOutOfScope][]: Exception thrown in attempt to invoke a method that is out of scope.
+
+
+
+
+
 ## ICanBoogie auto-config
 
 The package supports the auto-config feature of the framework [ICanBoogie][] and provides a
 config constructor for the "prototypes" config:
 
 ```php
-$core = new ICanBoogie\Core(ICanBoogie\AUTOCONFIG_PATHNAME);
+$core = \ICanBoogie\boot();
 
-$core->configs['prototypes']; // obtain the "prototypes" config
+$core->configs['prototypes']; // The "prototypes" config
 ```
 
 
@@ -876,12 +887,14 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 ## License
 
-The pakcage is licensed under the New BSD License. See the [LICENSE](LICENSE) file for details.
+The package is licensed under the New BSD License. See the [LICENSE](LICENSE) file for details.
 
 
 
 
 [ICanBoogie]: http://icanboogie.org
+[MethodNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodNotDefined.html
+[MethodOutOfScope]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodOutOfScope.html
 [Object]: http://icanboogie.org/docs/class-ICanBoogie.Object.html
 [PropertyNotWritable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotWritable.html
 [PropertyNotReadable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotReadable.html

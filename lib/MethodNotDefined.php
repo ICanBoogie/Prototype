@@ -12,16 +12,40 @@
 namespace ICanBoogie\Prototype;
 
 /**
- * This exception is thrown when one tries to access an undefined prototype method.
+ * Exception thrown in attempt to access a method that is not defined.
+ *
+ * @property-read string $method The method that is not defined.
+ * @property-read mixed $class The class of the instance on which the method was invoked.
  */
 class MethodNotDefined extends \BadMethodCallException
 {
-	public function __construct($message, $code=500, \Exception $previous=null)
+	use \ICanBoogie\GetterTrait;
+
+	private $method;
+
+	protected function get_method()
 	{
-		if (is_array($message))
-		{
-			$message = sprintf('Method "%s" is not defined by the prototype of class "%s".', $message[0], $message[1]);
-		}
+		return $this->method;
+	}
+
+	private $class;
+
+	protected function get_class()
+	{
+		return $this->class;
+	}
+
+	public function __construct($method, $class, $message=null, $code=500, \Exception $previous=null)
+	{
+		$this->method = $method;
+		$this->class = $class;
+
+		$message = $message ?: \ICanBoogie\format('The method %method is not defined by the prototype of class %class.', [
+
+			'method' => $method,
+			'class' => $class
+
+		]);
 
 		parent::__construct($message, $code, $previous);
 	}

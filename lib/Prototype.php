@@ -240,7 +240,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 		if (!isset($methods[$method]))
 		{
-			throw new MethodNotDefined([ $method, $this->class ]);
+			throw new MethodNotDefined($method, $this->class);
 		}
 
 		return $methods[$method];
