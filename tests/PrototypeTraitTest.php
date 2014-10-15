@@ -71,6 +71,21 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 		$a = new A('A', 'B', 'message');
 		$undefined = $a->undefined;
 	}
+
+	public function test_parent_invoke()
+	{
+		$prototype = Prototype::from('ICanBoogie\PrototypeTraitTest\ParentCaseA');
+		$prototype['url'] = function($instance, $type)
+		{
+			return "/path/to/$type.html";
+		};
+
+		$a = new \ICanBoogie\PrototypeTraitTest\ParentCaseA;
+		$this->assertEquals("/path/to/madonna.html", $a->url('madonna'));
+
+		$b = new \ICanBoogie\PrototypeTraitTest\ParentCaseB;
+		$this->assertEquals("/path/to/another/madonna.html", $b->url('madonna'));
+	}
 }
 
 namespace ICanBoogie\PrototypeTraitTest;
@@ -110,5 +125,18 @@ class A extends \Exception
 	protected function get_previous()
 	{
 		return $this->getPrevious();
+	}
+}
+
+class ParentCaseA
+{
+	use PrototypeTrait;
+}
+
+class ParentCaseB extends ParentCaseA
+{
+	public function url($type)
+	{
+		return parent::url("another/$type");
 	}
 }

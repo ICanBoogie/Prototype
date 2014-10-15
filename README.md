@@ -450,6 +450,50 @@ echo $article->image->nid; // 12
 
 
 
+
+## Prototype methods and `parent::`
+
+Prototype methods can be overridden and work with `parent::` calls just like regular methods.
+
+In the following example the prototype method `url()` is added to the class `Node` and
+overridden in the class `News`, still `parent::` can be used from `News`:
+
+```php
+<?php
+
+use ICanBoogie\Prototype;
+use ICanBoogie\PrototypeTrait;
+
+class Node
+{
+	use PrototypeTrait;
+}
+
+class News extends Node
+{
+	public function url($type)
+	{
+		return parent::url("another/$type");
+	}
+}
+
+Prototype::from('Node')['url'] = function($node, $type) {
+
+	return "/path/to/$type.html";
+
+};
+
+$node = new Node;
+$news = new News;
+
+echo $node->url('madonna'); // /path/to/madonna.html
+echo $news->url('madonna'); // /path/to/another/madonna.html
+```
+
+
+
+
+
 ## Defining prototypes methods
 
 Prototype methods can be defined using a global configuration; through the `prototype` property

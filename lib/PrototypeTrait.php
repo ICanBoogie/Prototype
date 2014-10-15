@@ -12,6 +12,7 @@
 namespace ICanBoogie;
 
 use ICanBoogie\Prototype\HasMethod;
+use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
 
 trait PrototypeTrait
@@ -121,16 +122,23 @@ trait PrototypeTrait
 			return call_user_func_array($this->$method, $arguments);
 		}
 
-		if (method_exists($this, $method))
-		{
-			throw new MethodOutOfScope($method, $this);
-		}
-
 		array_unshift($arguments, $this);
 
-		$prototype = $this->prototype ?: $this->get_prototype();
+		try
+		{
+			$prototype = $this->prototype ?: $this->get_prototype();
 
-		return call_user_func_array($prototype[$method], $arguments);
+			return call_user_func_array($prototype[$method], $arguments);
+		}
+		catch (MethodNotDefined $e)
+		{
+			if (method_exists($this, $method))
+			{
+				throw new MethodOutOfScope($method, $this);
+			}
+
+			throw $e;
+		}
 	}
 
 	/**
