@@ -85,7 +85,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 				continue;
 			}
 
-			$prototype->methods = $config[$class];
+			$prototype->methods = array_merge($prototype->methods, $config[$class]);
 		}
 	}
 
