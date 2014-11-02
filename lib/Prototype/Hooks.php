@@ -37,9 +37,14 @@ class Hooks
 			{
 				if (strpos($method, '::') === false)
 				{
-					throw new \InvalidArgumentException(sprintf
+					throw new \InvalidArgumentException(\ICanBoogie\format
 					(
-						'Invalid method name "%s", must be <code>class_name::method_name</code> in "%s"', $method, $pathname
+						'Invalid method name %method, must be <code>class_name::method_name</code> in %pathname"', [
+
+							'method' => $method,
+							'pathname' => $pathname
+
+						]
 					));
 				}
 
