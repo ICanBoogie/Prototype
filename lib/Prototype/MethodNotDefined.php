@@ -16,6 +16,8 @@ namespace ICanBoogie\Prototype;
  *
  * @property-read string $method The method that is not defined.
  * @property-read mixed $class The class of the instance on which the method was invoked.
+ * @property-read object|null $instance Instance on which the method was invoked, or `null` if
+ * only the class is available.
  */
 class MethodNotDefined extends \BadMethodCallException
 {
@@ -35,8 +37,30 @@ class MethodNotDefined extends \BadMethodCallException
 		return $this->class;
 	}
 
+	private $instance;
+
+	protected function get_instance()
+	{
+		return $this->instance;
+	}
+
+	/**
+	 * @inheritdoc
+	 *
+	 * @param string $method The method that is not defined.
+	 * @param string|object $class The name of the class or one of its instances.
+	 * @param string|null $message If `null` a message is formatted with $method and $class.
+	 * @param int $code
+	 * @param \Exception $previous
+	 */
 	public function __construct($method, $class, $message=null, $code=500, \Exception $previous=null)
 	{
+		if (is_object($class))
+		{
+			$this->instance = $class;
+			$class = get_class($class);
+		}
+
 		$this->method = $method;
 		$this->class = $class;
 
