@@ -2,7 +2,7 @@
 	"name": "icanboogie/prototype",
 	"type": "library",
 	"description": "Implements the Prototype design pattern; getters/setters",
-	"keywords": ["library"],
+	"keywords": [ "prototype", "getter", "setter", "facade" ],
 	"homepage": "http://icanboogie.org/",
 	"license": "BSD-3-Clause",
 	"authors": [
