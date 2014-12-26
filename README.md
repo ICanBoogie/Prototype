@@ -286,6 +286,10 @@ echo $a->pseudo_uniqid; // 508949b5aaa00
 
 ### Providing a default value until a property is set
 
+Because getters are invoked when their corresponding property is inaccessible, and because
+an unset property is inaccessible, it is possible to define getters to provide default values
+until a value is actually set.
+
 The following example demonstrates how a default value can be provided when the value of a
 property is missing. When the value of the `slug` property is empty the property is unset,
 making it inaccessible. Thus, until the property is actually set, the getter will be invoked
