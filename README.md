@@ -937,7 +937,7 @@ The package is licensed under the New BSD License. See the [LICENSE](LICENSE) fi
 
 
 
-[Build Status]: https://travis-ci.org/ICanBoogie/Prototype.svg?branch=master)
+[Build Status]: https://travis-ci.org/ICanBoogie/Prototype.svg?branch=master
 [Code Quality]: https://scrutinizer-ci.com/g/ICanBoogie/Prototype/badges/quality-score.png?b=master
 [ICanBoogie]: http://icanboogie.org
 [MethodNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodNotDefined.html
