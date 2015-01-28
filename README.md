@@ -880,7 +880,7 @@ The package requires PHP 5.4 or later.
 The recommended way to install this package is through [Composer](http://getcomposer.org/):
 
 ```
-$ composer require icanboogie/prototype:2.0.x
+$ composer require icanboogie/prototype
 ```
 
 The following packages are required, you might want to check them out:
@@ -937,7 +937,7 @@ The package is licensed under the New BSD License. See the [LICENSE](LICENSE) fi
 
 
 
-[Build Status]: https://travis-ci.org/ICanBoogie/Prototype.svg?branch=2.0)
+[Build Status]: https://travis-ci.org/ICanBoogie/Prototype.svg?branch=master)
 [Code Quality]: https://scrutinizer-ci.com/g/ICanBoogie/Prototype/badges/quality-score.png?b=master
 [ICanBoogie]: http://icanboogie.org
 [MethodNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodNotDefined.html
