@@ -95,7 +95,12 @@ trait GetterTrait
 				throw new PropertyNotReadable([ $property, $this ]);
 			}
 		}
-		catch (\ReflectionException $e) { }
+		catch (\ReflectionException $e)
+		{
+			#
+			# An exception may occur if the property is not defined, we don't care about that.
+			#
+		}
 
 		if ($this->has_method('set_' . $property))
 		{

@@ -17,7 +17,7 @@ namespace ICanBoogie\Prototype;
  * This function is called as a last chance to get the value of a property before the
  * {@link PropertyNotDefined} exception is thrown.
  *
- * @param Object $target Target object from which the property should be retrieved.
+ * @param object $target Target object from which the property should be retrieved.
  * @param string $property Name of the property.
  * @param bool $success `true` if the value was successfully retrieved, `false` otherwise.
  *
@@ -36,7 +36,7 @@ function last_chance_get($target, $property, &$success)
  * This function is called as a last chance to set the value of a property before the
  * property is created with the `public` visibility.
  *
- * @param Object $target Target object in which the property should be stored.
+ * @param object $target Target object in which the property should be stored.
  * @param string $property Name of the property.
  * @param mixed $value Value of the property.
  * @param bool $success `true` if the value was successfully stored, `false` otherwise.

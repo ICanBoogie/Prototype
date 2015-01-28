@@ -11,8 +11,22 @@
 
 namespace ICanBoogie\Prototype;
 
+use ICanBoogie\Prototype;
+
+/**
+ * Implements `has_method` for prototypes.
+ *
+ * @package ICanBoogie\Prototype
+ *
+ * @property-read Prototype $prototype
+ */
 trait HasMethod
 {
+	/**
+	 * @return Prototype
+	 */
+	abstract protected function get_prototype();
+
 	/**
 	 * Checks whether this object supports the specified method.
 	 *

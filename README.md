@@ -1,4 +1,6 @@
-# Prototype [![Build Status](https://secure.travis-ci.org/ICanBoogie/Prototype.svg?branch=2.0)](http://travis-ci.org/ICanBoogie/Prototype)
+# Prototype
+
+[![Build Status][]](http://travis-ci.org/ICanBoogie/Prototype) [![Code Quality][]](https://scrutinizer-ci.com/g/ICanBoogie/Prototype/?branch=master)
 
 With the `Object` and `Prototype` classes, provided by the __Prototype__ package, you can easily
 implement getters and setters as well as define methods, getters and setters at runtime. These
@@ -921,7 +923,7 @@ The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://travis-ci.org/ICanBoogie/Prototype.svg?branch=2.0)](https://travis-ci.org/ICanBoogie/Prototype)
+[![Build Status][]](https://travis-ci.org/ICanBoogie/Prototype)
 
 
 
@@ -934,6 +936,9 @@ The package is licensed under the New BSD License. See the [LICENSE](LICENSE) fi
 
 
 
+
+[Build Status]: https://travis-ci.org/ICanBoogie/Prototype.svg?branch=2.0)
+[Code Quality]: https://scrutinizer-ci.com/g/ICanBoogie/Prototype/badges/quality-score.png?b=master
 [ICanBoogie]: http://icanboogie.org
 [MethodNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodNotDefined.html
 [MethodOutOfScope]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodOutOfScope.html

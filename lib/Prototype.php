@@ -144,7 +144,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * The method creates a single array from the prototype methods and those of its parents.
 	 *
-	 * @return array[string]callable
+	 * @return callable[]
 	 */
 	protected function get_consolidated_methods()
 	{

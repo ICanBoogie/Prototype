@@ -18,7 +18,7 @@ class Hooks
 	 *
 	 * @param array $fragments
 	 *
-	 * @return array[string]callable
+	 * @return array
 	 *
 	 * @throws \InvalidArgumentException if a method definition is missing the '::' separator.
 	 */

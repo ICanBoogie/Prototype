@@ -47,7 +47,7 @@ class Object implements ToArrayRecursive
 	 *
 	 * @return mixed The new instance.
 	 */
-	static public function from($properties=null, array $construct_args=[], $class_name=null)
+	static public function from($properties = null, array $construct_args = [], $class_name = null)
 	{
 		if (!$class_name)
 		{
@@ -168,7 +168,7 @@ class Object implements ToArrayRecursive
 	 *
 	 * @param string|object $reference Class name of instance.
 	 *
-	 * @return array[string]\ReflectionProperty
+	 * @return \ReflectionProperty[]
 	 */
 	static public function resolve_facade_properties($reference)
 	{

@@ -11,8 +11,6 @@
 
 namespace ICanBoogie\Prototype;
 
-use ICanBoogie\Object;
-
 /**
  * Patchable helpers.
  */
@@ -42,7 +40,7 @@ class Helpers
 	 * Patches a patchable function.
 	 *
 	 * @param string $name Name of the function.
-	 * @param collable $callback Callback.
+	 * @param callable $callback Callback.
 	 *
 	 * @throws \RuntimeException is attempt to patch an undefined function.
 	 */

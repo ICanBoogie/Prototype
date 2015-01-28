@@ -11,6 +11,8 @@
 
 namespace ICanBoogie\Prototype;
 
+use ICanBoogie\GetterTrait;
+
 /**
  * Exception thrown in attempt to invoke a method that is out of scope.
  *
@@ -19,7 +21,7 @@ namespace ICanBoogie\Prototype;
  */
 class MethodOutOfScope extends \BadMethodCallException
 {
-	use \ICanBoogie\GetterTrait;
+	use GetterTrait;
 
 	private $method;
 
@@ -35,7 +37,16 @@ class MethodOutOfScope extends \BadMethodCallException
 		return $this->instance;
 	}
 
-	public function __construct($method, $instance, $message=null, $code=500, \Exception $previous=null)
+	/**
+	 * @inheritdoc
+	 *
+	 * @param string $method
+	 * @param object $instance
+	 * @param string|null $message
+	 * @param int $code
+	 * @param \Exception|null $previous
+	 */
+	public function __construct($method, $instance, $message = null, $code = 500, \Exception $previous = null)
 	{
 		$this->method = $method;
 		$this->instance = $instance;

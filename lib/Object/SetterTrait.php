@@ -12,7 +12,6 @@
 namespace ICanBoogie\Object;
 
 use ICanBoogie\PropertyNotWritable;
-use ICanBoogie\PropertyNotDefined;
 
 /**
  * Simple implementation of setters.
@@ -34,15 +33,18 @@ trait SetterTrait
 		{
 			# prevent the setter from being called twice if the property doesn't exists.
 			$this->$property = null;
+			$this->$method($value);
 
-			return $this->$method($value);
+			return;
 		}
 
 		$method = 'lazy_set_' . $property;
 
 		if ($this->has_method($method))
 		{
-			return $this->$property = $this->$method($value);
+			$this->$property = $this->$method($value);
+
+			return;
 		}
 
 		$success = false;

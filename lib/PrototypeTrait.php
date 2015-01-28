@@ -224,7 +224,12 @@ trait PrototypeTrait
 				throw new PropertyNotReadable([ $property, $this ]);
 			}
 		}
-		catch (\ReflectionException $e) { }
+		catch (\ReflectionException $e)
+		{
+			#
+			# An exception may occur if the property is not defined, we don't care about that.
+			#
+		}
 
 		if ($this->has_method('set_' . $property))
 		{
@@ -273,14 +278,18 @@ trait PrototypeTrait
 
 		if ($this->has_method($method))
 		{
-			return $this->$method($value);
+			$this->$method($value);
+
+			return;
 		}
 
 		$method = 'lazy_set_' . $property;
 
 		if ($this->has_method($method))
 		{
-			return $this->$property = $this->$method($value);
+			$this->$property = $this->$method($value);
+
+			return;
 		}
 
 		$success = false;

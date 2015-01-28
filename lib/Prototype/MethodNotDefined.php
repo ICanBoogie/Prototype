@@ -11,6 +11,8 @@
 
 namespace ICanBoogie\Prototype;
 
+use ICanBoogie\GetterTrait;
+
 /**
  * Exception thrown in attempt to access a method that is not defined.
  *
@@ -21,7 +23,7 @@ namespace ICanBoogie\Prototype;
  */
 class MethodNotDefined extends \BadMethodCallException
 {
-	use \ICanBoogie\GetterTrait;
+	use GetterTrait;
 
 	private $method;
 
@@ -53,7 +55,7 @@ class MethodNotDefined extends \BadMethodCallException
 	 * @param int $code
 	 * @param \Exception $previous
 	 */
-	public function __construct($method, $class, $message=null, $code=500, \Exception $previous=null)
+	public function __construct($method, $class, $message = null, $code = 500, \Exception $previous = null)
 	{
 		if (is_object($class))
 		{

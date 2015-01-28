@@ -13,6 +13,13 @@ namespace ICanBoogie\Object;
 
 trait HasMethod
 {
+	/**
+	 * Checks if a method exists.
+	 *
+	 * @param string $method
+	 *
+	 * @return bool `true` if the method exists, `false` otherwise.
+	 */
 	public function has_method($method)
 	{
 		return method_exists($this, $method);
