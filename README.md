@@ -1,6 +1,11 @@
 # Prototype
 
-[![Build Status][]](http://travis-ci.org/ICanBoogie/Prototype) [![Code Quality][]](https://scrutinizer-ci.com/g/ICanBoogie/Prototype/?branch=master)
+[![Release](https://img.shields.io/github/release/ICanBoogie/Prototype.svg)](https://github.com/ICanBoogie/Prototype/releases)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
+[![HHVM](https://img.shields.io/hhvm/icanboogie/prototype.svg)](http://hhvm.h4cc.de/package/icanboogie/prototype)
+[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
+[![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
 With the `Object` and `Prototype` classes, provided by the __Prototype__ package, you can easily
 implement getters and setters as well as define methods, getters and setters at runtime. These
@@ -923,7 +928,8 @@ The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status][]](https://travis-ci.org/ICanBoogie/Prototype)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 
 
 
@@ -937,8 +943,6 @@ The package is licensed under the New BSD License. See the [LICENSE](LICENSE) fi
 
 
 
-[Build Status]: https://travis-ci.org/ICanBoogie/Prototype.svg?branch=master
-[Code Quality]: https://scrutinizer-ci.com/g/ICanBoogie/Prototype/badges/quality-score.png?b=master
 [ICanBoogie]: http://icanboogie.org
 [MethodNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodNotDefined.html
 [MethodOutOfScope]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodOutOfScope.html
