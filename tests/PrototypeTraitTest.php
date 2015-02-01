@@ -11,6 +11,7 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\Prototype\PrototypeTraitTest\HasPropertyFixture;
 use ICanBoogie\PrototypeTraitTest\A;
 
 class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
@@ -28,7 +29,7 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function test_set_a()
 	{
@@ -37,7 +38,7 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function test_set_b()
 	{
@@ -46,7 +47,7 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function test_set_code()
 	{
@@ -55,7 +56,7 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function test_set_previous()
 	{
@@ -64,7 +65,7 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotDefined
+	 * @expectedException \ICanBoogie\PropertyNotDefined
 	 */
 	public function test_get_undefined()
 	{
@@ -85,6 +86,25 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 
 		$b = new \ICanBoogie\PrototypeTraitTest\ParentCaseB;
 		$this->assertEquals("/path/to/another/madonna.html", $b->url('madonna'));
+	}
+
+	public function test_should_have_property()
+	{
+		$a = new HasPropertyFixture;
+
+		$a->prototype['get_readonly'] = function() { };
+		$a->prototype['lazy_get_lazy_readonly'] = function() { };
+		$a->prototype['set_writeonly'] = function() { };
+		$a->prototype['lazy_set_lazy_writeonly'] = function() { };
+
+		$this->assertTrue($a->has_property('public'));
+		$this->assertTrue($a->has_property('protected'));
+		$this->assertTrue($a->has_property('private'));
+		$this->assertTrue($a->has_property('readonly'));
+		$this->assertTrue($a->has_property('lazy_readonly'));
+		$this->assertTrue($a->has_property('writeonly'));
+		$this->assertTrue($a->has_property('lazy_writeonly'));
+		$this->assertFalse($a->has_property('undefined'));
 	}
 }
 

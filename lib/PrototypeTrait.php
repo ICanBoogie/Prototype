@@ -11,99 +11,19 @@
 
 namespace ICanBoogie;
 
-use ICanBoogie\Prototype\HasMethod;
+use ICanBoogie\Accessor\AccessorTrait;
+use ICanBoogie\Accessor\SerializableTrait;
 use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
 
 trait PrototypeTrait
 {
-	use HasMethod;
-
-	private $prototype;
-
-	/**
-	 * Returns the prototype associated with the class.
-	 *
-	 * @return Prototype
-	 */
-	protected function get_prototype()
+	use AccessorTrait
 	{
-		if (!$this->prototype)
-		{
-			$this->prototype = Prototype::from($this);
-		}
-
-		return $this->prototype;
+		AccessorTrait::has_property as private accessor_has_property;
 	}
 
-	/**
-	 * The method returns an array of key/key pairs.
-	 *
-	 * Properties for which a lazy getter is defined are discarded. For instance, if the property
-	 * `next` is defined and the class of the instance defines the getter `lazy_get_next()`, the
-	 * property is discarded.
-	 *
-	 * Note that façade properties are also included.
-	 *
-	 * Warning: The code used to export private properties seams to produce frameless exception on
-	 * session close. If you encounter this problem you might want to override the method. Don't
-	 * forget to remove the prototype property!
-	 *
-	 * @return array
-	 */
-	public function __sleep()
-	{
-		$keys = array_keys(get_object_vars($this));
-
-		if ($keys)
-		{
-			$keys = array_combine($keys, $keys);
-
-			unset($keys['prototype']);
-
-			foreach ($keys as $key)
-			{
-				#
-				# we don't use {@link has_method()} because using prototype during session write
-				# seams to corrupt PHP (tested with PHP 5.3.3).
-				#
-
-				if (method_exists($this, 'lazy_get_' . $key))
-				{
-					unset($keys[$key]);
-				}
-			}
-		}
-
-		foreach (Object::resolve_facade_properties($this) as $name => $property)
-		{
-			$keys[$name] = "\x00" . $property->class . "\x00" . $name;
-		}
-
-		return $keys;
-	}
-
-	/**
-	 * Unsets null properties for which a getter is defined so that it is called when the property
-	 * is accessed.
-	 */
-	public function __wakeup()
-	{
-		$vars = get_object_vars($this);
-
-		foreach ($vars as $key => $value)
-		{
-			if ($value !== null)
-			{
-				continue;
-			}
-
-			if ($this->has_method('lazy_get_' . $key))
-			{
-				unset($this->$key);
-			}
-		}
-	}
+	use SerializableTrait;
 
 	/**
 	 * If a property exists with the name specified by `$method` and holds an object which class
@@ -142,30 +62,94 @@ trait PrototypeTrait
 	}
 
 	/**
-	 * Returns the value of an inaccessible property.
+	 * The method returns an array of key/key pairs.
 	 *
-	 * Multiple callbacks are tried in order to retrieve the value of the property:
+	 * Properties for which a lazy getter is defined are discarded. For instance, if the property
+	 * `next` is defined and the class of the instance defines the getter `lazy_get_next()`, the
+	 * property is discarded.
 	 *
-	 * 1. `get_<property>`: Get and return the value of the property.
-	 * 2. `lazy_get_<property>`: Get, set and return the value of the property. Because new
-	 * properties are created as public the callback is only called once which is ideal for lazy
-	 * loading.
-	 * 3. The prototype is queried for callbacks for the `get_<property>` and
-	 * `lazy_get_<property>` methods.
-	 * 4. Finally, the `ICanBoogie\Object::property` event is fired to try and retrieve the value
-	 * of the property.
+	 * Note that façade properties are also included.
 	 *
-	 * @param string $property
+	 * Warning: The code used to export private properties seams to produce frameless exception on
+	 * session close. If you encounter this problem you might want to override the method. Don't
+	 * forget to remove the prototype property!
 	 *
-	 * @throws PropertyNotReadable when the property has a protected or private scope and
-	 * no suitable callback could be found to retrieve its value.
-	 *
-	 * @throws PropertyNotDefined when the property is undefined and there is no suitable
-	 * callback to retrieve its values.
-	 *
-	 * @return mixed The value of the inaccessible property.
+	 * @return array
 	 */
-	public function __get($property)
+	public function __sleep()
+	{
+		$keys = $this->accessor_sleep();
+
+		unset($keys['prototype']);
+
+		return $keys;
+	}
+
+	/**
+	 * Checks if the object has the specified property.
+	 *
+	 * The difference with the `property_exists()` function is that this method also checks for
+	 * getters defined by the class or the prototype.
+	 *
+	 * @param string $property The property to check.
+	 *
+	 * @return bool true if the object has the property, false otherwise.
+	 */
+	public function has_property($property)
+	{
+		if ($this->accessor_has_property($property))
+		{
+			return true;
+		}
+
+		$success = false;
+		$this->last_chance_get($property, $success);
+
+		return $success;
+	}
+
+	/**
+	 * Checks whether this object supports the specified method.
+	 *
+	 * The method checks for methods defined by the class and the prototype.
+	 *
+	 * @param string $method Name of the method.
+	 *
+	 * @return bool `true` if the method is defined, `false` otherwise.
+	 */
+	public function has_method($method)
+	{
+		if (method_exists($this, $method))
+		{
+			return true;
+		}
+
+		$prototype = $this->prototype ?: $this->get_prototype();
+
+		return isset($prototype[$method]);
+	}
+
+	private $prototype;
+
+	/**
+	 * Returns the prototype associated with the class.
+	 *
+	 * @return Prototype
+	 */
+	protected function get_prototype()
+	{
+		if (!$this->prototype)
+		{
+			$this->prototype = Prototype::from($this);
+		}
+
+		return $this->prototype;
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function accessor_get($property)
 	{
 		$method = 'get_' . $property;
 
@@ -209,70 +193,13 @@ trait PrototypeTrait
 			return $value;
 		}
 
-		#
-		# We tried, but the property really is unaccessible.
-		#
-
-		$reflexion_class = new \ReflectionClass($this);
-
-		try
-		{
-			$reflexion_property = $reflexion_class->getProperty($property);
-
-			if (!$reflexion_property->isPublic())
-			{
-				throw new PropertyNotReadable([ $property, $this ]);
-			}
-		}
-		catch (\ReflectionException $e)
-		{
-			#
-			# An exception may occur if the property is not defined, we don't care about that.
-			#
-		}
-
-		if ($this->has_method('set_' . $property))
-		{
-			throw new PropertyNotReadable([ $property, $this ]);
-		}
-
-		$properties = array_keys(get_object_vars($this));
-
-		if ($properties)
-		{
-			throw new PropertyNotDefined(sprintf('Unknown or inaccessible property "%s" for object of class "%s" (available properties: %s).', $property, get_class($this), implode(', ', $properties)));
-		}
-
-		throw new PropertyNotDefined([ $property, $this ]);
-	}
+		$this->assert_property_is_readable($property);
+	} //@codeCoverageIgnore
 
 	/**
-	 * Sets the value of an inaccessible property.
-	 *
-	 * The method is called because the property does not exists, it's visibility is
-	 * "protected" or "private", or because although its visibility is "public" is was unset
-	 * and is now inaccessible.
-	 *
-	 * The method only sets the property if it isn't defined by the class or its visibility is
-	 * "public", but one can provide setters to override this behavior:
-	 *
-	 * The `set_<property>` setter can be used to set properties that are protected or private,
-	 * which can be used to make properties write-only for example.
-	 *
-	 * The `volatile_set_<property>` setter can be used the handle virtual properties e.g. a
-	 * `minute` property that would alter a `second` property for example.
-	 *
-	 * The setters can be defined by the class or its prototype.
-	 *
-	 * Note: Permission is granted if a `lazy_get_<property>` getter is defined by the class or
-	 * its prototype.
-	 *
-	 * @param string $property
-	 * @param mixed $value
-	 *
-	 * @throws PropertyNotWritable if the property is not writable.
+	 * @inheritdoc
 	 */
-	public function __set($property, $value)
+	public function accessor_set($property, $value)
 	{
 		$method = 'set_' . $property;
 
@@ -300,59 +227,9 @@ trait PrototypeTrait
 			return;
 		}
 
-		#
-		# We tried, but the property really is unaccessible.
-		#
-
-		if (property_exists($this, $property) && !$this->has_method('lazy_get_' . $property))
-		{
-			$reflection = new \ReflectionObject($this);
-			$property_reflection = $reflection->getProperty($property);
-
-			if (!$property_reflection->isPublic())
-			{
-				throw new PropertyNotWritable([ $property, $this ]);
-			}
-
-			$this->$property = $value;
-
-			return;
-		}
-
-		if ($this->has_method('get_' . $property))
-		{
-			throw new PropertyNotWritable([ $property, $this ]);
-		}
+		$this->assert_property_is_writable($property);
 
 		$this->$property = $value;
-	}
-
-	/**
-	 * Checks if the object has the specified property.
-	 *
-	 * The difference with the `property_exists()` function is that this method also checks for
-	 * getters defined by the class or the prototype.
-	 *
-	 * @param string $property The property to check.
-	 *
-	 * @return bool true if the object has the property, false otherwise.
-	 */
-	public function has_property($property)
-	{
-		if (property_exists($this, $property))
-		{
-			return true;
-		}
-
-		if ($this->has_method('get_' . $property) || $this->has_method('lazy_get_' . $property))
-		{
-			return true;
-		}
-
-		$success = false;
-		$this->last_chance_get($property, $success);
-
-		return $success;
 	}
 
 	/**

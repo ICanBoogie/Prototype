@@ -9,6 +9,7 @@
  * file that was distributed with this source code.
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+$loader = require __DIR__ . '/../vendor/autoload.php';
+$loader->addPsr4("ICanBoogie\\Prototype\\PrototypeTraitTest\\", __DIR__ . '/PrototypeTraitTest');
 
 date_default_timezone_set('Europe/Paris');

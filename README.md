@@ -7,331 +7,8 @@
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
-With the `Object` and `Prototype` classes, provided by the __Prototype__ package, you can easily
-implement getters and setters as well as define methods, getters and setters at runtime. These
-getters and setters are always mapped to a magic property and can be used to create façade
-to properties, inject dependencies, reverse application control, lazy load resources,
-or create read-only and write-only properties.
-
-Note: Although the following examples extend the [Object][] class to demonstrate the capability
-of the prototype features, these features are available as a trait and thus can be used
-by any class, without requiring direct inheritance from [Object][].
-
-
-
-
-
-## Defining getters and setters
-
-A getter is a method that gets the value of a specific property. A setter is a method that sets
-the value of a specific property. You can define getters and setters on classes using
-the [PrototypeTrait][] trait, such as the [Object][] class, with either the inheritance
-of the class or the prototype associated with it.
-
-Using a combination of getters, setters, properties, and properties visibility you can create
-read-only properties, write-only properties, virtual properties, façade properties, or implement
-lazy loading.
-
-__Something to remember__: The getter or the setter is only called when the corresponding property
-is not accessible. This is most notably important to remember when using lazy loading, which
-creates the associated property once called.
-
-
-
-
-
-### Read-only properties
-
-Read-only properties are created by defining a getter. A [PropertyNotWritable][] exception is
-thrown in attempt to set a read-only property.
-
-The following example demonstrates how a `property` read-only property can be implemented:
-
-```php
-<?php
-
-class ReadOnlyProperty extends \ICanBoogie\Object
-{
-	protected function get_property()
-	{
-		return 'value';
-	}
-}
-
-$a = new ReadOnlyProperty;
-echo $a->property; // value
-$a->property = null; // throws ICanBoogie\PropertyNotWritable
-```
-
-An existing property can be made read-only by setting its visibility to `protected` or `private`:
-
-```php
-<?php
-
-class ReadOnlyProperty extends \ICanBoogie\Object
-{
-	private $property = 'value';
-
-	protected function get_property()
-	{
-		return $this->property;
-	}
-}
-
-$a = new ReadOnlyProperty;
-echo $a->property; // value
-$a->property = null; // throws ICanBoogie\PropertyNotWritable
-```
-
-
-
-
-
-### Write-only properties
-
-Write-only properties are created by defining a setter. A [PropertyNotReadable][] exception is
-thrown in attempt to get a write-only property.
-
-The following example demonstrates how a `property` write-only property can be implemented:
-
-```php
-<?php
-
-class WriteOnlyProperty extends \ICanBoogie\Object
-{
-	protected function set_property($value)
-	{
-		// …
-	}
-}
-
-$a = new WriteOnlyProperty;
-$a->property = 'value';
-echo $a->property; // throws ICanBoogie\PropertyNotReadable
-```
-
-An existing property can be made write-only by setting its visibility to `protected` or `private`:
-
-```php
-<?php
-
-class WriteOnlyProperty extends \ICanBoogie\Object
-{
-	private $property = 'value';
-
-	protected function set_property($value)
-	{
-		$this->property = $value;
-	}
-}
-
-$a = new WriteOnlyProperty;
-$a->property = 'value';
-echo $a->property; // throws ICanBoogie\PropertyNotReadable
-```
-
-
-
-
-
-### Virtual properties
-
-A virtual property is created by defining both its getter and setter. Such a property
-can provide an interface to another property or data structure.
-
-The following example demonstrates how a `minutes` virtual property can be implemented as an
-interface to a `seconds` property.
-
-```php
-<?php
-
-use ICanBoogie\Object;
-
-class Time extends Object
-{
-	public $seconds;
-
-	protected function set_minutes($minutes)
-	{
-		$this->seconds = $minutes * 60;
-	}
-
-	protected function get_minutes()
-	{
-		return $this->seconds / 60;
-	}
-}
-
-$time = new Time;
-$time->seconds = 120;
-echo $time->minutes; // 2
-
-$time->minutes = 4;
-echo $time->seconds; // 240
-```
-
-
-
-
-
-### Façade properties
-
-Sometimes you want to be able to manage the type of a property, what you can store, what you
-can retrieve, the most transparently possible. This can be achieved with _façade properties_.
-
-Façade properties are setup by defining a private property along with its getter and setter.
-The following example demonstrates how a `created_at` property is created, that can be set
-to a `DateTime` instance, a string, an integer or null, while always returning
-a `DateTime` instance.
-
-```php
-<?php
-
-use ICanBoogie\DateTime;
-
-class Article extends \ICanBoogie\Object
-{
-	private $created_at;
-
-	protected function set_created_at($datetime)
-	{
-		$this->created_at = $datetime;
-	}
-
-	protected function get_created_at()
-	{
-		$datetime = $this->created_at;
-
-		if ($datetime instanceof DateTime)
-		{
-			return $datetime;
-		}
-
-		return $this->created_at = ($datetime === null) ? DateTime::none() : new DateTime($datetime, 'utc');
-	}
-}
-```
-
-
-
-
-
-
-#### Façade properties are exported
-
-The value of façade properties is exported when the instance is serialized or transformed into an
-array.
-
-The following example demonstrates how a `created_at` property is exported both by `__sleep()`
-(which is invoked during `serialize()`) and `to_array()`.
-
-```php
-<?php
-
-$a = new Article;
-$a->created_at = 'now';
-
-echo get_class($a->created_at);                      // ICanBoogie\DateTime
-echo array_key_exists('created_at', $a->__sleep());  // true
-echo array_key_exists('created_at', $a->to_array()); // true
-
-serialize($a);
-// O:7:"Article":1:{s:19:"\x00Article\x00created_at";O:19:"ICanBoogie\DateTime":3:{s:4:"date";s:19:"2013-11-18 22:20:00";s:13:"timezone_type";i:3;s:8:"timezone";s:3:"UTC";}}
-```
-
-Notice how the `created_at` property is exported during `serialize()` while preserving its
-visibility.
-
-
-
-
-
-### Lazy loading
-
-Properties that only create their value once they have been accessed can also be defined, they
-are often used for lazy loading.
-
-In the following example, the `lazy_get_pseudo_uniqid()` getter returns a unique value, but because the 
-`pseudo_uniqid` property is created with the `public` visibility after the getter was called,
-any subsequent access to the property returns the same value:
-
-```php
-<?php
-
-use ICanBoogie\Object;
-
-class PseudoUniqID extends Object
-{
-	protected function lazy_get_pseudo_uniqid()
-	{
-		return uniqid();
-	}
-}
-
-$a = new PseudoUniqID;
-
-echo $a->pseudo_uniqid; // 5089497a540f8
-echo $a->pseudo_uniqid; // 5089497a540f8
-```
-
-Of course, unsetting the created property resets the process.
-
-```php
-<?php
-
-unset($a->pseudo_uniqid);
-
-echo $a->pseudo_uniqid; // 508949b5aaa00
-echo $a->pseudo_uniqid; // 508949b5aaa00
-```
-
-
-
-
-
-## More examples
-
-### Providing a default value until a property is set
-
-Because getters are invoked when their corresponding property is inaccessible, and because
-an unset property is inaccessible, it is possible to define getters to provide default values
-until a value is actually set.
-
-The following example demonstrates how a default value can be provided when the value of a
-property is missing. When the value of the `slug` property is empty the property is unset,
-making it inaccessible. Thus, until the property is actually set, the getter will be invoked
-and will return a default value created from the `title` property.
-
-```php
-<?php
-
-use ICanBoogie\Object;
-
-class Article extends Object
-{
-	public $title;
-	public $slug;
-
-	public function __construct($title, $slug=null)
-	{
-		$this->title = $tile;
-
-		if ($slug)
-		{
-			$this->slug = $slug;
-		}
-		else
-		{
-			unset($this->slug);
-		}
-	}
-
-	protected function get_slug()
-	{
-		return \ICanBoogie\normalize($this->slug);
-	}
-}
-```
+The **Prototype** package allows methods of classes using the [PrototypeTrait][] to be defined at
+runtime, and since the [Accessor package][] is used, this also includes getters and setters.
 
 
 
@@ -345,9 +22,9 @@ available to every instance of the class and are inherited by the sub-classes of
 ```php
 <?php
 
-use ICanboogie\Object;
+use ICanBoogie\PrototypeTrait;
 
-class Cat extends Object {}
+class Cat { use PrototypeTrait; }
 class OtherCat extends Cat {}
 class FierceCat extends Cat {}
 
@@ -389,10 +66,12 @@ Because getters and setters are methods too, they are defined just like regular 
 ```php
 <?php
 
-use ICanBoogie\Object;
+use ICanBoogie\PrototypeTrait;
 
-class Time extends Object
+class TimeObject
 {
+	use PrototypeTrait;
+
 	public $seconds;
 }
 
@@ -431,11 +110,14 @@ record from an ActiveRecord model.
 ```php
 <?php
 
-use ICanBoogie\Object;
+use ICanBoogie\Prototype;
+use ICanBoogie\PrototypeTrait;
 use ICanBoogie\ActiveRecord;
 
-class Article extends Object
+class Article
 {
+	use PrototypeTrait;
+	
 	public $image_id;
 }
 
@@ -563,9 +245,12 @@ the `prototype` property:
 ```php
 <?php
 
-use ICanBoogie\Object;
+use ICanBoogie\PrototypeTrait;
 
-class Cat {}
+class Cat
+{
+	use PrototypeTrait;
+}
 
 $cat = new Cat;
 
@@ -635,7 +320,9 @@ public and façade properties are exported.
 ```php
 <?php
 
-class A extends \ICanBoogie\Object
+use ICanBoogie\Object
+
+class A extends Object
 {
 	public $a;
 	protected $b;
@@ -811,15 +498,14 @@ The following exceptions are defined:
 
 
 
-## ICanBoogie auto-config
+## ICanBoogie autoconfig
 
-The package supports the auto-config feature of the framework [ICanBoogie][] and provides a
+The package supports the autoconfig feature of the framework [ICanBoogie][] and provides a
 config constructor for the "prototypes" config:
 
 ```php
-$core = \ICanBoogie\boot();
-
-$core->configs['prototypes']; // The "prototypes" config
+$app = ICanBoogie\boot();
+$app->configs['prototypes']; // The "prototypes" config
 ```
 
 
@@ -943,6 +629,7 @@ The package is licensed under the New BSD License. See the [LICENSE](LICENSE) fi
 
 
 
+[Accessor package]: https://github.com/ICanBoogie/Accessor
 [ICanBoogie]: http://icanboogie.org
 [MethodNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodNotDefined.html
 [MethodOutOfScope]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodOutOfScope.html

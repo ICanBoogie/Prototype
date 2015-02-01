@@ -11,7 +11,7 @@
 
 namespace ICanBoogie\Prototype;
 
-use ICanBoogie\GetterTrait;
+use ICanBoogie\Accessor\AccessorTrait;
 
 /**
  * Exception thrown in attempt to access a method that is not defined.
@@ -23,7 +23,7 @@ use ICanBoogie\GetterTrait;
  */
 class MethodNotDefined extends \BadMethodCallException
 {
-	use GetterTrait;
+	use AccessorTrait;
 
 	private $method;
 

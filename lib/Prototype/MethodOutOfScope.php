@@ -11,7 +11,7 @@
 
 namespace ICanBoogie\Prototype;
 
-use ICanBoogie\GetterTrait;
+use ICanBoogie\Accessor\AccessorTrait;
 
 /**
  * Exception thrown in attempt to invoke a method that is out of scope.
@@ -21,7 +21,7 @@ use ICanBoogie\GetterTrait;
  */
 class MethodOutOfScope extends \BadMethodCallException
 {
-	use GetterTrait;
+	use AccessorTrait;
 
 	private $method;
 

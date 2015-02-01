@@ -11,6 +11,7 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\Prototype\PrototypeTest\HasPropertyFixture;
 use ICanBoogie\PrototypeTest\A;
 use ICanBoogie\PrototypeTest\B;
 use ICanBoogie\PrototypeTest\Cat;

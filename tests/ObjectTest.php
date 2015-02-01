@@ -40,7 +40,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function test_set_prototype()
 	{
@@ -58,7 +58,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @dataProvider provide_test_readonly
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function test_readonly($class)
 	{
@@ -83,7 +83,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @dataProvider provide_test_writeonly
-	 * @expectedException ICanBoogie\PropertyNotReadable
+	 * @expectedException \ICanBoogie\PropertyNotReadable
 	 */
 	public function test_writeonly($class)
 	{
@@ -115,7 +115,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotDefined
+	 * @expectedException \ICanBoogie\PropertyNotDefined
 	 */
 	public function test_get_undefined()
 	{
@@ -228,7 +228,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function testInvalidUseOfDefaultValueForUnsetProtectedProperty()
 	{
@@ -237,7 +237,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotWritable
+	 * @expectedException \ICanBoogie\PropertyNotWritable
 	 */
 	public function testInvalidProtectedPropertyGetter()
 	{
@@ -284,7 +284,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotDefined
+	 * @expectedException \ICanBoogie\PropertyNotDefined
 	 */
 	public function testGetUnsetPublicProperty()
 	{
@@ -293,7 +293,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotReadable
+	 * @expectedException \ICanBoogie\PropertyNotReadable
 	 */
 	public function testGetUnsetProtectedProperty()
 	{
@@ -302,7 +302,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\PropertyNotDefined
+	 * @expectedException \ICanBoogie\PropertyNotDefined
 	 */
 	public function testGetUndefinedProperty()
 	{

@@ -18,35 +18,25 @@
 		"source": "https://github.com/ICanBoogie/Prototype"
 	},
 
-	"minimum-stability": "dev",
-
 	"require": {
 		"php": ">=5.4.0",
-		"icanboogie/common": "~1.2.2"
+		"icanboogie/common": "~1.2.2",
+		"icanboogie/accessor": "~1.0.1"
 	},
 
 	"autoload": {
-
 		"psr-4": {
-
 			"ICanBoogie\\Object\\": "lib/Object",
 			"ICanBoogie\\Prototype\\": "lib/Prototype"
-
 		},
-
-		"classmap": [ "lib/GetterTrait.php", "lib/Object.php", "lib/Prototype.php", "lib/PrototypeTrait.php" ],
-
+		"classmap": [ "lib/Object.php", "lib/Prototype.php", "lib/PrototypeTrait.php" ],
 		"files": [ "helpers.php" ]
 	},
 
 	"extra": {
-
 		"icanboogie": {
-
 			"config-constructor": {
-
 				"prototypes": "ICanBoogie\\Prototype\\Hooks::synthesize_config#hooks"
-
 			}
 		}
 	}
