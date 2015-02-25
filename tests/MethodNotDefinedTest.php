@@ -15,6 +15,21 @@ use ICanBoogie\Prototype\MethodNotDefinedTest\A;
 
 class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
 {
+	public function test_instance()
+	{
+		$method = 'method' . uniqid();
+		$object = $this
+			->getMockBuilder('ICanBoogie\Object')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$instance = new MethodNotDefined($method, $object);
+
+		$this->assertSame($method, $instance->method);
+		$this->assertSame(get_class($object), $instance->class);
+		$this->assertSame($object, $instance->instance);
+	}
+
 	public function test_invoke_public_method()
 	{
 		$a = new A;
@@ -22,7 +37,7 @@ class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\Prototype\MethodOutOfScope
+	 * @expectedException \ICanBoogie\Prototype\MethodOutOfScope
 	 */
 	public function test_invoke_protected_method()
 	{
@@ -31,7 +46,7 @@ class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanBoogie\Prototype\MethodOutOfScope
+	 * @expectedException \ICanBoogie\Prototype\MethodOutOfScope
 	 */
 	public function test_invoke_private_method()
 	{
@@ -59,9 +74,11 @@ class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
 
 namespace ICanBoogie\Prototype\MethodNotDefinedTest;
 
+use ICanBoogie\PrototypeTrait;
+
 class A
 {
-	use \ICanBoogie\PrototypeTrait;
+	use PrototypeTrait;
 
 	public function public_method()
 	{

@@ -85,7 +85,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 				continue;
 			}
 
-			$prototype->methods = array_merge($prototype->methods, $config[$class]);
+			$prototype->methods = $config[$class] + $prototype->methods;
 		}
 	}
 
@@ -220,7 +220,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetExists($method)
 	{
-		$methods = $this->get_consolidated_methods();
+		$methods = $this->consolidated_methods !== null ? $this->consolidated_methods : $this->get_consolidated_methods();
 
 		return isset($methods[$method]);
 	}
@@ -236,7 +236,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetGet($method)
 	{
-		$methods = $this->get_consolidated_methods();
+		$methods = $this->consolidated_methods !== null ? $this->consolidated_methods : $this->get_consolidated_methods();
 
 		if (!isset($methods[$method]))
 		{
@@ -251,7 +251,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function getIterator()
 	{
-		$methods = $this->get_consolidated_methods();
+		$methods = $this->consolidated_methods !== null ? $this->consolidated_methods : $this->get_consolidated_methods();
 
 		return new \ArrayIterator($methods);
 	}

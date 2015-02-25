@@ -31,7 +31,7 @@ class Helpers
 	 *
 	 * @return mixed
 	 */
-	static public function __callstatic($name, array $arguments)
+	static public function __callStatic($name, array $arguments)
 	{
 		return call_user_func_array(self::$jumptable[$name], $arguments);
 	}
@@ -44,6 +44,7 @@ class Helpers
 	 *
 	 * @throws \RuntimeException is attempt to patch an undefined function.
 	 */
+	// @codeCoverageIgnoreStart
 	static public function patch($name, $callback)
 	{
 		if (empty(self::$jumptable[$name]))
@@ -53,17 +54,18 @@ class Helpers
 
 		self::$jumptable[$name] = $callback;
 	}
+	// @codeCoverageIgnoreEnd
 
 	/*
 	 * Default implementations
 	 */
 
-	static private function last_chance_get($target, $property, &$success=false)
+	static private function last_chance_get($target, $property, &$success = false)
 	{
 
 	}
 
-	static private function last_chance_set($target, $property, $value, &$success=false)
+	static private function last_chance_set($target, $property, $value, &$success = false)
 	{
 
 	}

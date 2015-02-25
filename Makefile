@@ -8,10 +8,10 @@ usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
-	@composer install --dev
+	@composer install
 
 update:
-	@composer update --dev
+	@composer update
 
 autoload: vendor
 	@composer dump-autoload
@@ -34,6 +34,7 @@ doc: vendor
 	--template-config /usr/share/php/data/ApiGen/templates/bootstrap/config.neon
 
 clean:
+	@rm -fR build
 	@rm -fR docs
 	@rm -fR vendor
 	@rm -f composer.lock
