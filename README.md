@@ -1,6 +1,6 @@
 # Prototype
 
-[![Release](https://img.shields.io/github/release/ICanBoogie/Prototype.svg)](https://github.com/ICanBoogie/Prototype/releases)
+[![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/ICanBoogie/Prototype/releases)
 [![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
 [![HHVM](https://img.shields.io/hhvm/icanboogie/prototype.svg)](http://hhvm.h4cc.de/package/icanboogie/prototype)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
@@ -583,7 +583,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 ## License
 
-The package is licensed under the New BSD License. See the [LICENSE](LICENSE) file for details.
+ICanBoogie/Prototype is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
 
 
 

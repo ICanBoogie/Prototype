@@ -127,6 +127,22 @@ class Object implements ToArrayRecursive
 		return $instance;
 	}
 
+	static private function get_object_vars($object)
+	{
+		static $get_object_vars;
+
+		if (!$get_object_vars)
+		{
+			$get_object_vars = \Closure::bind(function($object) {
+
+				return get_object_vars($object);
+
+			}, null, 'stdClass');
+		}
+
+		return $get_object_vars($object);
+	}
+
 	/**
 	 * Converts the object into an array.
 	 *
@@ -136,7 +152,7 @@ class Object implements ToArrayRecursive
 	 */
 	public function to_array()
 	{
-		$array = \ICanBoogie\Prototype\get_public_object_vars($this);
+		$array = self::get_object_vars($this);
 
 		foreach (array_keys(AccessorReflection::resolve_facade_properties($this)) as $name)
 		{
