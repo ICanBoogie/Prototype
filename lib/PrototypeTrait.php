@@ -236,8 +236,6 @@ trait PrototypeTrait
 	 * The method is invoked as a last chance to get a property,
 	 * just before an exception is thrown.
 	 *
-	 * The method uses the helper {@link Prototype\last_chance_get()}.
-	 *
 	 * @param string $property Property to get.
 	 * @param bool $success If the _last chance get_ was successful.
 	 *
@@ -245,14 +243,12 @@ trait PrototypeTrait
 	 */
 	protected function last_chance_get($property, &$success)
 	{
-		return Prototype\last_chance_get($this, $property, $success);
+		$success = false;
 	}
 
 	/**
 	 * The method is invoked as a last chance to set a property,
 	 * just before an exception is thrown.
-	 *
-	 * The method uses the helper {@link Prototype\last_chance_set()}.
 	 *
 	 * @param string $property Property to set.
 	 * @param mixed $value Value of the property.
@@ -260,6 +256,6 @@ trait PrototypeTrait
 	 */
 	protected function last_chance_set($property, $value, &$success)
 	{
-		Prototype\last_chance_set($this, $property, $value, $success);
+		$success = false;
 	}
 }

@@ -512,46 +512,6 @@ $app->configs['prototypes']; // The "prototypes" config
 
 
 
-## Patching
-
-The `last_chance_get()` and `last_chance_set()` helpers are called in attempt to get or set the
-value of a property after no adequate getter or setter could be found to do so. If they fail, an
-exception is usually thrown.
-
-The functions defined by the Prototype package don't do anything, but they can be patched to
-provide different mechanisms. For instance, the [ICanBoogie](http://icanboogie.org/)
-framework patches the `last_chance_get()` helper to try and get the requested property
-using an event:
-
-```php
-<?php
-
-namespace ICanBoogie;
-
-Prototype\Helpers::patch('last_chance_get', function(Object $target, $property, &$success)
-{
-	$event = new Object\GetPropertyEvent($target, [ 'property' => $property ]);
-
-	#
-	# The operation is considered a success if the `value` property exists in the event
-	# object. Thus, even a `null` value is considered a success.
-	#
-
-	if (!property_exists($event, 'value'))
-	{
-		return;
-	}
-
-	$success = true;
-
-	return $event->value;
-});
-```
-
-
-
-
-
 ----------
 
 
