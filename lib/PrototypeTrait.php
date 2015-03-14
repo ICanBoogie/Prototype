@@ -149,7 +149,7 @@ trait PrototypeTrait
 	/**
 	 * @inheritdoc
 	 */
-	public function accessor_get($property)
+	protected function accessor_get($property)
 	{
 		$method = 'get_' . $property;
 
@@ -199,7 +199,7 @@ trait PrototypeTrait
 	/**
 	 * @inheritdoc
 	 */
-	public function accessor_set($property, $value)
+	protected function accessor_set($property, $value)
 	{
 		$method = 'set_' . $property;
 
