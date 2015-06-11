@@ -31,20 +31,13 @@ class Object implements ToArrayRecursive
 	/**
 	 * Creates a new instance of the class using the supplied properties.
 	 *
-	 * The instance is created in the same fashion [PDO](http://www.php.net/manual/en/book.pdo.php)
-	 * creates instances when fetching objects using the `FETCH_CLASS` mode, that is the properties
-	 * of the instance are set *before* its constructor is invoked.
-	 *
-	 * Note: Because the method uses the [`unserialize`](http://www.php.net/manual/en/function.unserialize.php)
-	 * function to create the instance, the `__wakeup()` magic method will be called if it is
-	 * defined by the class, and it will be called *before* the constructor.
-	 *
-	 * Note: The {@link __wakeup()} method of the {@link Object} class removes `null` properties
-	 * for which a getter is defined.
+	 * The method tries to create the instance in the same fashion as [PDO](http://www.php.net/manual/en/book.pdo.php)
+	 * with the `FETCH_CLASS` mode, that is the properties of the instance are set *before* its
+	 * constructor is invoked.
 	 *
 	 * @param array $properties Properties to be set before the constructor is invoked.
 	 * @param array $construct_args Arguments passed to the constructor.
-	 * @param string|null $class_name The name of the instance class. If empty the name of the
+	 * @param string|null $class_name The name of the instance class. If empty, the name of the
 	 * called class is used.
 	 *
 	 * @return mixed The new instance.
@@ -56,70 +49,21 @@ class Object implements ToArrayRecursive
 			$class_name = get_called_class();
 		}
 
-		$properties_count = 0;
-		$serialized = '';
+		$class_reflection = self::get_class_reflection($class_name);
 
-		if ($properties)
+		if (!$properties)
 		{
-			$class_reflection = new \ReflectionClass($class_name);
-			$class_properties = $class_reflection->getProperties();
-			$defaults = $class_reflection->getDefaultProperties();
-
-			$done = [];
-
-			foreach ($class_properties as $property)
-			{
-				if ($property->isStatic())
-				{
-					continue;
-				}
-
-				$properties_count++;
-
-				$identifier = $property->name;
-				$done[] = $identifier;
-				$value = null;
-
-				if (array_key_exists($identifier, $properties))
-				{
-					$value = $properties[$identifier];
-				}
-				else if (isset($defaults[$identifier]))
-				{
-					$value = $defaults[$identifier];
-				}
-
-				if ($property->isProtected())
-				{
-					$identifier = "\x00*\x00" . $identifier;
-				}
-				else if ($property->isPrivate())
-				{
-					$identifier = "\x00" . $property->class . "\x00" . $identifier;
-				}
-
-				$serialized .= serialize($identifier) . serialize($value);
-			}
-
-			$extra = array_diff(array_keys($properties), $done);
-
-			foreach ($extra as $name)
-			{
-				$properties_count++;
-
-				$serialized .= serialize($name) . serialize($properties[$name]);
-			}
+			return $class_reflection->newInstanceArgs($construct_args);
 		}
 
-		$serialized = 'O:' . strlen($class_name) . ':"' . $class_name . '":' . $properties_count . ':{' . $serialized . '}';
+		$instance = $class_reflection->newInstanceWithoutConstructor();
 
-		$instance = unserialize($serialized);
+		foreach ($properties as $property => $value)
+		{
+			$instance->$property = $value;
+		}
 
-		#
-		# for some reason is_callable() sometimes returns true event if the `__construct` method is not defined.
-		#
-
-		if (method_exists($instance, '__construct') && is_callable([ $instance, '__construct' ]))
+		if ($class_reflection->hasMethod('__construct') && is_callable([ $instance, '__construct' ]))
 		{
 			call_user_func_array([ $instance, '__construct' ], $construct_args);
 		}
@@ -127,6 +71,32 @@ class Object implements ToArrayRecursive
 		return $instance;
 	}
 
+	static private $class_reflection_cache = [];
+
+	/**
+	 * Returns cached class reflection.
+	 *
+	 * @param string $class_name
+	 *
+	 * @return \ReflectionClass
+	 */
+	static private function get_class_reflection($class_name)
+	{
+		if (isset(self::$class_reflection_cache[$class_name]))
+		{
+			return self::$class_reflection_cache[$class_name];
+		}
+
+		return self::$class_reflection_cache[$class_name] = new \ReflectionClass($class_name);
+	}
+
+	/**
+	 * Returns the public properties of an instance.
+	 *
+	 * @param mixed $object
+	 *
+	 * @return array
+	 */
 	static private function get_object_vars($object)
 	{
 		static $get_object_vars;
