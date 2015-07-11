@@ -107,7 +107,7 @@ class Object implements ToArrayRecursive
 
 				return get_object_vars($object);
 
-			}, null, 'stdClass');
+			}, null, 'ICanBoogie\Prototype\Dummy'); // Because `stdClass` is a no-no in PHP7
 		}
 
 		return $get_object_vars($object);
