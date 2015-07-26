@@ -8,7 +8,8 @@
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
 The **Prototype** package allows methods of classes using the [PrototypeTrait][] to be defined at
-runtime, and since the [Accessor package][] is used, this also includes getters and setters.
+runtime, and since the [icanboogie/accessor][] package is used, this also includes getters and
+setters.
 
 
 
@@ -289,7 +290,7 @@ $prototype['meow'] = function(Cat $cat)
 
 ### Defining prototypes methods using config fragments
 
-When using the [ICanBoogie](http://icanboogie.org/) framework, prototypes methods can be defined
+When using the [ICanBoogie][] framework, prototypes methods can be defined
 using the `hooks` config and the `prototypes` namespace:
 
 ```php
@@ -399,7 +400,7 @@ class A extends Object
 	public $c;
 }
 
-$a = A::from([ 'a' => 1, 'b' => 2, 'c' => 3 ]);
+$a = A::from([ 'b' => 2, 'c' => 3 ]);
 ```
 
 Instances are created in the same fashion [PDO](http://www.php.net/manual/en/book.pdo.php)
@@ -520,7 +521,7 @@ $app->configs['prototypes']; // The "prototypes" config
 
 ## Requirements
 
-The package requires PHP 5.4 or later.
+The package requires PHP 5.5 or later.
 
 
 
@@ -557,7 +558,7 @@ be cloned with the following command line:
 ## Documentation
 
 The package is documented as part of the [ICanBoogie][] framework
-[documentation](http://icanboogie.org/docs/). You can generate the documentation for the package
+[documentation][]. You can generate the documentation for the package
 and its dependencies with the `make doc` command. The documentation is generated in the `docs`
 directory. [ApiGen](http://apigen.org/) is required. The directory can later by cleaned with
 the `make clean` command.
@@ -583,19 +584,20 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 ## License
 
-ICanBoogie/Prototype is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
+**icanboogie/prototype** is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
 
 
 
 
 
-[Accessor package]: https://github.com/ICanBoogie/Accessor
-[ICanBoogie]: http://icanboogie.org
-[MethodNotDefined]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodNotDefined.html
-[MethodOutOfScope]: http://icanboogie.org/docs/class-ICanBoogie.Prototype.MethodOutOfScope.html
-[Object]: http://icanboogie.org/docs/class-ICanBoogie.Object.html
-[PropertyNotWritable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotWritable.html
-[PropertyNotReadable]: http://icanboogie.org/docs/class-ICanBoogie.PropertyNotReadable.html
-[PrototypeTrait]: http://icanboogie.org/docs/class-ICanBoogie.PrototypeTrait.html
-[ToArray]: http://icanboogie.org/docs/class-ICanBoogie.ToArray.html
-[ToArrayRecursive]: http://icanboogie.org/docs/class-ICanBoogie.ToArrayRecursive.html
+[PropertyNotWritable]: http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotWritable.html
+[PropertyNotReadable]: http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotReadable.html
+[ToArray]:             http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArray.html
+[ToArrayRecursive]:    http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArrayRecursive.html
+[documentation]:       http://api.icanboogie.org/prototype/2.3/
+[MethodNotDefined]:    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodNotDefined.html
+[MethodOutOfScope]:    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodOutOfScope.html
+[Object]:              http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Object.html
+[PrototypeTrait]:      http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.PrototypeTrait.html
+[ICanBoogie]:          http://icanboogie.org
+[icanboogie/accessor]: https://github.com/ICanBoogie/Accessor
