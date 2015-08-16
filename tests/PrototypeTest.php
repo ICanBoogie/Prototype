@@ -11,7 +11,6 @@
 
 namespace ICanBoogie;
 
-use ICanBoogie\Prototype\PrototypeTest\HasPropertyFixture;
 use ICanBoogie\PrototypeTest\A;
 use ICanBoogie\PrototypeTest\B;
 use ICanBoogie\PrototypeTest\Cat;
@@ -130,7 +129,7 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @expectedException ICanboogie\Prototype\MethodNotDefined
+	 * @expectedException \ICanBoogie\Prototype\MethodNotDefined
 	 */
 	public function testMethodNotDefined()
 	{

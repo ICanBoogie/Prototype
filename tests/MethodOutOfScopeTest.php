@@ -33,7 +33,8 @@ class MethodOutOfScopeTest extends \PHPUnit_Framework_TestCase
 		}
 		catch (\Exception $e)
 		{
-			$this->assertInstanceOf('ICanBoogie\Prototype\MethodOutOfScope', $e);
+			$this->assertInstanceOf(MethodOutOfScope::class, $e);
+			/* @var $e MethodOutOfScope */
 			$this->assertEquals('protected_method', $e->method);
 			$this->assertSame($a, $e->instance);
 		}
@@ -51,7 +52,8 @@ class MethodOutOfScopeTest extends \PHPUnit_Framework_TestCase
 		}
 		catch (\Exception $e)
 		{
-			$this->assertInstanceOf('ICanBoogie\Prototype\MethodOutOfScope', $e);
+			$this->assertInstanceOf(MethodOutOfScope::class, $e);
+			/* @var $e MethodOutOfScope */
 			$this->assertEquals('private_method', $e->method);
 			$this->assertSame($a, $e->instance);
 		}
@@ -60,9 +62,11 @@ class MethodOutOfScopeTest extends \PHPUnit_Framework_TestCase
 
 namespace ICanBoogie\Prototype\MethodOutOfScopeTest;
 
+use ICanBoogie\PrototypeTrait;
+
 class A
 {
-	use \ICanBoogie\PrototypeTrait;
+	use PrototypeTrait;
 
 	public function public_method()
 	{

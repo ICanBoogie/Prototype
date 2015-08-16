@@ -70,7 +70,8 @@ class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
 	public function test_get_undefined()
 	{
 		$a = new A('A', 'B', 'message');
-		$undefined = $a->undefined;
+		$p = 'undefined' . uniqid();
+		$a->$p;
 	}
 
 	public function test_parent_invoke()
