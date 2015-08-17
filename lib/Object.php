@@ -12,6 +12,7 @@
 namespace ICanBoogie;
 
 use ICanBoogie\Accessor\AccessorReflection;
+use ICanBoogie\Accessor\SerializableTrait;
 
 /**
  * Together with the {@link Prototype} class the {@link Object} class provides means to
@@ -20,13 +21,12 @@ use ICanBoogie\Accessor\AccessorReflection;
  * The class also provides a method to create instances in the same fashion PDO creates instances
  * with the `FETCH_CLASS` mode, that is the properties of the instance are set *before* its
  * constructor is invoked.
- *
- * @property-read Prototype $prototype The prototype associated with the class.
  */
 class Object implements ToArrayRecursive
 {
 	use ToArrayRecursiveTrait;
 	use PrototypeTrait;
+	use SerializableTrait;
 
 	/**
 	 * Creates a new instance of the class using the supplied properties.
@@ -107,10 +107,34 @@ class Object implements ToArrayRecursive
 
 				return get_object_vars($object);
 
-			}, null, 'ICanBoogie\Prototype\Dummy'); // Because `stdClass` is a no-no in PHP7
+			}, null, Prototype\Dummy::class); // Because `stdClass` is a no-no in PHP7
 		}
 
 		return $get_object_vars($object);
+	}
+
+	/**
+	 * The method returns an array of key/key pairs.
+	 *
+	 * Properties for which a lazy getter is defined are discarded. For instance, if the property
+	 * `next` is defined and the class of the instance defines the getter `lazy_get_next()`, the
+	 * property is discarded.
+	 *
+	 * Note that façade properties are also included.
+	 *
+	 * Warning: The code used to export private properties seams to produce frameless exception on
+	 * session close. If you encounter this problem you might want to override the method. Don't
+	 * forget to remove the prototype property!
+	 *
+	 * @return array
+	 */
+	public function __sleep()
+	{
+		$keys = $this->accessor_sleep();
+
+		unset($keys['prototype']);
+
+		return $keys;
 	}
 
 	/**

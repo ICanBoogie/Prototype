@@ -12,10 +12,14 @@
 namespace ICanBoogie;
 
 use ICanBoogie\Accessor\AccessorTrait;
-use ICanBoogie\Accessor\SerializableTrait;
 use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
 
+/**
+ * A trait for classes wishing to implement prototype methods.
+ *
+ * @property-read Prototype $prototype The prototype associated with the class.
+ */
 trait PrototypeTrait
 {
 	use AccessorTrait
@@ -23,7 +27,10 @@ trait PrototypeTrait
 		AccessorTrait::has_property as private accessor_has_property;
 	}
 
-	use SerializableTrait;
+	/**
+	 * @var Prototype
+	 */
+	private $prototype;
 
 	/**
 	 * If a property exists with the name specified by `$method` and holds an object which class
@@ -59,30 +66,6 @@ trait PrototypeTrait
 
 			throw $e;
 		}
-	}
-
-	/**
-	 * The method returns an array of key/key pairs.
-	 *
-	 * Properties for which a lazy getter is defined are discarded. For instance, if the property
-	 * `next` is defined and the class of the instance defines the getter `lazy_get_next()`, the
-	 * property is discarded.
-	 *
-	 * Note that façade properties are also included.
-	 *
-	 * Warning: The code used to export private properties seams to produce frameless exception on
-	 * session close. If you encounter this problem you might want to override the method. Don't
-	 * forget to remove the prototype property!
-	 *
-	 * @return array
-	 */
-	public function __sleep()
-	{
-		$keys = $this->accessor_sleep();
-
-		unset($keys['prototype']);
-
-		return $keys;
 	}
 
 	/**
@@ -129,8 +112,6 @@ trait PrototypeTrait
 		return isset($prototype[$method]);
 	}
 
-	private $prototype;
-
 	/**
 	 * Returns the prototype associated with the class.
 	 *
@@ -138,12 +119,7 @@ trait PrototypeTrait
 	 */
 	protected function get_prototype()
 	{
-		if (!$this->prototype)
-		{
-			$this->prototype = Prototype::from($this);
-		}
-
-		return $this->prototype;
+		return $this->prototype ?: $this->prototype = Prototype::from($this);
 	}
 
 	/**
