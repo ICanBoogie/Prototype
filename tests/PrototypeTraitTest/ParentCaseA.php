@@ -13,11 +13,10 @@ namespace ICanBoogie\PrototypeTraitTest;
 
 use ICanBoogie\PrototypeTrait;
 
-class HasPropertyFixture
+/**
+ * @method url(string $type)
+ */
+class ParentCaseA
 {
 	use PrototypeTrait;
-
-	public $public;
-	protected $protected;
-	private $private;
 }

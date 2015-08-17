@@ -19,9 +19,9 @@
 	},
 
 	"require": {
-		"php": ">=5.4.0",
-		"icanboogie/common": "~1.2.2",
-		"icanboogie/accessor": "~1.0.1"
+		"php": ">=5.5.0",
+		"icanboogie/common": "^1.2.2",
+		"icanboogie/accessor": "^1.0.1"
 	},
 
 	"autoload": {

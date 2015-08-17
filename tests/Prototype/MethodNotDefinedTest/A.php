@@ -9,15 +9,26 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypeTraitTest;
+namespace ICanBoogie\Prototype\MethodNotDefinedTest;
 
 use ICanBoogie\PrototypeTrait;
 
-class HasPropertyFixture
+class A
 {
 	use PrototypeTrait;
 
-	public $public;
-	protected $protected;
-	private $private;
+	public function public_method()
+	{
+		return __FUNCTION__;
+	}
+
+	protected function protected_method()
+	{
+		return __FUNCTION__;
+	}
+
+	private function private_method()
+	{
+		return __FUNCTION__;
+	}
 }

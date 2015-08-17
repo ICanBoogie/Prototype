@@ -9,15 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypeTraitTest;
+namespace ICanBoogie\ObjectTest;
 
-use ICanBoogie\PrototypeTrait;
+use ICanBoogie\Object;
 
-class HasPropertyFixture
+class ToArrayCase extends Object
 {
-	use PrototypeTrait;
+	public $a;
+	public $b;
+	public $c;
 
-	public $public;
-	protected $protected;
-	private $private;
+	public function __construct($a, $b, $c)
+	{
+		$this->a = $a;
+		$this->b = $b;
+		$this->c = $c;
+	}
 }

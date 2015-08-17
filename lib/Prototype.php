@@ -39,14 +39,14 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Prototypes built per class.
 	 *
-	 * @var array[string]Prototype
+	 * @var Prototype[]
 	 */
 	static protected $prototypes = [];
 
 	/**
 	 * Pool of prototype methods per class.
 	 *
-	 * @var array[string]callable
+	 * @var array
 	 */
 	static protected $pool;
 
@@ -72,6 +72,11 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 		return self::$prototypes[$class];
 	}
 
+	/**
+	 * Defines many prototype methods in a single call.
+	 *
+	 * @param array $config
+	 */
 	static public function configure(array $config)
 	{
 		self::$pool = $config;
@@ -106,14 +111,14 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Methods defined by the prototype.
 	 *
-	 * @var array[string]callable
+	 * @var callable[]
 	 */
 	protected $methods = [];
 
 	/**
 	 * Methods defined by the prototypes chain.
 	 *
-	 * @var array[string]callable
+	 * @var callable[]|null
 	 */
 	protected $consolidated_methods;
 
@@ -220,7 +225,9 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetExists($method)
 	{
-		$methods = $this->consolidated_methods !== null ? $this->consolidated_methods : $this->get_consolidated_methods();
+		$methods = $this->consolidated_methods !== null
+			? $this->consolidated_methods
+			: $this->get_consolidated_methods();
 
 		return isset($methods[$method]);
 	}
@@ -236,7 +243,9 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetGet($method)
 	{
-		$methods = $this->consolidated_methods !== null ? $this->consolidated_methods : $this->get_consolidated_methods();
+		$methods = $this->consolidated_methods !== null
+			? $this->consolidated_methods
+			: $this->get_consolidated_methods();
 
 		if (!isset($methods[$method]))
 		{
@@ -251,7 +260,9 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function getIterator()
 	{
-		$methods = $this->consolidated_methods !== null ? $this->consolidated_methods : $this->get_consolidated_methods();
+		$methods = $this->consolidated_methods !== null
+			? $this->consolidated_methods
+			: $this->get_consolidated_methods();
 
 		return new \ArrayIterator($methods);
 	}

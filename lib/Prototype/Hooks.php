@@ -11,6 +11,9 @@
 
 namespace ICanBoogie\Prototype;
 
+/**
+ * Hooks
+ */
 class Hooks
 {
 	/**

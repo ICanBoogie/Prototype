@@ -23,28 +23,27 @@ available to every instance of the class and are inherited by the sub-classes of
 ```php
 <?php
 
+use ICanBoogie\Prototype;
 use ICanBoogie\PrototypeTrait;
 
 class Cat { use PrototypeTrait; }
 class OtherCat extends Cat {}
 class FierceCat extends Cat {}
 
-$cat = new Cat();
-$other_cat = new OtherCat();
-$fierce_cat = new FierceCat();
-$second_fierce_cat = new FierceCat();
+$cat = new Cat;
+$other_cat = new OtherCat;
+$fierce_cat = new FierceCat;
+$second_fierce_cat = new FierceCat;
 
 // define the 'meow' prototype method for Cat class
-
-$cat->prototype['meow'] = function(Cat $cat) {
+Prototype::from(Cat::class)['meow'] = function(Cat $cat) {
 
 	return 'Meow';
 
 };
 
 // override the 'meow' prototype method for FierceCat class
-
-$fierce_cat->prototype['meow'] = function(Cat $cat) {
+Prototype::from(FierceCat::class)['meow'] = function(Cat $cat) {
 
 	return 'MEOOOW !';
 
@@ -67,6 +66,7 @@ Because getters and setters are methods too, they are defined just like regular 
 ```php
 <?php
 
+use ICanBoogie\Prototype;
 use ICanBoogie\PrototypeTrait;
 
 class TimeObject
@@ -77,14 +77,15 @@ class TimeObject
 }
 
 $time = new Time;
+$prototype = Prototype::from(Time::class);
 
-$time->prototype['set_minutes'] = function(Time $time, $minutes) {
+$prototype['set_minutes'] = function(Time $time, $minutes) {
 
 	$time->seconds = $minutes * 60;
 
 };
 
-$time->prototype['get_minutes'] = function(Time $time, $minutes) {
+$prototype['get_minutes'] = function(Time $time, $minutes) {
 
 	return $time->seconds / 60;
 
@@ -113,7 +114,6 @@ record from an ActiveRecord model.
 
 use ICanBoogie\Prototype;
 use ICanBoogie\PrototypeTrait;
-use ICanBoogie\ActiveRecord;
 
 class Article
 {
@@ -122,21 +122,17 @@ class Article
 	public $image_id;
 }
 
-$prototype = Prototype::from('Article');
+// …
 
-$prototype['get_image'] = function(Article $target)
-{
-	static $model;
+Prototype::from(Article::class)['get_image'] = function(Article $target) use ($image_model) {
 
-	if (!$model)
-	{
-		$model = ActiveRecord\get_model('images');
-	}
+	return $target->image_id
+		? $image_model[$target->image_id]
+		: null;
 
-	return $target->image_id ? $model[$target->image_id] : null;
 };
 
-$article = new Article();
+$article = new Article;
 $article->image_id = 12;
 echo $article->image->nid; // 12
 ```
@@ -171,7 +167,7 @@ class News extends Node
 	}
 }
 
-Prototype::from('Node')['url'] = function($node, $type) {
+Prototype::from(Node::class)['url'] = function($node, $type) {
 
 	return "/path/to/$type.html";
 
@@ -205,15 +201,14 @@ define the methods that the prototype implements.
 
 The following example demonstrate how the `meow()` method is defined for instances of the `Cat`
 and `FierceCat` classes. Although they are defined using closure in the example, methods can be
-defined using any callable such as `"Website\Hooks::cat_meow"`.
+defined using any callable such as `"App\Hooks::cat_meow"`.
 
 ```php
 <?php
 
-ICanBoogie\Prototype::configure
-([
+ICanBoogie\Prototype::configure([
 
-	'Cat' => [
+	Cat::class => [
 
 		'meow' => function(Cat $cat) {
 
@@ -222,9 +217,9 @@ ICanBoogie\Prototype::configure
 		}
 	],
 
-	'FierceCat' => [
+	FierceCat::class => [
 
-		'meow' => function(Cat $cat) {
+		'meow' => function(FierceCat $cat) {
 
 			return 'MEOOOW !';
 
@@ -240,8 +235,7 @@ ICanBoogie\Prototype::configure
 
 ### Defining prototypes methods through the `prototype` property
 
-As we have seen in previous examples, prototype methods can be defined using
-the `prototype` property:
+Prototype methods may be defined using the `prototype` property:
 
 ```php
 <?php
@@ -255,9 +249,10 @@ class Cat
 
 $cat = new Cat;
 
-$cat->prototype['meow'] = function(Cat $cat)
-{
+$cat->prototype['meow'] = function(Cat $cat) {
+
 	return 'Meow';
+
 };
 
 echo $cat->meow();
@@ -269,18 +264,17 @@ echo $cat->meow();
 
 ### Defining prototypes methods using a prototype instance
 
-Prototype methods can be defined using the `Prototype` instance of a class:
+Prototype methods may be defined using the `Prototype` instance of a class:
 
 ```php
 <?php
 
 use ICanBoogie\Prototype;
 
-$prototype = Prototype::from('Cat');
+Prototype::from(Cat::class)['meow'] = function(Cat $cat) {
 
-$prototype['meow'] = function(Cat $cat)
-{
 	return 'Meow';
+	
 };
 ```
 
@@ -290,7 +284,7 @@ $prototype['meow'] = function(Cat $cat)
 
 ### Defining prototypes methods using config fragments
 
-When using the [ICanBoogie][] framework, prototypes methods can be defined
+When using the [ICanBoogie][] framework, prototypes methods may be defined
 using the `hooks` config and the `prototypes` namespace:
 
 ```php
@@ -302,8 +296,8 @@ return [
 
 	'prototypes' => [
 
-		'Icybee\Modules\Pages\Page::my_additional_method' => 'Website\Hooks::my_additional_method',
-		'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'Website\Hooks::lazy_get_my_property'
+		'Icybee\Modules\Pages\Page::my_additional_method' => 'App\Hooks::my_additional_method',
+		'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'App\Hooks::lazy_get_my_property'
 
 	]
 ];
@@ -418,7 +412,7 @@ namespace ICanBoogie;
 
 class Operation
 {
-	static public function from($properties=null, array $construct_args=[], $class_name=null)
+	static public function from($properties = null, array $construct_args = [], $class_name = null)
 	{
 		if ($properties instanceof Request)
 		{

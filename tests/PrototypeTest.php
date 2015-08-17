@@ -24,8 +24,8 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$this->a = $a = new A();
-		$this->b = $b = new B();
+		$this->a = $a = new A;
+		$this->b = $b = new B;
 
 		$a->prototype['set_minutes'] = function(A $self, $minutes) {
 
@@ -40,7 +40,7 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 	public function testPrototype()
 	{
-		$this->assertInstanceOf('ICanBoogie\Prototype', $this->a->prototype);
+		$this->assertInstanceOf(Prototype::class, $this->a->prototype);
 	}
 
 	public function testMethod()
@@ -105,10 +105,10 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 	public function testPrototypeChainWithCats()
 	{
-		$cat = new Cat();
-		$normal_cat = new NormalCat();
-		$fierce_cat = new FierceCat();
-		$other_fierce_cat = new FierceCat();
+		$cat = new Cat;
+		$normal_cat = new NormalCat;
+		$fierce_cat = new FierceCat;
+		$other_fierce_cat = new FierceCat;
 
 		$cat->prototype['meow'] = function($target) {
 

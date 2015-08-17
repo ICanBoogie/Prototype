@@ -17,7 +17,7 @@ use ICanBoogie\Accessor\AccessorTrait;
  * Exception thrown in attempt to access a method that is not defined.
  *
  * @property-read string $method The method that is not defined.
- * @property-read mixed $class The class of the instance on which the method was invoked.
+ * @property-read string $class The class of the instance on which the method was invoked.
  * @property-read object|null $instance Instance on which the method was invoked, or `null` if
  * only the class is available.
  */
@@ -27,6 +27,9 @@ class MethodNotDefined extends \BadMethodCallException
 
 	private $method;
 
+	/**
+	 * @return string
+	 */
 	protected function get_method()
 	{
 		return $this->method;
@@ -34,6 +37,9 @@ class MethodNotDefined extends \BadMethodCallException
 
 	private $class;
 
+	/**
+	 * @return string
+	 */
 	protected function get_class()
 	{
 		return $this->class;
@@ -41,6 +47,9 @@ class MethodNotDefined extends \BadMethodCallException
 
 	private $instance;
 
+	/**
+	 * @return object|null
+	 */
 	protected function get_instance()
 	{
 		return $this->instance;

@@ -9,15 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypeTraitTest;
+namespace ICanBoogie\ObjectTest;
 
-use ICanBoogie\PrototypeTrait;
-
-class HasPropertyFixture
+class CreatedAtCaseExtended extends CreatedAtCase
 {
-	use PrototypeTrait;
 
-	public $public;
-	protected $protected;
-	private $private;
 }

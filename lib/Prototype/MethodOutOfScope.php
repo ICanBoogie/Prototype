@@ -17,7 +17,7 @@ use ICanBoogie\Accessor\AccessorTrait;
  * Exception thrown in attempt to invoke a method that is out of scope.
  *
  * @property-read string $method The method that is out of scope.
- * @property-read mixed $instance The instance on which the method was invoked.
+ * @property-read object|null $instance The instance on which the method was invoked.
  */
 class MethodOutOfScope extends \BadMethodCallException
 {
@@ -25,6 +25,9 @@ class MethodOutOfScope extends \BadMethodCallException
 
 	private $method;
 
+	/**
+	 * @return string
+	 */
 	protected function get_method()
 	{
 		return $this->method;
@@ -32,6 +35,9 @@ class MethodOutOfScope extends \BadMethodCallException
 
 	private $instance;
 
+	/**
+	 * @return object|null
+	 */
 	protected function get_instance()
 	{
 		return $this->instance;

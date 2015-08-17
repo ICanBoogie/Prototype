@@ -11,13 +11,10 @@
 
 namespace ICanBoogie\PrototypeTraitTest;
 
-use ICanBoogie\PrototypeTrait;
-
-class HasPropertyFixture
+class ParentCaseB extends ParentCaseA
 {
-	use PrototypeTrait;
-
-	public $public;
-	protected $protected;
-	private $private;
+	public function url($type)
+	{
+		return parent::url("another/$type");
+	}
 }

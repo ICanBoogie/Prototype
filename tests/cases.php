@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the ICanBoogie package.
+ *
+ * (c) Olivier Laviale <olivier.laviale@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ICanBoogie\ObjectTest;
 
 use ICanBoogie\Object;
@@ -130,6 +139,8 @@ class DefaultValueForUnsetProperty extends Object
  * This class is similar to the previous class, but the `slug` property is now protected. Thanks
  * to the volatile getter, the property can be read but setting it from the public scope
  * throws a `PropertyNotWritable` exception.
+ *
+ * @property-read string $slug
  */
 class DefaultValueForUnsetProtectedProperty extends Object
 {
@@ -138,7 +149,7 @@ class DefaultValueForUnsetProtectedProperty extends Object
 
 	public function __construct()
 	{
-		if (!$this->slug)
+		if (empty($this->slug))
 		{
 			unset($this->slug);
 		}
@@ -205,105 +216,5 @@ class VirtualProperty extends Object
 	protected function get_minutes()
 	{
 		return $this->seconds / 60;
-	}
-}
-
-class CreatedAtCase extends Object
-{
-	private $created_at;
-
-	protected function get_created_at()
-	{
-		$created_at = $this->created_at;
-
-		if ($created_at instanceof \DateTime)
-		{
-			return $created_at;
-		}
-
-		return new \DateTime($created_at);
-	}
-
-	protected function set_created_at($created_at)
-	{
-		$this->created_at = $created_at;
-	}
-}
-
-class CreatedAtCaseExtended extends CreatedAtCase
-{
-
-}
-
-class ExportCase extends Object
-{
-	public $public = 'public';
-	public $public_with_lazy_getter = 'public_with_lazy_getter';
-
-	protected function lazy_get_public_with_lazy_getter()
-	{
-		return 'VALUE: public_with_lazy_getter';
-	}
-
-	protected $protected = 'protected';
-	protected $protected_with_getter = 'protected_with_getter';
-	protected $protected_with_setter = 'protected_with_setter';
-	protected $protected_with_getter_and_setter = 'protected_with_getter_and_setter';
-	protected $protected_with_lazy_getter = 'protected_with_lazy_getter';
-
-	protected function get_protected_with_getter()
-	{
-		return 'VALUE: protected_with_getter';
-	}
-
-	protected function set_protected_with_setter()
-	{
-
-	}
-
-	protected function get_protected_with_getter_and_setter()
-	{
-		return 'VALUE: protected_with_getter';
-	}
-
-	protected function set_protected_with_getter_and_setter()
-	{
-
-	}
-
-	protected function lazy_get_protected_with_lazy_getter()
-	{
-		return 'VALUE: protected_with_lazy_getter';
-	}
-
-	private $private = 'private';
-	private $private_with_getter = 'private_with_getter';
-	private $private_with_setter = 'private_with_setter';
-	private $private_with_getter_and_setter = 'private_with_getter_and_setter';
-	private $private_with_lazy_getter = 'private_with_lazy_getter';
-
-	protected function get_private_with_getter()
-	{
-		return 'VALUE: private_with_getter';
-	}
-
-	protected function set_private_with_setter()
-	{
-
-	}
-
-	protected function get_private_with_getter_and_setter()
-	{
-		return 'VALUE: private_with_getter';
-	}
-
-	protected function set_private_with_getter_and_setter()
-	{
-
-	}
-
-	protected function lazy_get_private_with_lazy_getter()
-	{
-		return 'VALUE: private_with_lazy_getter';
 	}
 }
