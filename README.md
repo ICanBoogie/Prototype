@@ -284,22 +284,21 @@ Prototype::from(Cat::class)['meow'] = function(Cat $cat) {
 
 ### Defining prototypes methods using config fragments
 
-When using the [ICanBoogie][] framework, prototypes methods may be defined
-using the `hooks` config and the `prototypes` namespace:
+When using the [ICanBoogie][] framework, prototype methods may be defined
+using `prototype` configuration fragments:
 
 ```php
 <?php
 
-// config/hooks.php
+use Article;
+
+// config/prototype.php
 
 return [
 
-	'prototypes' => [
+	Article::class . '::url' => 'App\Hooks::article_url',
+	Article::class . '::get_url' => 'App\Hooks::article_get_url'
 
-		'Icybee\Modules\Pages\Page::my_additional_method' => 'App\Hooks::my_additional_method',
-		'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'App\Hooks::lazy_get_my_property'
-
-	]
 ];
 ```
 
@@ -496,11 +495,11 @@ The following exceptions are defined:
 ## ICanBoogie autoconfig
 
 The package supports the autoconfig feature of the framework [ICanBoogie][] and provides a
-config constructor for the "prototypes" config:
+configuration constructor for the "prototype" config:
 
 ```php
 $app = ICanBoogie\boot();
-$app->configs['prototypes']; // The "prototypes" config
+$app->configs['prototype']; // The "prototype" config
 ```
 
 

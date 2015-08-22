@@ -20,15 +20,7 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 	{
 		Hooks::synthesize_config([
 
-			[
-
-				'prototypes' => [
-
-					'invalid_method' => function () {}
-
-				]
-
-			]
+			[ 'invalid_method' => function () {} ]
 
 		]);
 	}
@@ -45,43 +37,21 @@ class HooksTest extends \PHPUnit_Framework_TestCase
 
 			[
 
-				'prototypes' => [
-
-					'one::one' => $one_one,
-					'one::two' => $one_two
-
-				]
+				'one::one' => $one_one,
+				'one::two' => $one_two
 
 			],
 
 			[
 
-				'prototypes' => [
-
-					'one::one' => $one_one_override,
-					'one::three' => $one_three
-
-				]
+				'one::one' => $one_one_override,
+				'one::three' => $one_three
 
 			],
 
 			[
 
-				uniqid() => [
-
-					uniqid()
-
-				]
-
-			],
-
-			[
-
-				'prototypes' => [
-
-					'two::one' => $two_one
-
-				]
+				'two::one' => $two_one
 
 			]
 

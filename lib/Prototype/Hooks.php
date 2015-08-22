@@ -17,13 +17,11 @@ namespace ICanBoogie\Prototype;
 class Hooks
 {
 	/**
-	 * Synthesizes the "prototypes" config from the "hooks" config.
+	 * Synthesizes the "prototype" config from the "prototype" config fragments.
 	 *
 	 * @param array $fragments
 	 *
 	 * @return array
-	 *
-	 * @throws \InvalidArgumentException if a method definition is missing the '::' separator.
 	 */
 	static public function synthesize_config(array $fragments)
 	{
@@ -31,25 +29,9 @@ class Hooks
 
 		foreach ($fragments as $pathname => $fragment)
 		{
-			if (empty($fragment['prototypes']))
+			foreach ($fragment as $method => $callback)
 			{
-				continue;
-			}
-
-			foreach ($fragment['prototypes'] as $method => $callback)
-			{
-				if (strpos($method, '::') === false)
-				{
-					throw new \InvalidArgumentException(\ICanBoogie\format
-					(
-						'Invalid method name %method, must be <code>class_name::method_name</code> in %pathname"', [
-
-							'method' => $method,
-							'pathname' => $pathname
-
-						]
-					));
-				}
+				self::assert_valid_prototype_method_name($method, $pathname);
 
 				list($class, $method) = explode('::', $method);
 
@@ -58,5 +40,29 @@ class Hooks
 		}
 
 		return $methods;
+	}
+
+	/**
+	 * Asserts that a prototype method name is valid.
+	 *
+	 * @param string $method
+	 * @param string $pathname
+	 *
+	 * @throws \InvalidArgumentException if a method definition is missing the '::' separator.
+	 */
+	static private function assert_valid_prototype_method_name($method, $pathname)
+	{
+		if (strpos($method, '::') === false)
+		{
+			throw new \InvalidArgumentException(\ICanBoogie\format
+			(
+				'Invalid method name %method, must be <code>class_name::method_name</code> in %pathname"', [
+
+					'method' => $method,
+					'pathname' => $pathname
+
+				]
+			));
+		}
 	}
 }

@@ -14,25 +14,7 @@ namespace ICanBoogie;
 use ICanBoogie\Prototype\MethodNotDefined;
 
 /**
- * Subclasses of the {@link Object} class are associated with a prototype, which can be used to
- * add methods as well as getters and setters to classes.
- *
- * When using the ICanBoogie framework, methods can be defined using the "hooks" config and the
- * "prototypes" namespace:
- *
- * <pre>
- * <?php
- *
- * return [
- *
- *     'prototypes' => [
- *
- *         'Icybee\Modules\Pages\Page::my_additional_method' => 'MyHookClass::my_additional_method',
- *         'Icybee\Modules\Pages\Page::lazy_get_my_property' => 'MyHookClass::lazy_get_my_property'
- *
- *     ]
- * ];
- * </pre>
+ * Manages the prototype methods that may be bound to classes using {@link PrototypeTrait}.
  */
 class Prototype implements \ArrayAccess, \IteratorAggregate
 {

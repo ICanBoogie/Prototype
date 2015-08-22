@@ -35,7 +35,7 @@
 	"extra": {
 		"icanboogie": {
 			"config-constructor": {
-				"prototypes": "ICanBoogie\\Prototype\\Hooks::synthesize_config#hooks"
+				"prototype": "ICanBoogie\\Prototype\\Hooks::synthesize_config"
 			}
 		}
 	}
