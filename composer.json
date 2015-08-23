@@ -30,13 +30,5 @@
 			"ICanBoogie\\Prototype\\": "lib/Prototype"
 		},
 		"classmap": [ "lib/Object.php", "lib/Prototype.php", "lib/PrototypeTrait.php" ]
-	},
-
-	"extra": {
-		"icanboogie": {
-			"config-constructor": {
-				"prototype": "ICanBoogie\\Prototype\\Hooks::synthesize_config"
-			}
-		}
 	}
 }

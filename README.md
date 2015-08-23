@@ -284,7 +284,7 @@ Prototype::from(Cat::class)['meow'] = function(Cat $cat) {
 
 ### Defining prototypes methods using config fragments
 
-When using the [ICanBoogie][] framework, prototype methods may be defined
+If the package is bound to [ICanBoogie][] using [icanboogie/bind-prototype][], prototype methods may be defined
 using `prototype` configuration fragments:
 
 ```php
@@ -492,20 +492,6 @@ The following exceptions are defined:
 
 
 
-## ICanBoogie autoconfig
-
-The package supports the autoconfig feature of the framework [ICanBoogie][] and provides a
-configuration constructor for the "prototype" config:
-
-```php
-$app = ICanBoogie\boot();
-$app->configs['prototype']; // The "prototype" config
-```
-
-
-
-
-
 ----------
 
 
@@ -583,14 +569,15 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-[PropertyNotWritable]: http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotWritable.html
-[PropertyNotReadable]: http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotReadable.html
-[ToArray]:             http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArray.html
-[ToArrayRecursive]:    http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArrayRecursive.html
-[documentation]:       http://api.icanboogie.org/prototype/2.3/
-[MethodNotDefined]:    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodNotDefined.html
-[MethodOutOfScope]:    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodOutOfScope.html
-[Object]:              http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Object.html
-[PrototypeTrait]:      http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.PrototypeTrait.html
-[ICanBoogie]:          http://icanboogie.org
-[icanboogie/accessor]: https://github.com/ICanBoogie/Accessor
+[PropertyNotWritable]:       http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotWritable.html
+[PropertyNotReadable]:       http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotReadable.html
+[ToArray]:                   http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArray.html
+[ToArrayRecursive]:          http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArrayRecursive.html
+[documentation]:             http://api.icanboogie.org/prototype/2.3/
+[MethodNotDefined]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodNotDefined.html
+[MethodOutOfScope]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodOutOfScope.html
+[Object]:                    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Object.html
+[PrototypeTrait]:            http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.PrototypeTrait.html
+[ICanBoogie]:                http://icanboogie.org
+[icanboogie/accessor]:       https://github.com/ICanBoogie/Accessor
+[icanboogie/bind-prototype]: https://github.com/ICanBoogie/bind-prototype
