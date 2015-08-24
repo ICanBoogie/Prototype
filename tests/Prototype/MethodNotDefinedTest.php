@@ -58,16 +58,22 @@ class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
 	public function test_undefined_method()
 	{
 		$a = new A;
+		$m = 'method' . uniqid();
 
 		try
 		{
-			$a->undefined_method();
+			$a->$m();
+
+			$this->fail("Expected MethodNotDefined");
+		}
+		catch (MethodNotDefined $e)
+		{
+			$this->assertEquals($m, $e->method);
+			$this->assertEquals(get_class($a), $e->class);
 		}
 		catch (\Exception $e)
 		{
-			$this->assertInstanceOf(MethodNotDefined::class, $e);
-			$this->assertEquals('undefined_method', $e->method);
-			$this->assertEquals(get_class($a), $e->class);
+			$this->fail("Expected MethodNotDefined");
 		}
 	}
 }
