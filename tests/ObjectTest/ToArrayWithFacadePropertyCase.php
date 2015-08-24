@@ -11,9 +11,9 @@
 
 namespace ICanBoogie\ObjectTest;
 
-use ICanBoogie\Object;
+use ICanBoogie\Prototyped;
 
-class ToArrayWithFacadePropertyCase extends Object
+class ToArrayWithFacadePropertyCase extends Prototyped
 {
 	public $a;
 	protected $b;

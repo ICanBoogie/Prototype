@@ -11,7 +11,7 @@
 
 namespace ICanBoogie\Prototype;
 
-use ICanBoogie\Object;
+use ICanBoogie\Prototyped;
 use ICanBoogie\Prototype\MethodNotDefinedTest\A;
 
 class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +20,7 @@ class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
 	{
 		$method = 'method' . uniqid();
 		$object = $this
-			->getMockBuilder(Object::class)
+			->getMockBuilder(Prototyped::class)
 			->disableOriginalConstructor()
 			->getMock();
 

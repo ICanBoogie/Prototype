@@ -11,12 +11,12 @@
 
 namespace ICanBoogie\ObjectTest;
 
-use ICanBoogie\Object;
+use ICanBoogie\Prototyped;
 
 /**
  * The `value` property CAN be read but MUST NOT be set.
  */
-class ReadOnlyProperty extends Object
+class ReadOnlyProperty extends Prototyped
 {
 	protected function get_property()
 	{
@@ -31,7 +31,7 @@ class ReadOnlyPropertyExtended extends ReadOnlyProperty
 /**
  * The `value` property CAN be read but MUST NOT be set.
  */
-class ReadOnlyPropertyProtected extends Object
+class ReadOnlyPropertyProtected extends Prototyped
 {
 	protected $property = 'value';
 
@@ -48,7 +48,7 @@ class ReadOnlyPropertyProtectedExtended extends ReadOnlyPropertyProtected
 /**
  * The `value` property CAN be read but MUST NOT be set.
  */
-class ReadOnlyPropertyPrivate extends Object
+class ReadOnlyPropertyPrivate extends Prototyped
 {
 	private $property = 'value';
 
@@ -65,7 +65,7 @@ class ReadOnlyPropertyPrivateExtended extends ReadOnlyPropertyPrivate
 /**
  * The `value` property CAN be wrote but MUST NOT be read.
  */
-class WriteOnlyProperty extends Object
+class WriteOnlyProperty extends Prototyped
 {
 	protected function set_property($value)
 	{
@@ -80,7 +80,7 @@ class WriteOnlyPropertyExtended extends WriteOnlyProperty
 /**
  * The `value` property CAN be wrote but MUST NOT be read.
  */
-class WriteOnlyPropertyProtected extends Object
+class WriteOnlyPropertyProtected extends Prototyped
 {
 	protected $property;
 
@@ -97,7 +97,7 @@ class WriteOnlyPropertyProtectedExtended extends WriteOnlyPropertyProtected
 /**
  * The `value` property CAN be wrote but MUST NOT be read.
  */
-class WriteOnlyPropertyPrivate extends Object
+class WriteOnlyPropertyPrivate extends Prototyped
 {
 	private $property;
 
@@ -116,7 +116,7 @@ class WriteOnlyPropertyPrivateExtended extends WriteOnlyPropertyPrivate
  * the property. The public property is unset to make it unaccessible, it should *not* be
  * created by the getter, but it can still be set by the user at any time.
  */
-class DefaultValueForUnsetProperty extends Object
+class DefaultValueForUnsetProperty extends Prototyped
 {
 	public $title;
 	public $slug;
@@ -142,7 +142,7 @@ class DefaultValueForUnsetProperty extends Object
  *
  * @property-read string $slug
  */
-class DefaultValueForUnsetProtectedProperty extends Object
+class DefaultValueForUnsetProtectedProperty extends Prototyped
 {
 	public $title;
 	protected $slug;
@@ -165,7 +165,7 @@ class DefaultValueForUnsetProtectedProperty extends Object
  * ICanBoogie\PropertyNotWritable is thrown if one tries to get the `value` property because the
  * getter tries to set the value and there is no setter.
  */
-class InvalidProtectedPropertyGetter extends Object
+class InvalidProtectedPropertyGetter extends Prototyped
 {
 	protected $value;
 
@@ -186,7 +186,7 @@ class InvalidProtectedPropertyGetter extends Object
  *
  * Note: This makes `value` writable from public scope.
  */
-class ValidProtectedPropertyGetter extends Object
+class ValidProtectedPropertyGetter extends Prototyped
 {
 	protected $value;
 
@@ -204,7 +204,7 @@ class ValidProtectedPropertyGetter extends Object
 /**
  * A virtual property is a property whose value is stored elsewhere.
  */
-class VirtualProperty extends Object
+class VirtualProperty extends Prototyped
 {
 	public $seconds;
 

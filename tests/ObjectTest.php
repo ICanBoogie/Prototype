@@ -24,7 +24,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_get_prototype()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 		$this->assertInstanceOf(Prototype::class, $o->prototype);
 	}
 
@@ -33,13 +33,13 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test_set_prototype()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 		$o->prototype = null;
 	}
 
 	public function test_export_empty()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 
 		$this->assertEmpty($o->__sleep());
 		$this->assertEmpty($o->to_array());
@@ -99,7 +99,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	public function test_set_undefined()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 		$v = uniqid();
 		$p = 'property' . uniqid();
 		$o->$p = $v;
@@ -111,14 +111,14 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test_get_undefined()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 		$p = 'property' . uniqid();
 		$o->$p;
 	}
 
 	public function test_to_array()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 		$this->assertEmpty($o->to_array());
 
 		$o = new ExportCase;
@@ -138,7 +138,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	public function test_sleep()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 		$this->assertEmpty($o->__sleep());
 
 		$o = new ExportCase;
@@ -325,7 +325,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	public function test_prototype_is_not_exported()
 	{
-		$o = new Object;
+		$o = new Prototyped;
 		$this->assertNotContains('prototype', $o->__sleep());
 		$this->assertArrayNotHasKey('prototype', $o->to_array());
 	}

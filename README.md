@@ -187,7 +187,7 @@ echo $news->url('madonna'); // /path/to/another/madonna.html
 ## Defining prototypes methods
 
 Prototype methods can be defined using a global configuration; through the `prototype` property
-of an `Object` instance; or using the `Prototype` instance associated with classes using
+of an `Prototyped` instance; or using the `Prototype` instance associated with classes using
 the [PrototypeTrait][] trait.
 
 
@@ -308,15 +308,15 @@ return [
 
 ## Getting an array representation of an object
 
-An array representation of an `Object` instance can be obtained using the `to_array()` method. Only
+An array representation of an `Prototyped` instance can be obtained using the `to_array()` method. Only
 public and façade properties are exported.
 
 ```php
 <?php
 
-use ICanBoogie\Object
+use ICanBoogie\Prototyped
 
-class A extends Object
+class A extends Prototyped
 {
 	public $a;
 	protected $b;
@@ -381,12 +381,12 @@ echo $a->to_json(); // {"a":"a","c":"c"}
 
 ## Creating an instance from an array of properties
 
-The `Object::from()` method creates an instance from an array of properties:
+The `Prototyped::from()` method creates an instance from an array of properties:
 
 ```php
 <?php
 
-class A extends Object
+class A extends Prototyped
 {
 	private $a;
 	protected $b;
@@ -400,7 +400,7 @@ Instances are created in the same fashion [PDO](http://www.php.net/manual/en/boo
 creates instances when fetching objects using the `FETCH_CLASS` mode, that is the properties
 of the instance are set *before* its constructor is invoked.
 
-`Object` sub-classes might want to override the `Object::from` method to allow creating
+`Prototyped` sub-classes might want to override the `Prototyped::from` method to allow creating
 instances from different kind of sources, just like the `Operation::from` method creates an
 `Operation` instance from a `Request`:
 
@@ -576,7 +576,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 [documentation]:             http://api.icanboogie.org/prototype/2.3/
 [MethodNotDefined]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodNotDefined.html
 [MethodOutOfScope]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodOutOfScope.html
-[Object]:                    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Object.html
+[Prototyped]:                    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototyped.html
 [PrototypeTrait]:            http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.PrototypeTrait.html
 [ICanBoogie]:                http://icanboogie.org
 [icanboogie/accessor]:       https://github.com/ICanBoogie/Accessor

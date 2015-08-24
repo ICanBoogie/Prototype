@@ -12,12 +12,12 @@
 namespace ICanBoogie\ObjectTest;
 
 use DateTime;
-use ICanBoogie\Object;
+use ICanBoogie\Prototyped;
 
 /**
  * @property DateTime $created_at
  */
-class CreatedAtCase extends Object
+class CreatedAtCase extends Prototyped
 {
 	private $created_at;
 

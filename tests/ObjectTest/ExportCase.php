@@ -11,9 +11,9 @@
 
 namespace ICanBoogie\ObjectTest;
 
-use ICanBoogie\Object;
+use ICanBoogie\Prototyped;
 
-class ExportCase extends Object
+class ExportCase extends Prototyped
 {
 	public $public = 'public';
 	public $public_with_lazy_getter = 'public_with_lazy_getter';

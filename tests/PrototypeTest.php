@@ -139,11 +139,11 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 namespace ICanBoogie\PrototypeTest;
 
-use ICanBoogie\Object;
+use ICanBoogie\Prototyped;
 
-class A extends Object {}
+class A extends Prototyped {}
 class B extends A {}
 
-class Cat extends Object {}
+class Cat extends Prototyped {}
 class NormalCat extends Cat {}
 class FierceCat extends Cat {}

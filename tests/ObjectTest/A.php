@@ -11,9 +11,9 @@
 
 namespace ICanBoogie\ObjectTest;
 
-use ICanBoogie\Object;
+use ICanBoogie\Prototyped;
 
-class A extends Object
+class A extends Prototyped
 {
 	public $a;
 	public $b;
