@@ -61,7 +61,12 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	static public function configure(array $config)
 	{
-		self::$pool = $config;
+		if (!$config)
+		{
+			return;
+		}
+
+		self::update_pool($config);
 
 		foreach (self::$prototypes as $class => $prototype)
 		{
@@ -73,6 +78,33 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			}
 
 			$prototype->methods = $config[$class] + $prototype->methods;
+		}
+	}
+
+	/**
+	 * Updates the method pool with additional bindings.
+	 *
+	 * @param array $bindings
+	 *
+	 * @return array
+	 */
+	static private function update_pool(array $bindings)
+	{
+		$pool = &self::$pool;
+
+		if (!$pool)
+		{
+			$pool = $bindings;
+
+			return;
+		}
+
+		$intersect = array_intersect_key($bindings, $pool);
+		$pool += array_diff_key($bindings, $pool);
+
+		foreach ($intersect as $class => $methods)
+		{
+			$pool[$class] = array_merge($pool[$class], $methods);
 		}
 	}
 
