@@ -9,9 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\ObjectTest;
+namespace ICanBoogie\PrototypedTest;
 
-class CreatedAtCaseExtended extends CreatedAtCase
+use ICanBoogie\Prototyped;
+
+class ToArrayCase extends Prototyped
 {
+	public $a;
+	public $b;
+	public $c;
 
+	public function __construct($a, $b, $c)
+	{
+		$this->a = $a;
+		$this->b = $b;
+		$this->c = $c;
+	}
 }

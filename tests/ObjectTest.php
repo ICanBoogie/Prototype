@@ -11,16 +11,16 @@
 
 namespace ICanBoogie;
 
-use ICanBoogie\ObjectTest\A;
-use ICanBoogie\ObjectTest\CreatedAtCase;
-use ICanBoogie\ObjectTest\CreatedAtCaseExtended;
-use ICanBoogie\ObjectTest\ToArrayCase;
-use ICanBoogie\ObjectTest\ToArrayWithFacadePropertyCase;
-use ICanBoogie\ObjectTest\ExportCase;
+use ICanBoogie\PrototypedTest\A;
+use ICanBoogie\PrototypedTest\CreatedAtCase;
+use ICanBoogie\PrototypedTest\CreatedAtCaseExtended;
+use ICanBoogie\PrototypedTest\ToArrayCase;
+use ICanBoogie\PrototypedTest\ToArrayWithFacadePropertyCase;
+use ICanBoogie\PrototypedTest\ExportCase;
 
 require_once 'cases.php';
 
-class ObjectTest extends \PHPUnit_Framework_TestCase
+class PrototypedTest extends \PHPUnit_Framework_TestCase
 {
 	public function test_get_prototype()
 	{
@@ -60,12 +60,12 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 
-			[ ObjectTest\ReadOnlyProperty::class ],
-			[ ObjectTest\ReadOnlyPropertyExtended::class ],
-			[ ObjectTest\ReadOnlyPropertyProtected::class ],
-			[ ObjectTest\ReadOnlyPropertyProtectedExtended::class ],
-			[ ObjectTest\ReadOnlyPropertyPrivate::class ],
-			[ ObjectTest\ReadOnlyPropertyPrivateExtended::class ],
+			[ PrototypedTest\ReadOnlyProperty::class ],
+			[ PrototypedTest\ReadOnlyPropertyExtended::class ],
+			[ PrototypedTest\ReadOnlyPropertyProtected::class ],
+			[ PrototypedTest\ReadOnlyPropertyProtectedExtended::class ],
+			[ PrototypedTest\ReadOnlyPropertyPrivate::class ],
+			[ PrototypedTest\ReadOnlyPropertyPrivateExtended::class ],
 
 		];
 	}
@@ -87,12 +87,12 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	{
 		return [
 
-			[ ObjectTest\WriteOnlyProperty::class ],
-			[ ObjectTest\WriteOnlyPropertyExtended::class ],
-			[ ObjectTest\WriteOnlyPropertyProtected::class ],
-			[ ObjectTest\WriteOnlyPropertyProtectedExtended::class ],
-			[ ObjectTest\WriteOnlyPropertyPrivate::class ],
-			[ ObjectTest\WriteOnlyPropertyPrivateExtended::class ],
+			[ PrototypedTest\WriteOnlyProperty::class ],
+			[ PrototypedTest\WriteOnlyPropertyExtended::class ],
+			[ PrototypedTest\WriteOnlyPropertyProtected::class ],
+			[ PrototypedTest\WriteOnlyPropertyProtectedExtended::class ],
+			[ PrototypedTest\WriteOnlyPropertyPrivate::class ],
+			[ PrototypedTest\WriteOnlyPropertyPrivateExtended::class ],
 
 		];
 	}
@@ -183,20 +183,20 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	public function testDefaultValueForUnsetProperty()
 	{
-		$o = new ObjectTest\DefaultValueForUnsetProperty;
+		$o = new PrototypedTest\DefaultValueForUnsetProperty;
 		$o->title = 'The quick brown fox';
 		$this->assertEquals('the-quick-brown-fox', $o->slug);
 		$this->assertArrayNotHasKey('slug', (array) $o);
 		$this->assertArrayNotHasKey('slug', $o->to_array());
 		$this->assertNotContains('slug', $o->__sleep());
 
-		$o = ObjectTest\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox' ]);
+		$o = PrototypedTest\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox' ]);
 		$this->assertEquals('the-quick-brown-fox', $o->slug);
 		$this->assertArrayNotHasKey('slug', (array) $o);
 		$this->assertArrayNotHasKey('slug', $o->to_array());
 		$this->assertNotContains('slug', $o->__sleep());
 
-		$o = new ObjectTest\DefaultValueForUnsetProperty;
+		$o = new PrototypedTest\DefaultValueForUnsetProperty;
 		$o->title = 'The quick brown fox';
 		$o->slug = 'brown-fox';
 		$this->assertEquals('brown-fox', $o->slug);
@@ -204,7 +204,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('slug', $o->to_array());
 		$this->assertContains('slug', $o->__sleep());
 
-		$o = ObjectTest\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox', 'slug' => 'brown-fox' ]);
+		$o = PrototypedTest\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox', 'slug' => 'brown-fox' ]);
 		$this->assertEquals('brown-fox', $o->slug);
 		$this->assertArrayHasKey('slug', (array) $o);
 		$this->assertArrayHasKey('slug', $o->to_array());
@@ -213,7 +213,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 
 	public function testDefaultValueForUnsetProtectedProperty()
 	{
-		$o = new ObjectTest\DefaultValueForUnsetProtectedProperty;
+		$o = new PrototypedTest\DefaultValueForUnsetProtectedProperty;
 		$o->title = 'Testing';
 		$this->assertEquals('testing', $o->slug);
 		# slug comes from the volatile getter, the property must *not* be set.
@@ -225,7 +225,7 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testInvalidUseOfDefaultValueForUnsetProtectedProperty()
 	{
-		$o = new ObjectTest\DefaultValueForUnsetProtectedProperty;
+		$o = new PrototypedTest\DefaultValueForUnsetProtectedProperty;
 		$o->slug = 'madonna';
 	}
 
@@ -234,19 +234,19 @@ class ObjectTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testInvalidProtectedPropertyGetter()
 	{
-		$o = new ObjectTest\InvalidProtectedPropertyGetter;
+		$o = new PrototypedTest\InvalidProtectedPropertyGetter;
 		$a = $o->value;
 	}
 
 	public function testValidProtectedPropertyGetter()
 	{
-		$o = new ObjectTest\ValidProtectedPropertyGetter;
+		$o = new PrototypedTest\ValidProtectedPropertyGetter;
 		$this->assertNotNull($o->value);
 	}
 
 	public function testVirtualProperty()
 	{
-		$o = new ObjectTest\VirtualProperty;
+		$o = new PrototypedTest\VirtualProperty;
 
 		$o->minutes = 1;
 		$this->assertEquals(1, $o->minutes);

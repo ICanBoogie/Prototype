@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\ObjectTest;
+namespace ICanBoogie\PrototypedTest;
 
 use ICanBoogie\Prototyped;
 

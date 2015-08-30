@@ -10,7 +10,7 @@
  */
 
 $loader = require __DIR__ . '/../vendor/autoload.php';
-$loader->addPsr4("ICanBoogie\\ObjectTest\\", __DIR__ . '/ObjectTest');
+$loader->addPsr4("ICanBoogie\\PrototypedTest\\", __DIR__ . '/PrototypedTest');
 $loader->addPsr4("ICanBoogie\\PrototypeTraitTest\\", __DIR__ . '/PrototypeTraitTest');
 $loader->addPsr4("ICanBoogie\\Prototype\\", __DIR__ . '/Prototype');
 
