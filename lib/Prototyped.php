@@ -58,9 +58,16 @@ class Prototyped implements ToArrayRecursive
 
 		$instance = $class_reflection->newInstanceWithoutConstructor();
 
-		foreach ($properties as $property => $value)
+		if ($instance instanceof self)
 		{
-			$instance->$property = $value;
+			$instance->assign($properties);
+		}
+		else
+		{
+			foreach ($properties as $property => $value)
+			{
+				$instance->$property = $value;
+			}
 		}
 
 		if ($class_reflection->hasMethod('__construct') && is_callable([ $instance, '__construct' ]))
@@ -135,6 +142,23 @@ class Prototyped implements ToArrayRecursive
 		unset($keys['prototype']);
 
 		return $keys;
+	}
+
+	/**
+	 * Assigns properties to an object.
+	 *
+	 * @param array $properties The properties to assign.
+	 *
+	 * @return $this
+	 */
+	public function assign(array $properties)
+	{
+		foreach ($properties as $property => $value)
+		{
+			$this->$property = $value;
+		}
+
+		return $this;
 	}
 
 	/**
