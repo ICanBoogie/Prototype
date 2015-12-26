@@ -26,9 +26,8 @@
 
 	"autoload": {
 		"psr-4": {
-			"ICanBoogie\\Prototype\\": "lib/Prototype",
-			"ICanBoogie\\Prototyped\\": "lib/Prototyped"
-		},
-		"classmap": [ "lib/Prototype.php", "lib/Prototyped.php", "lib/PrototypeTrait.php" ]
+			"ICanBoogie\\": "lib",
+			"ICanBoogie\\Prototype\\": "lib/Prototype"
+		}
 	}
 }
