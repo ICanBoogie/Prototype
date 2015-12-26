@@ -75,13 +75,24 @@ class MethodNotDefined extends \BadMethodCallException
 		$this->method = $method;
 		$this->class = $class;
 
-		$message = $message ?: \ICanBoogie\format('The method %method is not defined by the prototype of class %class.', [
+		parent::__construct($message ?: $this->format_message($method, $class), $code, $previous);
+	}
+
+	/**
+	 * Formats exception message.
+	 *
+	 * @param string $method
+	 * @param string $class
+	 *
+	 * @return string
+	 */
+	protected function format_message($method, $class)
+	{
+		return \ICanBoogie\format('The method %method is not defined by the prototype of class %class.', [
 
 			'method' => $method,
 			'class' => $class
 
 		]);
-
-		parent::__construct($message, $code, $previous);
 	}
 }

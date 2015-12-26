@@ -57,13 +57,24 @@ class MethodOutOfScope extends \BadMethodCallException
 		$this->method = $method;
 		$this->instance = $instance;
 
-		$message = $message ?: \ICanBoogie\format('The method %method is out of scope for class %class.', [
+		parent::__construct($message ?: $this->format_message($method, $instance), $code, $previous);
+	}
+
+	/**
+	 * Formats exception message.
+	 *
+	 * @param string $method
+	 * @param object $instance
+	 *
+	 * @return string
+	 */
+	protected function format_message($method, $instance)
+	{
+		return \ICanBoogie\format('The method %method is out of scope for class %class.', [
 
 			'method' => $method,
 			'class' => get_class($instance)
 
 		]);
-
-		parent::__construct($message, $code, $previous);
 	}
 }
