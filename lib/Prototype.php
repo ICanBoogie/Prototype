@@ -19,18 +19,18 @@ use ICanBoogie\Prototype\MethodNotDefined;
 class Prototype implements \ArrayAccess, \IteratorAggregate
 {
 	/**
-	 * Prototypes built per class.
+	 * Prototypes instances per class.
 	 *
 	 * @var Prototype[]
 	 */
 	static protected $prototypes = [];
 
 	/**
-	 * Pool of prototype methods per class.
+	 * Prototype methods per class.
 	 *
 	 * @var array
 	 */
-	static protected $pool;
+	static protected $bindings;
 
 	/**
 	 * Returns the prototype associated with the specified class or object.
@@ -46,65 +46,71 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			$class = get_class($class);
 		}
 
-		if (empty(self::$prototypes[$class]))
-		{
-			self::$prototypes[$class] = new static($class);
-		}
-
-		return self::$prototypes[$class];
+		return empty(self::$prototypes[$class])
+			? self::$prototypes[$class] = new static($class)
+			: self::$prototypes[$class];
 	}
 
 	/**
-	 * Defines many prototype methods in a single call.
+	 * Defines prototype methods.
 	 *
-	 * @param array $config
+	 * @param array $bindings
 	 */
-	static public function configure(array $config)
+	static public function configure(array $bindings)
 	{
-		if (!$config)
+		if (!$bindings)
 		{
 			return;
 		}
 
-		self::update_pool($config);
-
-		foreach (self::$prototypes as $class => $prototype)
-		{
-			$prototype->consolidated_methods = null;
-
-			if (empty($config[$class]))
-			{
-				continue;
-			}
-
-			$prototype->methods = $config[$class] + $prototype->methods;
-		}
+		self::update_bindings($bindings);
+		self::update_instances($bindings);
 	}
 
 	/**
-	 * Updates the method pool with additional bindings.
+	 * Updates prototype methods with bindings.
 	 *
 	 * @param array $bindings
 	 *
 	 * @return array
 	 */
-	static private function update_pool(array $bindings)
+	static private function update_bindings(array $bindings)
 	{
-		$pool = &self::$pool;
+		$current = &self::$bindings;
 
-		if (!$pool)
+		if (!$current)
 		{
-			$pool = $bindings;
+			$current = $bindings;
 
 			return;
 		}
 
-		$intersect = array_intersect_key($bindings, $pool);
-		$pool += array_diff_key($bindings, $pool);
+		$intersect = array_intersect_key($bindings, $current);
+		$current += array_diff_key($bindings, $current);
 
 		foreach ($intersect as $class => $methods)
 		{
-			$pool[$class] = array_merge($pool[$class], $methods);
+			$current[$class] = array_merge($current[$class], $methods);
+		}
+	}
+
+	/**
+	 * Updates instances with bindings.
+	 *
+	 * @param array $bindings
+	 */
+	static private function update_instances(array $bindings)
+	{
+		foreach (self::$prototypes as $class => $prototype)
+		{
+			$prototype->consolidated_methods = null;
+
+			if (empty($bindings[$class]))
+			{
+				continue;
+			}
+
+			$prototype->methods = $bindings[$class] + $prototype->methods;
 		}
 	}
 
@@ -152,9 +158,9 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			$this->parent = static::from($parent_class);
 		}
 
-		if (isset(self::$pool[$class]))
+		if (isset(self::$bindings[$class]))
 		{
-			$this->methods = self::$pool[$class];
+			$this->methods = self::$bindings[$class];
 		}
 	}
 
