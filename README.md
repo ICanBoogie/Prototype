@@ -1,10 +1,10 @@
 # Prototype
 
 [![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/3.0.svg)](http://travis-ci.org/ICanBoogie/Prototype)
 [![HHVM](https://img.shields.io/hhvm/icanboogie/prototype.svg)](http://hhvm.h4cc.de/package/icanboogie/prototype)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
+[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/3.0.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/3.0.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
 The **icanboogie/prototype** package allows methods of classes using the [PrototypeTrait][] to be
@@ -500,7 +500,7 @@ The following exceptions are defined:
 
 ## Requirements
 
-The package requires PHP 5.5 or later.
+The package requires PHP 5.6 or later.
 
 
 
@@ -554,8 +554,8 @@ The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/3.0.svg)](http://travis-ci.org/ICanBoogie/Prototype)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/3.0.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 
 
 
@@ -573,11 +573,11 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 [PropertyNotReadable]:       http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotReadable.html
 [ToArray]:                   http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArray.html
 [ToArrayRecursive]:          http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArrayRecursive.html
-[documentation]:             http://api.icanboogie.org/prototype/2.3/
-[MethodNotDefined]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodNotDefined.html
-[MethodOutOfScope]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodOutOfScope.html
-[Prototyped]:                http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototyped.html
-[PrototypeTrait]:            http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.PrototypeTrait.html
+[documentation]:             http://api.icanboogie.org/prototype/3.0/
+[MethodNotDefined]:          http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.Prototype.MethodNotDefined.html
+[MethodOutOfScope]:          http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.Prototype.MethodOutOfScope.html
+[Prototyped]:                http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.Prototyped.html
+[PrototypeTrait]:            http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.PrototypeTrait.html
 [ICanBoogie]:                http://icanboogie.org
 [icanboogie/accessor]:       https://github.com/ICanBoogie/Accessor
 [icanboogie/bind-prototype]: https://github.com/ICanBoogie/bind-prototype

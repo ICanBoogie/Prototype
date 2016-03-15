@@ -1,7 +1,7 @@
 # customization
 
 PACKAGE_NAME = icanboogie/prototype
-PACKAGE_VERSION = 2.4
+PACKAGE_VERSION = 3.0
 
 # do not edit the following lines
 

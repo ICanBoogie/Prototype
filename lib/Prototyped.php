@@ -72,7 +72,7 @@ class Prototyped implements ToArrayRecursive
 
 		if ($class_reflection->hasMethod('__construct') && is_callable([ $instance, '__construct' ]))
 		{
-			call_user_func_array([ $instance, '__construct' ], $construct_args);
+			$instance->__construct(...$construct_args);
 		}
 
 		return $instance;

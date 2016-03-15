@@ -46,7 +46,7 @@ trait PrototypeTrait
 	{
 		if (isset($this->$method) && is_callable([ $this->$method, '__invoke' ]))
 		{
-			return call_user_func_array($this->$method, $arguments);
+			return $this->$method(...$arguments);
 		}
 
 		array_unshift($arguments, $this);
@@ -54,8 +54,9 @@ trait PrototypeTrait
 		try
 		{
 			$prototype = $this->prototype ?: $this->get_prototype();
+			$callable = $prototype[$method];
 
-			return call_user_func_array($prototype[$method], $arguments);
+			return $callable(...$arguments);
 		}
 		catch (MethodNotDefined $e)
 		{
@@ -151,14 +152,14 @@ trait PrototypeTrait
 
 		if (isset($prototype[$method]))
 		{
-			return call_user_func($prototype[$method], $this, $property);
+			return $prototype[$method]($this, $property);
 		}
 
 		$method  = 'lazy_get_' . $property;
 
 		if (isset($prototype[$method]))
 		{
-			return $this->$property = call_user_func($prototype[$method], $this, $property);
+			return $this->$property = $prototype[$method]($this, $property);
 		}
 
 		$success = false;
