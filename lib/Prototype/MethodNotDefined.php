@@ -59,17 +59,19 @@ class MethodNotDefined extends \BadMethodCallException
 	 * @inheritdoc
 	 *
 	 * @param string $method The method that is not defined.
-	 * @param string|object $class The name of the class or one of its instances.
+	 * @param string|object $class_or_instance The name of the class or one of its instances.
 	 * @param string|null $message If `null` a message is formatted with $method and $class.
 	 * @param int $code
 	 * @param \Exception $previous
 	 */
-	public function __construct($method, $class, $message = null, $code = 500, \Exception $previous = null)
+	public function __construct($method, $class_or_instance, $message = null, $code = 500, \Exception $previous = null)
 	{
-		if (is_object($class))
+		$class = $class_or_instance;
+
+		if (is_object($class_or_instance))
 		{
-			$this->instance = $class;
-			$class = get_class($class);
+			$this->instance = $class_or_instance;
+			$class = get_class($class_or_instance);
 		}
 
 		$this->method = $method;

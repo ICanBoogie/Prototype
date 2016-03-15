@@ -1,15 +1,15 @@
 # Prototype
 
-[![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/ICanBoogie/Prototype/releases)
+[![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 [![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
 [![HHVM](https://img.shields.io/hhvm/icanboogie/prototype.svg)](http://hhvm.h4cc.de/package/icanboogie/prototype)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
-The **Prototype** package allows methods of classes using the [PrototypeTrait][] to be defined at
-runtime, and since the [icanboogie/accessor][] package is used, this also includes getters and
-setters.
+The **icanboogie/prototype** package allows methods of classes using the [PrototypeTrait][] to be
+defined at runtime, and since the [icanboogie/accessor][] package is used, this also includes
+getters and setters.
 
 
 
@@ -118,7 +118,7 @@ use ICanBoogie\PrototypeTrait;
 class Article
 {
 	use PrototypeTrait;
-	
+
 	public $image_id;
 }
 
@@ -274,7 +274,7 @@ use ICanBoogie\Prototype;
 Prototype::from(Cat::class)['meow'] = function(Cat $cat) {
 
 	return 'Meow';
-	
+
 };
 ```
 
@@ -576,7 +576,7 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 [documentation]:             http://api.icanboogie.org/prototype/2.3/
 [MethodNotDefined]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodNotDefined.html
 [MethodOutOfScope]:          http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototype.MethodOutOfScope.html
-[Prototyped]:                    http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototyped.html
+[Prototyped]:                http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.Prototyped.html
 [PrototypeTrait]:            http://api.icanboogie.org/prototype/2.3/class-ICanBoogie.PrototypeTrait.html
 [ICanBoogie]:                http://icanboogie.org
 [icanboogie/accessor]:       https://github.com/ICanBoogie/Accessor
