@@ -71,8 +71,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 * Updates prototype methods with bindings.
 	 *
 	 * @param array $bindings
-	 *
-	 * @return array
 	 */
 	static private function update_bindings(array $bindings)
 	{
@@ -81,8 +79,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 		if (!$current)
 		{
 			$current = $bindings;
-
-			return;
 		}
 
 		$intersect = array_intersect_key($bindings, $current);
