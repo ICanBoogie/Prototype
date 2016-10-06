@@ -23,14 +23,14 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var Prototype[]
 	 */
-	static protected $prototypes = [];
+	static private $prototypes = [];
 
 	/**
 	 * Prototype methods per class.
 	 *
 	 * @var array
 	 */
-	static protected $bindings;
+	static private $bindings;
 
 	/**
 	 * Returns the prototype associated with the specified class or object.
@@ -119,35 +119,35 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @var string
 	 */
-	protected $class;
+	private $class;
 
 	/**
 	 * Parent prototype.
 	 *
 	 * @var Prototype
 	 */
-	protected $parent;
+	private $parent;
 
 	/**
 	 * Methods defined by the prototype.
 	 *
 	 * @var callable[]
 	 */
-	protected $methods = [];
+	private $methods = [];
 
 	/**
 	 * Methods defined by the prototypes chain.
 	 *
 	 * @var callable[]|null
 	 */
-	protected $consolidated_methods;
+	private $consolidated_methods;
 
 	/**
 	 * Creates a prototype for the specified class.
 	 *
 	 * @param string $class
 	 */
-	protected function __construct($class)
+	private function __construct($class)
 	{
 		$this->class = $class;
 
@@ -171,7 +171,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return callable[]
 	 */
-	protected function get_consolidated_methods()
+	private function get_consolidated_methods()
 	{
 		if ($this->consolidated_methods !== null)
 		{
@@ -193,7 +193,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * The method must be invoked when prototype methods are modified.
 	 */
-	protected function revoke_consolidated_methods()
+	private function revoke_consolidated_methods()
 	{
 		$class = $this->class;
 
