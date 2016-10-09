@@ -67,7 +67,7 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 		};
 
-		Prototype::configure([
+		Prototype::bind([
 
 			BindCase::class => [
 
@@ -77,7 +77,7 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 		]);
 
-		Prototype::configure([
+		Prototype::bind([
 
 			BindCase::class => [
 
@@ -87,14 +87,14 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 		]);
 
-		Prototype::configure([]);
+		Prototype::bind([]);
 
 		$case = new BindCase();
 
 		$this->assertSame($value1, $case->$method1());
 		$this->assertSame($value2, $case->$method2());
 
-		Prototype::configure([
+		Prototype::bind([
 
 			BindCase::class => [
 

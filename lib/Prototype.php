@@ -56,7 +56,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param array $bindings
 	 */
-	static public function configure(array $bindings)
+	static public function bind(array $bindings)
 	{
 		if (!$bindings)
 		{
@@ -65,6 +65,19 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 		self::update_bindings($bindings);
 		self::update_instances($bindings);
+	}
+
+	/**
+	 * Defines prototype methods.
+	 *
+	 * @param array $bindings
+	 *
+	 * @deprecated
+	 * @see bind()
+	 */
+	static public function configure(array $bindings)
+	{
+		self::bind($bindings);
 	}
 
 	/**

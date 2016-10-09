@@ -206,7 +206,7 @@ defined using any callable such as `"App\Hooks::cat_meow"`.
 ```php
 <?php
 
-ICanBoogie\Prototype::configure([
+ICanBoogie\Prototype::bind([
 
 	Cat::class => [
 
