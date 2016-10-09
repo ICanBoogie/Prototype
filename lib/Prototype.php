@@ -46,9 +46,9 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			$class = get_class($class);
 		}
 
-		return empty(self::$prototypes[$class])
-			? self::$prototypes[$class] = new static($class)
-			: self::$prototypes[$class];
+		$prototype = &self::$prototypes[$class];
+
+		return $prototype ?: $prototype = new static($class);
 	}
 
 	/**
