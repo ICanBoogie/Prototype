@@ -11,11 +11,14 @@
 
 namespace ICanBoogie;
 
+use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\PrototypeTest\A;
 use ICanBoogie\PrototypeTest\B;
+use ICanBoogie\PrototypeTest\BindCase;
 use ICanBoogie\PrototypeTest\Cat;
 use ICanBoogie\PrototypeTest\FierceCat;
 use ICanBoogie\PrototypeTest\NormalCat;
+use ICanBoogie\PrototypeTest\UnsetCase;
 
 class PrototypeTest extends \PHPUnit_Framework_TestCase
 {
@@ -36,6 +39,82 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 
 			return $self->seconds / 60;
 		};
+	}
+
+	public function testBind()
+	{
+		$method1 = 'm' . uniqid();
+		$method2 = 'm' . uniqid();
+		$value1 = uniqid();
+		$value2 = uniqid();
+		$value3 = uniqid();
+
+		$callback1 = function (BindCase $case) use ($value1) {
+
+			return $value1;
+
+		};
+
+		$callback2 = function (BindCase $case) use ($value2) {
+
+			return $value2;
+
+		};
+
+		$callback3 = function (BindCase $case) use ($value3) {
+
+			return $value3;
+
+		};
+
+		Prototype::configure([
+
+			BindCase::class => [
+
+				$method1 => $callback1
+
+			]
+
+		]);
+
+		Prototype::configure([
+
+			BindCase::class => [
+
+				$method2 => $callback2
+
+			]
+
+		]);
+
+		Prototype::configure([]);
+
+		$case = new BindCase();
+
+		$this->assertSame($value1, $case->$method1());
+		$this->assertSame($value2, $case->$method2());
+
+		Prototype::configure([
+
+			BindCase::class => [
+
+				$method1 => $callback3
+
+			]
+
+		]);
+
+		$methods = iterator_to_array(Prototype::from(BindCase::class));
+
+		$this->assertSame([
+
+			$method1 => $callback3,
+			$method2 => $callback2,
+
+		], $methods);
+
+		$this->assertSame($value3, $case->$method1());
+		$this->assertSame($value2, $case->$method2());
 	}
 
 	public function testPrototype()
@@ -135,15 +214,27 @@ class PrototypeTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->a->undefined_method();
 	}
+
+	public function testUnset()
+	{
+		$value = uniqid();
+		$method = 'm' . uniqid();
+
+		$prototype = Prototype::from(UnsetCase::class);
+		$prototype[$method] = function () use ($value) {
+
+			return $value;
+
+		};
+
+		$case = new UnsetCase();
+
+		$this->assertSame($value, $case->$method());
+
+		unset($prototype[$method]);
+
+		$this->setExpectedException(MethodNotDefined::class);
+
+		$case->$method();
+	}
 }
-
-namespace ICanBoogie\PrototypeTest;
-
-use ICanBoogie\Prototyped;
-
-class A extends Prototyped {}
-class B extends A {}
-
-class Cat extends Prototyped {}
-class NormalCat extends Cat {}
-class FierceCat extends Cat {}
