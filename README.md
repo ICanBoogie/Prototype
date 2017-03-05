@@ -1,10 +1,10 @@
 # Prototype
 
 [![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/3.0.svg)](http://travis-ci.org/ICanBoogie/Prototype)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
 [![HHVM](https://img.shields.io/hhvm/icanboogie/prototype.svg)](http://hhvm.h4cc.de/package/icanboogie/prototype)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/3.0.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/3.0.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
+[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
 The **icanboogie/prototype** package allows methods of classes using the [PrototypeTrait][] to be
@@ -554,8 +554,8 @@ The directory can later be cleaned with the `make clean` command.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/3.0.svg)](http://travis-ci.org/ICanBoogie/Prototype)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/3.0.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
+[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 
 
 
