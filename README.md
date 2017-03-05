@@ -569,15 +569,15 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-[PropertyNotWritable]:       http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotWritable.html
-[PropertyNotReadable]:       http://api.icanboogie.org/common/1.2/class-ICanBoogie.PropertyNotReadable.html
-[ToArray]:                   http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArray.html
-[ToArrayRecursive]:          http://api.icanboogie.org/common/1.2/class-ICanBoogie.ToArrayRecursive.html
-[documentation]:             http://api.icanboogie.org/prototype/3.0/
-[MethodNotDefined]:          http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.Prototype.MethodNotDefined.html
-[MethodOutOfScope]:          http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.Prototype.MethodOutOfScope.html
-[Prototyped]:                http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.Prototyped.html
-[PrototypeTrait]:            http://api.icanboogie.org/prototype/3.0/class-ICanBoogie.PrototypeTrait.html
-[ICanBoogie]:                http://icanboogie.org
+[PropertyNotWritable]:       https://icanboogie.org/api/common/1.2/class-ICanBoogie.PropertyNotWritable.html
+[PropertyNotReadable]:       https://icanboogie.org/api/common/1.2/class-ICanBoogie.PropertyNotReadable.html
+[ToArray]:                   https://icanboogie.org/api/common/1.2/class-ICanBoogie.ToArray.html
+[ToArrayRecursive]:          https://icanboogie.org/api/common/1.2/class-ICanBoogie.ToArrayRecursive.html
+[documentation]:             https://icanboogie.org/api/prototype/3.0/
+[MethodNotDefined]:          https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.Prototype.MethodNotDefined.html
+[MethodOutOfScope]:          https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.Prototype.MethodOutOfScope.html
+[Prototyped]:                https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.Prototyped.html
+[PrototypeTrait]:            https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.PrototypeTrait.html
+[ICanBoogie]:                https://icanboogie.org
 [icanboogie/accessor]:       https://github.com/ICanBoogie/Accessor
 [icanboogie/bind-prototype]: https://github.com/ICanBoogie/bind-prototype
