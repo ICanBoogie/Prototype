@@ -9,7 +9,6 @@
  * file that was distributed with this source code.
  */
 
-$loader = require __DIR__ . '/../vendor/autoload.php';
-$loader->addPsr4("ICanBoogie\\", __DIR__);
+require __DIR__ . '/../vendor/autoload.php';
 
 date_default_timezone_set('Europe/Paris');
