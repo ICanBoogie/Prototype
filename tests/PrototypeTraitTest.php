@@ -16,7 +16,7 @@ use ICanBoogie\PrototypeTraitTest\AccessorCase;
 use ICanBoogie\PrototypeTraitTest\ParentCaseA;
 use ICanBoogie\PrototypeTraitTest\ParentCaseB;
 
-class PrototypeTraitTest extends \PHPUnit_Framework_TestCase
+class PrototypeTraitTest extends \PHPUnit\Framework\TestCase
 {
 	public function test_accessor()
 	{

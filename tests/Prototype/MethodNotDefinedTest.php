@@ -14,7 +14,7 @@ namespace ICanBoogie\Prototype;
 use ICanBoogie\Prototyped;
 use ICanBoogie\Prototype\MethodNotDefinedTest\A;
 
-class MethodNotDefinedTest extends \PHPUnit_Framework_TestCase
+class MethodNotDefinedTest extends \PHPUnit\Framework\TestCase
 {
 	public function test_instance()
 	{

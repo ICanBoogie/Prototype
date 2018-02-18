@@ -20,7 +20,7 @@ use ICanBoogie\PrototypeTest\FierceCat;
 use ICanBoogie\PrototypeTest\NormalCat;
 use ICanBoogie\PrototypeTest\UnsetCase;
 
-class PrototypeTest extends \PHPUnit_Framework_TestCase
+class PrototypeTest extends \PHPUnit\Framework\TestCase
 {
 	private $a;
 	private $b;

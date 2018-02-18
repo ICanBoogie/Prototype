@@ -13,7 +13,7 @@ namespace ICanBoogie\Prototype;
 
 use ICanBoogie\Prototype\MethodOutOfScopeTest\A;
 
-class MethodOutOfScopeTest extends \PHPUnit_Framework_TestCase
+class MethodOutOfScopeTest extends \PHPUnit\Framework\TestCase
 {
 	public function test_invoke_public_method()
 	{

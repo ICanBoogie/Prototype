@@ -20,7 +20,7 @@ use ICanBoogie\PrototypedTest\ExportCase;
 
 require_once 'cases.php';
 
-class PrototypedTest extends \PHPUnit_Framework_TestCase
+class PrototypedTest extends \PHPUnit\Framework\TestCase
 {
 	public function test_get_prototype()
 	{
