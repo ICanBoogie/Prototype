@@ -12,6 +12,7 @@
 namespace ICanBoogie;
 
 use ICanBoogie\PrototypedTest\A;
+use ICanBoogie\PrototypedTest\AssignableCase;
 use ICanBoogie\PrototypedTest\CreatedAtCase;
 use ICanBoogie\PrototypedTest\CreatedAtCaseExtended;
 use ICanBoogie\PrototypedTest\ToArrayCase;
@@ -367,5 +368,52 @@ class PrototypedTest extends \PHPUnit\Framework\TestCase
 			[ CreatedAtCaseExtended::class ]
 
 		];
+	}
+
+	public function test_assign_safe()
+	{
+		$case = new AssignableCase;
+		$case->assign([
+
+			AssignableCase::PROPERTY_ID => uniqid(),
+			AssignableCase::PROPERTY_COMMENT => $comment = uniqid(),
+			AssignableCase::PROPERTY_COLOR => $color = uniqid(),
+
+		]);
+
+		$this->assertEmpty($case->id);
+		$this->assertSame($comment, $case->comment);
+		$this->assertSame($color, $case->color);
+	}
+
+	public function test_assign_unsafe()
+	{
+		$case = new AssignableCase;
+		$case->assign([
+
+			AssignableCase::PROPERTY_ID => $id = uniqid(),
+			AssignableCase::PROPERTY_COMMENT => $comment = uniqid(),
+			AssignableCase::PROPERTY_COLOR => $color = uniqid(),
+
+		], AssignableCase::ASSIGN_UNSAFE);
+
+		$this->assertSame($id, $case->id);
+		$this->assertSame($comment, $case->comment);
+		$this->assertSame($color, $case->color);
+	}
+
+	public function test_from_is_unsafe()
+	{
+		$case = AssignableCase::from([
+
+			AssignableCase::PROPERTY_ID => $id = uniqid(),
+			AssignableCase::PROPERTY_COMMENT => $comment = uniqid(),
+			AssignableCase::PROPERTY_COLOR => $color = uniqid(),
+
+		]);
+
+		$this->assertSame($id, $case->id);
+		$this->assertSame($comment, $case->comment);
+		$this->assertSame($color, $case->color);
 	}
 }

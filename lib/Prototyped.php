@@ -28,6 +28,9 @@ class Prototyped implements ToArrayRecursive
 	use PrototypeTrait;
 	use SerializableTrait;
 
+	const ASSIGN_SAFE = false;
+	const ASSIGN_UNSAFE = true;
+
 	/**
 	 * Creates a new instance of the class using the supplied properties.
 	 *
@@ -60,7 +63,7 @@ class Prototyped implements ToArrayRecursive
 
 		if ($instance instanceof self)
 		{
-			$instance->assign($properties);
+			$instance->assign($properties, true);
 		}
 		else
 		{
@@ -76,6 +79,16 @@ class Prototyped implements ToArrayRecursive
 		}
 
 		return $instance;
+	}
+
+	/**
+	 * Returns assignable properties.
+	 *
+	 * @return array
+	 */
+	static public function assignable()
+	{
+		return [];
 	}
 
 	static private $class_reflection_cache = [];
@@ -148,11 +161,17 @@ class Prototyped implements ToArrayRecursive
 	 * Assigns properties to an object.
 	 *
 	 * @param array $properties The properties to assign.
+	 * @param bool $unsafe
 	 *
 	 * @return $this
 	 */
-	public function assign(array $properties)
+	public function assign(array $properties, $unsafe = self::ASSIGN_SAFE)
 	{
+		if (!$unsafe)
+		{
+			$properties = array_intersect_key($properties, array_fill_keys(static::assignable(), null));
+		}
+
 		foreach ($properties as $property => $value)
 		{
 			$this->$property = $value;
