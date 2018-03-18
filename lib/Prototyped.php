@@ -35,8 +35,8 @@ class Prototyped implements ToArrayRecursive
 	use PrototypeTrait;
 	use SerializableTrait;
 
-	const ASSIGN_SAFE = false;
-	const ASSIGN_UNSAFE = true;
+	public const ASSIGN_SAFE = false;
+	public const ASSIGN_UNSAFE = true;
 
 	/**
 	 * Creates a new instance of the class using the supplied properties.
@@ -50,11 +50,11 @@ class Prototyped implements ToArrayRecursive
 	 * @param string|null $class_name The name of the instance class. If empty, the name of the
 	 * called class is used.
 	 *
-	 * @return mixed The new instance.
+	 * @return object The new instance.
 	 *
 	 * @throws \ReflectionException
 	 */
-	static public function from($properties = null, array $construct_args = [], $class_name = null)
+	static public function from(array $properties = [], array $construct_args = [], string $class_name = null): object
 	{
 		$class_reflection = self::get_class_reflection($class_name ?: get_called_class());
 
@@ -87,7 +87,7 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @return array
 	 */
-	static public function assignable()
+	static public function assignable(): array
 	{
 		return [];
 	}
@@ -103,7 +103,7 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @throws \ReflectionException
 	 */
-	static private function get_class_reflection($class_name)
+	static private function get_class_reflection(string $class_name): \ReflectionClass
 	{
 		$reflection = &self::$class_reflection_cache[$class_name];
 
@@ -117,17 +117,17 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @return array
 	 */
-	static private function get_object_vars($object)
+	static private function get_object_vars(object $object): array
 	{
 		static $get_object_vars;
 
 		if (!$get_object_vars)
 		{
-			$get_object_vars = \Closure::bind(function($object) {
+			$get_object_vars = \Closure::bind(function(object $object) {
 
 				return get_object_vars($object);
 
-			}, null, Prototype\Dummy::class); // Because `stdClass` is a no-no in PHP7
+			}, null, get_class(new class {})); // Because `stdClass` is a no-no in PHP7
 		}
 
 		return $get_object_vars($object);
@@ -165,7 +165,7 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @return $this
 	 */
-	public function assign(array $properties, $unsafe = self::ASSIGN_SAFE)
+	public function assign(array $properties, bool $unsafe = self::ASSIGN_SAFE): object
 	{
 		if (!$unsafe)
 		{
@@ -187,7 +187,7 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @return array
 	 */
-	public function to_array()
+	public function to_array(): array
 	{
 		$array = self::get_object_vars($this);
 
@@ -204,7 +204,7 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @return string
 	 */
-	public function to_json()
+	public function to_json(): string
 	{
 		return json_encode($this->to_array_recursive());
 	}

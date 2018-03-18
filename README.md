@@ -313,7 +313,7 @@ public and façade properties are exported.
 ```php
 <?php
 
-use ICanBoogie\Prototyped
+use ICanBoogie\Prototyped;
 
 class A extends Prototyped
 {
@@ -399,86 +399,9 @@ Instances are created in the same fashion [PDO](http://www.php.net/manual/en/boo
 creates instances when fetching objects using the `FETCH_CLASS` mode, that is the properties
 of the instance are set *before* its constructor is invoked.
 
-`Prototyped` sub-classes might want to override the `Prototyped::from` method to allow creating
-instances from different kind of sources, just like the `Operation::from` method creates an
-`Operation` instance from a `Request`:
-
-```php
-<?php
-
-namespace ICanBoogie;
-
-class Operation
-{
-	static public function from($properties = null, array $construct_args = [], $class_name = null)
-	{
-		if ($properties instanceof Request)
-		{
-			return static::from_request($properties);
-		}
-
-		return parent::from($properties, $construct_args, $class_name);
-	}
-}
-```
-
 
 
  
-
-## Using the Prototype trait
-
-The prototype features are available as a [trait](http://php.net/traits). Any class can implement
-them simply by using the [PrototypeTrait][] trait.
-
-```php
-<?php
-
-use ICanBoogie\PrototypeTrait;
-
-class MyException extends Exception
-{
-	use PrototypeTrait;
-
-	private $a;
-	private $b;
-
-	public function __construct($a, $b, $message, $code=500, Exception $previous=null)
-	{
-		$this->a = $a;
-		$this->b = $b;
-
-		parent::__construct($message, $code, $previous);
-	}
-
-	protected function get_a()
-	{
-		return $this->a;
-	}
-
-	protected function get_b()
-	{
-		return $this->b;
-	}
-
-	protected function get_code()
-	{
-		return $this->getCode();
-	}
-}
-
-$e = new MyException(12, 34, "Damned!", 404);
-
-echo $e->a;    // 12
-echo $e->b;    // 34
-echo $e->code; // 404
-
-$e->a = 34; // throws PropertyNotWritable
-```
-
-
-
-
 
 ## Exceptions
 
@@ -499,7 +422,7 @@ The following exceptions are defined:
 
 ## Requirements
 
-The package requires PHP 5.6 or later.
+The package requires PHP 7.2 or later.
 
 
 
@@ -562,11 +485,11 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 [PropertyNotReadable]:       https://icanboogie.org/api/common/1.2/class-ICanBoogie.PropertyNotReadable.html
 [ToArray]:                   https://icanboogie.org/api/common/1.2/class-ICanBoogie.ToArray.html
 [ToArrayRecursive]:          https://icanboogie.org/api/common/1.2/class-ICanBoogie.ToArrayRecursive.html
-[documentation]:             https://icanboogie.org/api/prototype/3.0/
-[MethodNotDefined]:          https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.Prototype.MethodNotDefined.html
-[MethodOutOfScope]:          https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.Prototype.MethodOutOfScope.html
-[Prototyped]:                https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.Prototyped.html
-[PrototypeTrait]:            https://icanboogie.org/api/prototype/3.0/class-ICanBoogie.PrototypeTrait.html
+[documentation]:             https://icanboogie.org/api/prototype/4.0/
+[MethodNotDefined]:          https://icanboogie.org/api/prototype/4.0/class-ICanBoogie.Prototype.MethodNotDefined.html
+[MethodOutOfScope]:          https://icanboogie.org/api/prototype/4.0/class-ICanBoogie.Prototype.MethodOutOfScope.html
+[Prototyped]:                https://icanboogie.org/api/prototype/4.0/class-ICanBoogie.Prototyped.html
+[PrototypeTrait]:            https://icanboogie.org/api/prototype/4.0/class-ICanBoogie.PrototypeTrait.html
 [ICanBoogie]:                https://icanboogie.org
 [icanboogie/accessor]:       https://github.com/ICanBoogie/Accessor
 [icanboogie/bind-prototype]: https://github.com/ICanBoogie/bind-prototype

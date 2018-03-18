@@ -233,7 +233,7 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 
 		unset($prototype[$method]);
 
-		$this->setExpectedException(MethodNotDefined::class);
+		$this->expectException(MethodNotDefined::class);
 
 		$case->$method();
 	}

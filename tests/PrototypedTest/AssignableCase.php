@@ -14,7 +14,7 @@ class AssignableCase extends Prototyped
 	public $comment;
 	public $color;
 
-	static public function assignable()
+	static public function assignable(): array
 	{
 		return parent::assignable() + [
 

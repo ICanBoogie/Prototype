@@ -34,24 +34,18 @@ class MethodNotDefined extends \BadMethodCallException
 	 */
 	private $method;
 
-	/**
-	 * @return string
-	 */
-	private function get_method()
+	private function get_method(): string
 	{
 		return $this->method;
 	}
 
 	/**
-	 * @return string
+	 * @var string
 	 * @uses get_class
 	 */
 	private $class;
 
-	/**
-	 * @return string
-	 */
-	private function get_class()
+	private function get_class(): string
 	{
 		return $this->class;
 	}
@@ -62,10 +56,7 @@ class MethodNotDefined extends \BadMethodCallException
 	 */
 	private $instance;
 
-	/**
-	 * @return object|null
-	 */
-	private function get_instance()
+	private function get_instance(): ?object
 	{
 		return $this->instance;
 	}
@@ -77,16 +68,16 @@ class MethodNotDefined extends \BadMethodCallException
 	 * @param string|object $class_or_instance The name of the class or one of its instances.
 	 * @param string|null $message If `null` a message is formatted with $method and $class.
 	 * @param int $code
-	 * @param \Exception $previous
+	 * @param \Throwable $previous
 	 */
-	public function __construct($method, $class_or_instance, $message = null, $code = 500, \Exception $previous = null)
+	public function __construct(string $method, $class_or_instance, string $message = null, int $code = 500, \Throwable $previous = null)
 	{
 		$class = $class_or_instance;
 
-		if (is_object($class_or_instance))
+		if (\is_object($class_or_instance))
 		{
 			$this->instance = $class_or_instance;
-			$class = get_class($class_or_instance);
+			$class = \get_class($class_or_instance);
 		}
 
 		$this->method = $method;
@@ -95,15 +86,7 @@ class MethodNotDefined extends \BadMethodCallException
 		parent::__construct($message ?: $this->format_message($method, $class), $code, $previous);
 	}
 
-	/**
-	 * Formats exception message.
-	 *
-	 * @param string $method
-	 * @param string $class
-	 *
-	 * @return string
-	 */
-	private function format_message($method, $class)
+	private function format_message(string $method, string $class): string
 	{
 		return format('The method %method is not defined by the prototype of class %class.', [
 

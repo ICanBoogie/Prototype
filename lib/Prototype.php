@@ -46,7 +46,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return Prototype
 	 */
-	static public function from($class_or_object)
+	static public function from($class_or_object): Prototype
 	{
 		$class = is_object($class_or_object) ? get_class($class_or_object) : $class_or_object;
 		$prototype = &self::$prototypes[$class];
@@ -59,7 +59,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param array $bindings
 	 */
-	static public function bind(array $bindings)
+	static public function bind(array $bindings): void
 	{
 		if (!$bindings)
 		{
@@ -71,24 +71,11 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	}
 
 	/**
-	 * Defines prototype methods.
-	 *
-	 * @param array $bindings
-	 *
-	 * @deprecated
-	 * @see bind()
-	 */
-	static public function configure(array $bindings)
-	{
-		self::bind($bindings);
-	}
-
-	/**
 	 * Updates prototype methods with bindings.
 	 *
 	 * @param array $bindings
 	 */
-	static private function update_bindings(array $bindings)
+	static private function update_bindings(array $bindings): void
 	{
 		$current = &self::$bindings;
 
@@ -111,7 +98,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param array $bindings
 	 */
-	static private function update_instances(array $bindings)
+	static private function update_instances(array $bindings): void
 	{
 		foreach (self::$prototypes as $class => $prototype)
 		{
@@ -159,10 +146,9 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @param string $class
 	 */
-	private function __construct($class)
+	private function __construct(string $class)
 	{
 		$this->class = $class;
-
 		$parent_class = get_parent_class($class);
 
 		if ($parent_class)
@@ -181,7 +167,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return callable[]
 	 */
-	private function get_consolidated_methods()
+	private function get_consolidated_methods(): array
 	{
 		$consolidated_methods = &$this->consolidated_methods;
 
@@ -200,7 +186,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * @return callable[]
 	 */
-	private function consolidate_methods()
+	private function consolidate_methods(): array
 	{
 		$methods = $this->methods;
 
@@ -217,7 +203,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 *
 	 * The method must be invoked when prototype methods are modified.
 	 */
-	private function revoke_consolidated_methods()
+	private function revoke_consolidated_methods(): void
 	{
 		$class = $this->class;
 

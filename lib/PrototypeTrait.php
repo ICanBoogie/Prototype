@@ -35,10 +35,7 @@ trait PrototypeTrait
 	 */
 	private $prototype;
 
-	/**
-	 * @return Prototype
-	 */
-	protected function get_prototype()
+	protected function get_prototype(): Prototype
 	{
 		return $this->prototype ?: $this->prototype = Prototype::from($this);
 	}
@@ -90,7 +87,7 @@ trait PrototypeTrait
 	 *
 	 * @return bool `true` if the object has the property, `false` otherwise.
 	 */
-	public function has_property($property)
+	public function has_property(string $property): bool
 	{
 		if ($this->accessor_has_property($property))
 		{
@@ -112,7 +109,7 @@ trait PrototypeTrait
 	 *
 	 * @return bool `true` if the method is defined, `false` otherwise.
 	 */
-	public function has_method($method)
+	public function has_method(string $method): bool
 	{
 		if (method_exists($this, $method))
 		{
@@ -219,9 +216,11 @@ trait PrototypeTrait
 	 *
 	 * @return mixed
 	 */
-	protected function last_chance_get($property, &$success)
+	protected function last_chance_get(string $property, bool &$success)
 	{
 		$success = false;
+
+		return null;
 	}
 
 	/**
@@ -232,7 +231,7 @@ trait PrototypeTrait
 	 * @param mixed $value Value of the property.
 	 * @param bool $success If the _last chance set_ was successful.
 	 */
-	protected function last_chance_set($property, $value, &$success)
+	protected function last_chance_set(string $property, $value, bool &$success): void
 	{
 		$success = false;
 	}

@@ -1,8 +1,8 @@
 # customization
 
 PACKAGE_NAME = icanboogie/prototype
-PACKAGE_VERSION = 4.0
-PHPUNIT_VERSION = phpunit-5.phar
+PACKAGE_VERSION = 5.0
+PHPUNIT_VERSION = phpunit-7-4.phar
 PHPUNIT = build/$(PHPUNIT_VERSION)
 
 # do not edit the following lines
@@ -11,7 +11,10 @@ usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
-	@composer install
+	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer install
+
+update:
+	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer update
 
 # testing
 
