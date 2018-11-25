@@ -509,25 +509,9 @@ The package requires PHP 5.6 or later.
 
 The recommended way to install this package is through [Composer](http://getcomposer.org/):
 
-```
+```bash
 $ composer require icanboogie/prototype
 ```
-
-The following packages are required, you might want to check them out:
-
-* [icanboogie/common](https://packagist.org/packages/icanboogie/common)
-
-
-
-
-
-
-### Cloning the repository
-
-The package is [available on GitHub](https://github.com/ICanBoogie/Prototype), its repository can
-be cloned with the following command line:
-
-	$ git clone https://github.com/ICanBoogie/Prototype.git
 
 
 
@@ -535,11 +519,10 @@ be cloned with the following command line:
 
 ## Documentation
 
-The package is documented as part of the [ICanBoogie][] framework
-[documentation][]. You can generate the documentation for the package
-and its dependencies with the `make doc` command. The documentation is generated in the `docs`
-directory. [ApiGen](http://apigen.org/) is required. The directory can later by cleaned with
-the `make clean` command.
+The package is documented as part of the [ICanBoogie][] framework [documentation][]. You can
+generate the documentation for the package and its dependencies with the `make doc` command. The
+documentation is generated in the `docs` directory. [ApiGen](http://apigen.org/) is required. The
+directory can later by cleaned with the `make clean` command.
 
 
 
@@ -547,9 +530,16 @@ the `make clean` command.
 
 ## Testing
 
-The test suite is ran with the `make test` command. [Composer](http://getcomposer.org/) is
-automatically installed as well as all the dependencies required to run the suite.
-The directory can later be cleaned with the `make clean` command.
+The test suite is ran with the `make test` command. [PHPUnit](https://phpunit.de/) and
+[Composer](http://getcomposer.org/) need to be globally available to run the suite.
+The command installs dependencies as required. The `make test-coverage` command runs test suite and
+also creates an HTML coverage report in "build/coverage". The directory can later be cleaned with
+the `make clean` command.
+
+To ensure tests are running with the minimum requirements, it is advised to run them inside the
+provided container. The container is started with the `make test-container` command. Once inside the
+container, `make test` and `make test-coverage` can be used. Xdebug is available in the container
+and ready for debugging, it uses the servername `icanboogie-tests` and the absolute path `/app`.
 
 The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
