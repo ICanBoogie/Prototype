@@ -13,6 +13,13 @@ namespace ICanBoogie;
 
 use ICanBoogie\Accessor\AccessorReflection;
 use ICanBoogie\Accessor\SerializableTrait;
+use function array_fill_keys;
+use function array_intersect_key;
+use function array_keys;
+use function get_called_class;
+use function get_object_vars;
+use function is_callable;
+use function json_encode;
 
 /**
  * Together with the {@link Prototype} class the {@link Prototyped} class provides means to
@@ -34,9 +41,9 @@ class Prototyped implements ToArrayRecursive
 	/**
 	 * Creates a new instance of the class using the supplied properties.
 	 *
-	 * The method tries to create the instance in the same fashion as [PDO](http://www.php.net/manual/en/book.pdo.php)
-	 * with the `FETCH_CLASS` mode, that is the properties of the instance are set *before* its
-	 * constructor is invoked.
+	 * The method tries to create the instance in the same fashion as
+	 * [PDO](http://www.php.net/manual/en/book.pdo.php) with the `FETCH_CLASS` mode, that is the
+	 * properties of the instance are set *before* its constructor is invoked.
 	 *
 	 * @param array $properties Properties to be set before the constructor is invoked.
 	 * @param array $construct_args Arguments passed to the constructor.
@@ -44,15 +51,12 @@ class Prototyped implements ToArrayRecursive
 	 * called class is used.
 	 *
 	 * @return mixed The new instance.
+	 *
+	 * @throws \ReflectionException
 	 */
 	static public function from($properties = null, array $construct_args = [], $class_name = null)
 	{
-		if (!$class_name)
-		{
-			$class_name = get_called_class();
-		}
-
-		$class_reflection = self::get_class_reflection($class_name);
+		$class_reflection = self::get_class_reflection($class_name ?: get_called_class());
 
 		if (!$properties)
 		{
@@ -63,14 +67,11 @@ class Prototyped implements ToArrayRecursive
 
 		if ($instance instanceof self)
 		{
-			$instance->assign($properties, true);
+			$instance->assign($properties, self::ASSIGN_UNSAFE);
 		}
-		else
+		else foreach ($properties as $property => $value)
 		{
-			foreach ($properties as $property => $value)
-			{
-				$instance->$property = $value;
-			}
+			$instance->$property = $value;
 		}
 
 		if ($class_reflection->hasMethod('__construct') && is_callable([ $instance, '__construct' ]))
@@ -99,21 +100,20 @@ class Prototyped implements ToArrayRecursive
 	 * @param string $class_name
 	 *
 	 * @return \ReflectionClass
+	 *
+	 * @throws \ReflectionException
 	 */
 	static private function get_class_reflection($class_name)
 	{
-		if (isset(self::$class_reflection_cache[$class_name]))
-		{
-			return self::$class_reflection_cache[$class_name];
-		}
+		$reflection = &self::$class_reflection_cache[$class_name];
 
-		return self::$class_reflection_cache[$class_name] = new \ReflectionClass($class_name);
+		return $reflection ?: $reflection = new \ReflectionClass($class_name);
 	}
 
 	/**
 	 * Returns the public properties of an instance.
 	 *
-	 * @param mixed $object
+	 * @param object $object
 	 *
 	 * @return array
 	 */

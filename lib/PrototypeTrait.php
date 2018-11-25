@@ -14,6 +14,9 @@ namespace ICanBoogie;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
+use function array_unshift;
+use function is_callable;
+use function method_exists;
 
 /**
  * A trait for classes wishing to implement prototype methods.
@@ -28,9 +31,17 @@ trait PrototypeTrait
 	}
 
 	/**
-	 * @var Prototype
+	 * @var Prototype|null
 	 */
 	private $prototype;
+
+	/**
+	 * @return Prototype
+	 */
+	protected function get_prototype()
+	{
+		return $this->prototype ?: $this->prototype = Prototype::from($this);
+	}
 
 	/**
 	 * If a property exists with the name specified by `$method` and holds an object which class
@@ -77,7 +88,7 @@ trait PrototypeTrait
 	 *
 	 * @param string $property The property to check.
 	 *
-	 * @return bool true if the object has the property, false otherwise.
+	 * @return bool `true` if the object has the property, `false` otherwise.
 	 */
 	public function has_property($property)
 	{
@@ -111,16 +122,6 @@ trait PrototypeTrait
 		$prototype = $this->prototype ?: $this->get_prototype();
 
 		return isset($prototype[$method]);
-	}
-
-	/**
-	 * Returns the prototype associated with the class.
-	 *
-	 * @return Prototype
-	 */
-	protected function get_prototype()
-	{
-		return $this->prototype ?: $this->prototype = Prototype::from($this);
 	}
 
 	/**

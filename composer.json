@@ -24,6 +24,7 @@
 	},
 	"require": {
 		"php": ">=5.6",
+		"ext-json": "*",
 		"icanboogie/common": "^1.2",
 		"icanboogie/accessor": "^1.0|^2.0"
 	},

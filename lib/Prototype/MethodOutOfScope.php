@@ -12,27 +12,37 @@
 namespace ICanBoogie\Prototype;
 
 use ICanBoogie\Accessor\AccessorTrait;
+use function get_class;
+use function ICanBoogie\format;
 
 /**
  * Exception thrown in attempt to invoke a method that is out of scope.
  *
  * @property-read string $method The method that is out of scope.
- * @property-read object|null $instance The instance on which the method was invoked.
+ * @property-read object $instance The instance on which the method was invoked.
  */
 class MethodOutOfScope extends \BadMethodCallException
 {
 	use AccessorTrait;
 
+	/**
+	 * @return string
+	 * @uses get_method
+	 */
 	private $method;
 
 	/**
 	 * @return string
 	 */
-	protected function get_method()
+	private function get_method()
 	{
 		return $this->method;
 	}
 
+	/**
+	 * @return object
+	 * @uses get_instance
+	 */
 	private $instance;
 
 	/**
@@ -68,9 +78,9 @@ class MethodOutOfScope extends \BadMethodCallException
 	 *
 	 * @return string
 	 */
-	protected function format_message($method, $instance)
+	private function format_message($method, $instance)
 	{
-		return \ICanBoogie\format('The method %method is out of scope for class %class.', [
+		return format('The method %method is out of scope for class %class.', [
 
 			'method' => $method,
 			'class' => get_class($instance)

@@ -12,6 +12,13 @@
 namespace ICanBoogie;
 
 use ICanBoogie\Prototype\MethodNotDefined;
+use function array_diff_key;
+use function array_intersect_key;
+use function array_merge;
+use function get_class;
+use function get_parent_class;
+use function is_object;
+use function is_subclass_of;
 
 /**
  * Manages the prototype methods that may be bound to classes using {@link PrototypeTrait}.
@@ -28,24 +35,20 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	/**
 	 * Prototype methods per class.
 	 *
-	 * @var array
+	 * @var array|null
 	 */
 	static private $bindings;
 
 	/**
 	 * Returns the prototype associated with the specified class or object.
 	 *
-	 * @param string|object $class Class name or instance.
+	 * @param string|object $class_or_object Class name or object.
 	 *
 	 * @return Prototype
 	 */
-	static public function from($class)
+	static public function from($class_or_object)
 	{
-		if (is_object($class))
-		{
-			$class = get_class($class);
-		}
-
+		$class = is_object($class_or_object) ? get_class($class_or_object) : $class_or_object;
 		$prototype = &self::$prototypes[$class];
 
 		return $prototype ?: $prototype = new static($class);

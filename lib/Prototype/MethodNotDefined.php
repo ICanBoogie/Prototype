@@ -12,6 +12,9 @@
 namespace ICanBoogie\Prototype;
 
 use ICanBoogie\Accessor\AccessorTrait;
+use function get_class;
+use function ICanBoogie\format;
+use function is_object;
 
 /**
  * Exception thrown in attempt to access a method that is not defined.
@@ -25,32 +28,44 @@ class MethodNotDefined extends \BadMethodCallException
 {
 	use AccessorTrait;
 
+	/**
+	 * @var string
+	 * @uses get_method
+	 */
 	private $method;
 
 	/**
 	 * @return string
 	 */
-	protected function get_method()
+	private function get_method()
 	{
 		return $this->method;
 	}
 
+	/**
+	 * @return string
+	 * @uses get_class
+	 */
 	private $class;
 
 	/**
 	 * @return string
 	 */
-	protected function get_class()
+	private function get_class()
 	{
 		return $this->class;
 	}
 
+	/**
+	 * @return object|null
+	 * @uses get_instance
+	 */
 	private $instance;
 
 	/**
 	 * @return object|null
 	 */
-	protected function get_instance()
+	private function get_instance()
 	{
 		return $this->instance;
 	}
@@ -88,9 +103,9 @@ class MethodNotDefined extends \BadMethodCallException
 	 *
 	 * @return string
 	 */
-	protected function format_message($method, $class)
+	private function format_message($method, $class)
 	{
-		return \ICanBoogie\format('The method %method is not defined by the prototype of class %class.', [
+		return format('The method %method is not defined by the prototype of class %class.', [
 
 			'method' => $method,
 			'class' => $class
