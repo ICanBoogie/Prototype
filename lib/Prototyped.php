@@ -14,8 +14,10 @@ namespace ICanBoogie;
 use Closure;
 use ICanBoogie\Accessor\AccessorReflection;
 use ICanBoogie\Accessor\SerializableTrait;
+use ICanBoogie\Prototype\UnableToInstantiate;
 use ReflectionClass;
 use ReflectionException;
+use Throwable;
 use function array_fill_keys;
 use function array_intersect_key;
 use function array_keys;
@@ -55,34 +57,44 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @return object The new instance.
 	 *
-	 * @throws ReflectionException
+	 * @throws UnableToInstantiate
 	 */
 	static public function from(array $properties = [], array $construct_args = [], string $class_name = null): object
 	{
-		$class_reflection = self::get_class_reflection($class_name ?: get_called_class());
-
-		if (!$properties)
-		{
-			return $class_reflection->newInstanceArgs($construct_args);
+		if (!$class_name) {
+			$class_name = get_called_class();
 		}
 
-		$instance = $class_reflection->newInstanceWithoutConstructor();
+		try {
+			$class_reflection = self::get_class_reflection($class_name);
 
-		if ($instance instanceof self)
-		{
-			$instance->assign($properties, self::ASSIGN_UNSAFE);
-		}
-		else foreach ($properties as $property => $value)
-		{
-			$instance->$property = $value;
-		}
+			if (!$properties)
+			{
+				return $class_reflection->newInstanceArgs($construct_args);
+			}
 
-		if ($class_reflection->hasMethod('__construct') && is_callable([ $instance, '__construct' ]))
-		{
-			$instance->__construct(...$construct_args);
-		}
+			$instance = $class_reflection->newInstanceWithoutConstructor();
 
-		return $instance;
+			if ($instance instanceof self)
+			{
+				$instance->assign($properties, self::ASSIGN_UNSAFE);
+			}
+			else foreach ($properties as $property => $value)
+			{
+				$instance->$property = $value;
+			}
+
+			if ($class_reflection->hasMethod('__construct') && is_callable([ $instance, '__construct' ]))
+			{
+				$instance->__construct(...$construct_args);
+			}
+
+			return $instance;
+		}
+		catch (Throwable $e)
+		{
+			throw new UnableToInstantiate("Unable to instantiate `$class_name`.", 0, $e);
+		}
 	}
 
 	/**

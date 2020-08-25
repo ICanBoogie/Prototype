@@ -11,6 +11,7 @@
 
 namespace ICanBoogie\Prototype;
 
+use BadMethodCallException;
 use ICanBoogie\Accessor\AccessorTrait;
 use Throwable;
 use function get_class;
@@ -22,7 +23,7 @@ use function ICanBoogie\format;
  * @property-read string $method The method that is out of scope.
  * @property-read object $instance The instance on which the method was invoked.
  */
-class MethodOutOfScope extends \BadMethodCallException
+class MethodOutOfScope extends BadMethodCallException implements Exception
 {
 	/**
 	 * @uses get_method
@@ -53,12 +54,12 @@ class MethodOutOfScope extends \BadMethodCallException
 	/**
 	 * @inheritdoc
 	 */
-	public function __construct(string $method, object $instance, string $message = null, int $code = 500, Throwable $previous = null)
+	public function __construct(string $method, object $instance, string $message = null, Throwable $previous = null)
 	{
 		$this->method = $method;
 		$this->instance = $instance;
 
-		parent::__construct($message ?: $this->format_message($method, $instance), $code, $previous);
+		parent::__construct($message ?: $this->format_message($method, $instance), 0, $previous);
 	}
 
 	private function format_message(string $method, object $instance): string

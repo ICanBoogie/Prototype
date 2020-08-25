@@ -11,14 +11,19 @@
 
 namespace ICanBoogie;
 
+use Exception;
+use ICanBoogie\Prototype\UnableToInstantiate;
 use ICanBoogie\PrototypedTest\A;
 use ICanBoogie\PrototypedTest\AssignableCase;
 use ICanBoogie\PrototypedTest\CreatedAtCase;
 use ICanBoogie\PrototypedTest\CreatedAtCaseExtended;
 use ICanBoogie\PrototypedTest\ExportCase;
+use ICanBoogie\PrototypedTest\FailingCase;
 use ICanBoogie\PrototypedTest\ToArrayCase;
 use ICanBoogie\PrototypedTest\ToArrayWithFacadePropertyCase;
 use PHPUnit\Framework\TestCase;
+use Throwable;
+use function get_class;
 
 require_once 'cases.php';
 
@@ -351,7 +356,7 @@ class PrototypedTest extends TestCase
 		return [
 
 			[ CreatedAtCase::class ],
-			[ CreatedAtCaseExtended::class ]
+			[ CreatedAtCaseExtended::class ],
 
 		];
 	}
@@ -401,5 +406,25 @@ class PrototypedTest extends TestCase
 		$this->assertSame($id, $case->id);
 		$this->assertSame($comment, $case->comment);
 		$this->assertSame($color, $case->color);
+	}
+
+	public function test_from_should_decorate_failures()
+	{
+		$cause = new Exception();
+
+		try
+		{
+			FailingCase::from([ 'one' => 1 ], [ $cause ]);
+		}
+		catch (UnableToInstantiate $e)
+		{
+			$this->assertSame($cause, $e->getPrevious());
+
+			return;
+		}
+		catch (Throwable $e)
+		{
+			$this->fail("Excepted decorating exception, got: " . get_class($e));
+		}
 	}
 }
