@@ -15,13 +15,14 @@ use ICanBoogie\PrototypedTest\A;
 use ICanBoogie\PrototypedTest\AssignableCase;
 use ICanBoogie\PrototypedTest\CreatedAtCase;
 use ICanBoogie\PrototypedTest\CreatedAtCaseExtended;
+use ICanBoogie\PrototypedTest\ExportCase;
 use ICanBoogie\PrototypedTest\ToArrayCase;
 use ICanBoogie\PrototypedTest\ToArrayWithFacadePropertyCase;
-use ICanBoogie\PrototypedTest\ExportCase;
+use PHPUnit\Framework\TestCase;
 
 require_once 'cases.php';
 
-class PrototypedTest extends \PHPUnit\Framework\TestCase
+class PrototypedTest extends TestCase
 {
 	public function test_get_prototype()
 	{
@@ -29,12 +30,10 @@ class PrototypedTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf(Prototype::class, $o->prototype);
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 */
 	public function test_set_prototype()
 	{
 		$o = new Prototyped;
+		$this->expectException(PropertyNotWritable::class);
 		$o->prototype = null;
 	}
 
@@ -48,12 +47,13 @@ class PrototypedTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @dataProvider provide_test_readonly
-	 * @expectedException \ICanBoogie\PropertyNotWritable
+	 *
 	 */
 	public function test_readonly($class)
 	{
 		$o = new $class;
 		$this->assertEquals('value', $o->property);
+		$this->expectException(PropertyNotWritable::class);
 		$o->property = true;
 	}
 
@@ -73,15 +73,13 @@ class PrototypedTest extends \PHPUnit\Framework\TestCase
 
 	/**
 	 * @dataProvider provide_test_write_only
-	 * @expectedException \ICanBoogie\PropertyNotReadable
-	 *
-	 * @param string $class
 	 */
-	public function test_write_only($class)
+	public function test_write_only(string $class)
 	{
 		$o = new $class;
 		$o->property = true;
-		$a = $o->property;
+		$this->expectException(PropertyNotReadable::class);
+		$o->property;
 	}
 
 	public function provide_test_write_only()
@@ -107,13 +105,11 @@ class PrototypedTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame($v, $o->$p);
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotDefined
-	 */
 	public function test_get_undefined()
 	{
 		$o = new Prototyped;
 		$p = 'property' . uniqid();
+		$this->expectException(PropertyNotDefined::class);
 		$o->$p;
 	}
 
@@ -221,21 +217,17 @@ class PrototypedTest extends \PHPUnit\Framework\TestCase
 		$this->assertArrayNotHasKey('slug', (array) $o);
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 */
 	public function testInvalidUseOfDefaultValueForUnsetProtectedProperty()
 	{
 		$o = new PrototypedTest\DefaultValueForUnsetProtectedProperty;
+		$this->expectException(PropertyNotWritable::class);
 		$o->slug = 'madonna';
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 */
 	public function testInvalidProtectedPropertyGetter()
 	{
 		$o = new PrototypedTest\InvalidProtectedPropertyGetter;
+		$this->expectException(PropertyNotWritable::class);
 		$a = $o->value;
 	}
 
@@ -265,30 +257,24 @@ class PrototypedTest extends \PHPUnit\Framework\TestCase
 		$this->assertArrayNotHasKey('minutes', $o->to_array());
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotDefined
-	 */
 	public function testGetUnsetPublicProperty()
 	{
 		$fixture = new A;
+		$this->expectException(PropertyNotDefined::class);
 		$fixture->unset;
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotReadable
-	 */
 	public function testGetUnsetProtectedProperty()
 	{
 		$fixture = new A;
+		$this->expectException(PropertyNotReadable::class);
 		$fixture->unset_protected;
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotDefined
-	 */
 	public function testGetUndefinedProperty()
 	{
 		$fixture = new A;
+		$this->expectException(PropertyNotDefined::class);
 		$fixture->madonna;
 	}
 

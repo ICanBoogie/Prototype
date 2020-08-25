@@ -11,7 +11,10 @@
 
 namespace ICanBoogie;
 
+use ArrayAccess;
+use ArrayIterator;
 use ICanBoogie\Prototype\MethodNotDefined;
+use IteratorAggregate;
 use function array_diff_key;
 use function array_intersect_key;
 use function array_merge;
@@ -23,7 +26,7 @@ use function is_subclass_of;
 /**
  * Manages the prototype methods that may be bound to classes using {@link PrototypeTrait}.
  */
-class Prototype implements \ArrayAccess, \IteratorAggregate
+final class Prototype implements ArrayAccess, IteratorAggregate
 {
 	/**
 	 * Prototypes instances per class.
@@ -43,8 +46,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 * Returns the prototype associated with the specified class or object.
 	 *
 	 * @param string|object $class_or_object Class name or object.
-	 *
-	 * @return Prototype
 	 */
 	static public function from($class_or_object): Prototype
 	{
@@ -56,8 +57,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 	/**
 	 * Defines prototype methods.
-	 *
-	 * @param array $bindings
 	 */
 	static public function bind(array $bindings): void
 	{
@@ -72,8 +71,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 	/**
 	 * Updates prototype methods with bindings.
-	 *
-	 * @param array $bindings
 	 */
 	static private function update_bindings(array $bindings): void
 	{
@@ -95,8 +92,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 	/**
 	 * Updates instances with bindings.
-	 *
-	 * @param array $bindings
 	 */
 	static private function update_instances(array $bindings): void
 	{
@@ -143,8 +138,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 
 	/**
 	 * Creates a prototype for the specified class.
-	 *
-	 * @param string $class
 	 */
 	private function __construct(string $class)
 	{
@@ -229,7 +222,7 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 	 */
 	public function offsetSet($method, $callback)
 	{
- 		self::$prototypes[$this->class]->methods[$method] = $callback;
+		self::$prototypes[$this->class]->methods[$method] = $callback;
 
 		$this->revoke_consolidated_methods();
 	}
@@ -300,6 +293,6 @@ class Prototype implements \ArrayAccess, \IteratorAggregate
 			$methods = $this->consolidate_methods();
 		}
 
-		return new \ArrayIterator($methods);
+		return new ArrayIterator($methods);
 	}
 }

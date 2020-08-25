@@ -19,24 +19,23 @@ use ICanBoogie\PrototypeTest\Cat;
 use ICanBoogie\PrototypeTest\FierceCat;
 use ICanBoogie\PrototypeTest\NormalCat;
 use ICanBoogie\PrototypeTest\UnsetCase;
+use PHPUnit\Framework\TestCase;
 
-class PrototypeTest extends \PHPUnit\Framework\TestCase
+class PrototypeTest extends TestCase
 {
 	private $a;
 	private $b;
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		$this->a = $a = new A;
 		$this->b = $b = new B;
 
-		$a->prototype['set_minutes'] = function(A $self, $minutes) {
-
+		$a->prototype['set_minutes'] = function (A $self, $minutes) {
 			$self->seconds = $minutes * 60;
 		};
 
-		$a->prototype['get_minutes'] = function(A $self, $minutes) {
-
+		$a->prototype['get_minutes'] = function (A $self) {
 			return $self->seconds / 60;
 		};
 	}
@@ -71,9 +70,9 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 
 			BindCase::class => [
 
-				$method1 => $callback1
+				$method1 => $callback1,
 
-			]
+			],
 
 		]);
 
@@ -81,9 +80,9 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 
 			BindCase::class => [
 
-				$method2 => $callback2
+				$method2 => $callback2,
 
-			]
+			],
 
 		]);
 
@@ -98,9 +97,9 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 
 			BindCase::class => [
 
-				$method1 => $callback3
+				$method1 => $callback3,
 
-			]
+			],
 
 		]);
 
@@ -126,7 +125,7 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 	{
 		$a = $this->a;
 
-		$a->prototype['format'] = function(A $self, $format) {
+		$a->prototype['format'] = function (A $self, $format) {
 
 			return date($format, $self->seconds);
 		};
@@ -143,20 +142,20 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 
 		$a->minutes = 2;
 
- 		$this->assertEquals(120, $a->seconds);
- 		$this->assertEquals(2, $a->minutes);
+		$this->assertEquals(120, $a->seconds);
+		$this->assertEquals(2, $a->minutes);
 	}
 
 	public function testPrototypeChain()
 	{
 		$b = $this->b;
 
-		$b->prototype['set_hours'] = function(B $self, $hours) {
+		$b->prototype['set_hours'] = function (B $self, $hours) {
 
 			$self->seconds = $hours * 3600;
 		};
 
-		$b->prototype['get_hours'] = function(B $self, $hours) {
+		$b->prototype['get_hours'] = function (B $self, $hours) {
 
 			return $self->seconds / 3600;
 		};
@@ -189,13 +188,13 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 		$fierce_cat = new FierceCat;
 		$other_fierce_cat = new FierceCat;
 
-		$cat->prototype['meow'] = function($target) {
+		$cat->prototype['meow'] = function ($target) {
 
 			return 'Meow';
 
 		};
 
-		$fierce_cat->prototype['meow'] = function($target) {
+		$fierce_cat->prototype['meow'] = function ($target) {
 
 			return 'MEOOOW !';
 
@@ -207,11 +206,9 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals('MEOOOW !', $other_fierce_cat->meow());
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\Prototype\MethodNotDefined
-	 */
 	public function testMethodNotDefined()
 	{
+		$this->expectException(MethodNotDefined::class);
 		$this->a->undefined_method();
 	}
 
@@ -221,7 +218,7 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 		$method = 'm' . uniqid();
 
 		$prototype = Prototype::from(UnsetCase::class);
-		$prototype[$method] = function () use ($value) {
+		$prototype[ $method ] = function () use ($value) {
 
 			return $value;
 
@@ -231,7 +228,7 @@ class PrototypeTest extends \PHPUnit\Framework\TestCase
 
 		$this->assertSame($value, $case->$method());
 
-		unset($prototype[$method]);
+		unset($prototype[ $method ]);
 
 		$this->expectException(MethodNotDefined::class);
 

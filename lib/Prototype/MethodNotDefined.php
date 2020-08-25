@@ -11,7 +11,9 @@
 
 namespace ICanBoogie\Prototype;
 
+use BadMethodCallException;
 use ICanBoogie\Accessor\AccessorTrait;
+use Throwable;
 use function get_class;
 use function ICanBoogie\format;
 use function is_object;
@@ -24,13 +26,17 @@ use function is_object;
  * @property-read object|null $instance Instance on which the method was invoked, or `null` if
  * only the class is available.
  */
-class MethodNotDefined extends \BadMethodCallException
+class MethodNotDefined extends BadMethodCallException
 {
+	/**
+	 * @uses get_method
+	 * @uses get_class
+	 * @uses get_instance
+	 */
 	use AccessorTrait;
 
 	/**
 	 * @var string
-	 * @uses get_method
 	 */
 	private $method;
 
@@ -41,7 +47,6 @@ class MethodNotDefined extends \BadMethodCallException
 
 	/**
 	 * @var string
-	 * @uses get_class
 	 */
 	private $class;
 
@@ -52,7 +57,6 @@ class MethodNotDefined extends \BadMethodCallException
 
 	/**
 	 * @return object|null
-	 * @uses get_instance
 	 */
 	private $instance;
 
@@ -67,17 +71,15 @@ class MethodNotDefined extends \BadMethodCallException
 	 * @param string $method The method that is not defined.
 	 * @param string|object $class_or_instance The name of the class or one of its instances.
 	 * @param string|null $message If `null` a message is formatted with $method and $class.
-	 * @param int $code
-	 * @param \Throwable $previous
 	 */
-	public function __construct(string $method, $class_or_instance, string $message = null, int $code = 500, \Throwable $previous = null)
+	public function __construct(string $method, $class_or_instance, string $message = null, int $code = 500, Throwable $previous = null)
 	{
 		$class = $class_or_instance;
 
-		if (\is_object($class_or_instance))
+		if (is_object($class_or_instance))
 		{
 			$this->instance = $class_or_instance;
-			$class = \get_class($class_or_instance);
+			$class = get_class($class_or_instance);
 		}
 
 		$this->method = $method;

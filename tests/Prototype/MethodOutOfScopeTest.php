@@ -11,9 +11,11 @@
 
 namespace ICanBoogie\Prototype;
 
+use Exception;
 use ICanBoogie\Prototype\MethodOutOfScopeTest\A;
+use PHPUnit\Framework\TestCase;
 
-class MethodOutOfScopeTest extends \PHPUnit\Framework\TestCase
+class MethodOutOfScopeTest extends TestCase
 {
 	public function test_invoke_public_method()
 	{
@@ -31,7 +33,7 @@ class MethodOutOfScopeTest extends \PHPUnit\Framework\TestCase
 
 			$this->fail('Excepted MethodOutOfScope exception.');
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$this->assertInstanceOf(MethodOutOfScope::class, $e);
 			/* @var $e MethodOutOfScope */
@@ -50,7 +52,7 @@ class MethodOutOfScopeTest extends \PHPUnit\Framework\TestCase
 
 			$this->fail('Excepted MethodOutOfScope exception.');
 		}
-		catch (\Exception $e)
+		catch (Exception $e)
 		{
 			$this->assertInstanceOf(MethodOutOfScope::class, $e);
 			/* @var $e MethodOutOfScope */

@@ -11,8 +11,11 @@
 
 namespace ICanBoogie;
 
+use Closure;
 use ICanBoogie\Accessor\AccessorReflection;
 use ICanBoogie\Accessor\SerializableTrait;
+use ReflectionClass;
+use ReflectionException;
 use function array_fill_keys;
 use function array_intersect_key;
 use function array_keys;
@@ -52,7 +55,7 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * @return object The new instance.
 	 *
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
 	static public function from(array $properties = [], array $construct_args = [], string $class_name = null): object
 	{
@@ -84,8 +87,6 @@ class Prototyped implements ToArrayRecursive
 
 	/**
 	 * Returns assignable properties.
-	 *
-	 * @return array
 	 */
 	static public function assignable(): array
 	{
@@ -97,25 +98,17 @@ class Prototyped implements ToArrayRecursive
 	/**
 	 * Returns cached class reflection.
 	 *
-	 * @param string $class_name
-	 *
-	 * @return \ReflectionClass
-	 *
-	 * @throws \ReflectionException
+	 * @throws ReflectionException
 	 */
-	static private function get_class_reflection(string $class_name): \ReflectionClass
+	static private function get_class_reflection(string $class_name): ReflectionClass
 	{
 		$reflection = &self::$class_reflection_cache[$class_name];
 
-		return $reflection ?: $reflection = new \ReflectionClass($class_name);
+		return $reflection ?: $reflection = new ReflectionClass($class_name);
 	}
 
 	/**
 	 * Returns the public properties of an instance.
-	 *
-	 * @param object $object
-	 *
-	 * @return array
 	 */
 	static private function get_object_vars(object $object): array
 	{
@@ -123,7 +116,7 @@ class Prototyped implements ToArrayRecursive
 
 		if (!$get_object_vars)
 		{
-			$get_object_vars = \Closure::bind(function(object $object) {
+			$get_object_vars = Closure::bind(function(object $object) {
 
 				return get_object_vars($object);
 
@@ -147,6 +140,8 @@ class Prototyped implements ToArrayRecursive
 	 * forget to remove the prototype property!
 	 *
 	 * @return array
+	 *
+	 * @throws ReflectionException
 	 */
 	public function __sleep()
 	{
@@ -161,7 +156,7 @@ class Prototyped implements ToArrayRecursive
 	 * Assigns properties to an object.
 	 *
 	 * @param array $properties The properties to assign.
-	 * @param bool $unsafe
+	 * @param bool $unsafe The properties are not filtered if `true`.
 	 *
 	 * @return $this
 	 */
@@ -185,7 +180,7 @@ class Prototyped implements ToArrayRecursive
 	 *
 	 * Only public properties and façade properties are included.
 	 *
-	 * @return array
+	 * @throws ReflectionException
 	 */
 	public function to_array(): array
 	{
@@ -201,8 +196,6 @@ class Prototyped implements ToArrayRecursive
 
 	/**
 	 * Converts the object into a JSON string.
-	 *
-	 * @return string
 	 */
 	public function to_json(): string
 	{

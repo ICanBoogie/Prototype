@@ -21,7 +21,7 @@ use function method_exists;
 /**
  * A trait for classes wishing to implement prototype methods.
  *
- * @property-read Prototype $prototype The prototype associated with the class.
+ * @property Prototype $prototype The prototype associated with the class.
  */
 trait PrototypeTrait
 {

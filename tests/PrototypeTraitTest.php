@@ -30,49 +30,39 @@ class PrototypeTraitTest extends \PHPUnit\Framework\TestCase
 		$this->assertSame($previous, $a->previous);
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 */
 	public function test_set_a()
 	{
 		$a = new AccessorCase('A', 'B', 'message');
+		$this->expectException(PropertyNotWritable::class);
 		$a->a = null;
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 */
 	public function test_set_b()
 	{
 		$a = new AccessorCase('A', 'B', 'message');
+		$this->expectException(PropertyNotWritable::class);
 		$a->b = null;
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 */
 	public function test_set_code()
 	{
 		$a = new AccessorCase('A', 'B', 'message');
+		$this->expectException(PropertyNotWritable::class);
 		$a->code = null;
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotWritable
-	 */
 	public function test_set_previous()
 	{
 		$a = new AccessorCase('A', 'B', 'message');
+		$this->expectException(PropertyNotWritable::class);
 		$a->previous = null;
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\PropertyNotDefined
-	 */
 	public function test_get_undefined()
 	{
 		$a = new AccessorCase('A', 'B', 'message');
 		$p = 'undefined' . uniqid();
+		$this->expectException(PropertyNotDefined::class);
 		$a->$p;
 	}
 

@@ -11,10 +11,12 @@
 
 namespace ICanBoogie\Prototype;
 
+use Exception;
 use ICanBoogie\Prototyped;
 use ICanBoogie\Prototype\MethodNotDefinedTest\A;
+use PHPUnit\Framework\TestCase;
 
-class MethodNotDefinedTest extends \PHPUnit\Framework\TestCase
+class MethodNotDefinedTest extends TestCase
 {
 	public function test_instance()
 	{
@@ -37,21 +39,17 @@ class MethodNotDefinedTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals('public_method', $a->public_method());
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\Prototype\MethodOutOfScope
-	 */
 	public function test_invoke_protected_method()
 	{
 		$a = new A;
+		$this->expectException(MethodOutOfScope::class);
 		$a->protected_method();
 	}
 
-	/**
-	 * @expectedException \ICanBoogie\Prototype\MethodOutOfScope
-	 */
 	public function test_invoke_private_method()
 	{
 		$a = new A;
+		$this->expectException(MethodOutOfScope::class);
 		$a->private_method();
 	}
 
@@ -63,17 +61,15 @@ class MethodNotDefinedTest extends \PHPUnit\Framework\TestCase
 		try
 		{
 			$a->$m();
-
-			$this->fail("Expected MethodNotDefined");
 		}
 		catch (MethodNotDefined $e)
 		{
 			$this->assertEquals($m, $e->method);
 			$this->assertEquals(get_class($a), $e->class);
+
+			return;
 		}
-		catch (\Exception $e)
-		{
-			$this->fail("Expected MethodNotDefined");
-		}
+
+		$this->fail("Expected MethodNotDefined");
 	}
 }

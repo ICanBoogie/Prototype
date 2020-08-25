@@ -12,6 +12,7 @@
 namespace ICanBoogie\Prototype;
 
 use ICanBoogie\Accessor\AccessorTrait;
+use Throwable;
 use function get_class;
 use function ICanBoogie\format;
 
@@ -23,11 +24,14 @@ use function ICanBoogie\format;
  */
 class MethodOutOfScope extends \BadMethodCallException
 {
+	/**
+	 * @uses get_method
+	 * @uses get_instance
+	 */
 	use AccessorTrait;
 
 	/**
-	 * @return string
-	 * @uses get_method
+	 * @var string
 	 */
 	private $method;
 
@@ -37,8 +41,7 @@ class MethodOutOfScope extends \BadMethodCallException
 	}
 
 	/**
-	 * @return object
-	 * @uses get_instance
+	 * @var object
 	 */
 	private $instance;
 
@@ -49,14 +52,8 @@ class MethodOutOfScope extends \BadMethodCallException
 
 	/**
 	 * @inheritdoc
-	 *
-	 * @param string $method
-	 * @param object $instance
-	 * @param string|null $message
-	 * @param int $code
-	 * @param \Exception|null $previous
 	 */
-	public function __construct(string $method, object $instance, string $message = null, int $code = 500, \Throwable $previous = null)
+	public function __construct(string $method, object $instance, string $message = null, int $code = 500, Throwable $previous = null)
 	{
 		$this->method = $method;
 		$this->instance = $instance;
