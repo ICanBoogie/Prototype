@@ -11,9 +11,8 @@
 
 namespace ICanBoogie\Prototype;
 
-use Exception;
-use ICanBoogie\Prototyped;
 use ICanBoogie\Prototype\MethodNotDefinedTest\A;
+use ICanBoogie\Prototyped;
 use PHPUnit\Framework\TestCase;
 
 class MethodNotDefinedTest extends TestCase

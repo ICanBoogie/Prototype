@@ -14,6 +14,7 @@ namespace ICanBoogie\Prototype;
 use BadMethodCallException;
 use ICanBoogie\Accessor\AccessorTrait;
 use Throwable;
+
 use function get_class;
 use function ICanBoogie\format;
 

@@ -15,6 +15,8 @@ use ArrayAccess;
 use ArrayIterator;
 use ICanBoogie\Prototype\MethodNotDefined;
 use IteratorAggregate;
+use Traversable;
+
 use function array_diff_key;
 use function array_intersect_key;
 use function array_merge;
@@ -25,38 +27,43 @@ use function is_subclass_of;
 
 /**
  * Manages the prototype methods that may be bound to classes using {@link PrototypeTrait}.
+ *
+ * @implements ArrayAccess<string, callable>
+ * @implements IteratorAggregate<string, callable>
  */
 final class Prototype implements ArrayAccess, IteratorAggregate
 {
 	/**
 	 * Prototypes instances per class.
 	 *
-	 * @var Prototype[]
+	 * @var array<string, Prototype>
 	 */
 	static private $prototypes = [];
 
 	/**
 	 * Prototype methods per class.
 	 *
-	 * @var array|null
+	 * @var array<class-string, array<string, callable>>|null
 	 */
 	static private $bindings;
 
 	/**
 	 * Returns the prototype associated with the specified class or object.
 	 *
-	 * @param string|object $class_or_object Class name or object.
+	 * @param class-string|object $class_or_object Class name or object.
 	 */
 	static public function from($class_or_object): Prototype
 	{
 		$class = is_object($class_or_object) ? get_class($class_or_object) : $class_or_object;
 		$prototype = &self::$prototypes[$class];
 
-		return $prototype ?: $prototype = new static($class);
+		return $prototype ?? $prototype = new self($class);
 	}
 
 	/**
 	 * Defines prototype methods.
+	 *
+	 * @param array<class-string, array<string, callable>> $bindings
 	 */
 	static public function bind(array $bindings): void
 	{
@@ -71,6 +78,8 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 
 	/**
 	 * Updates prototype methods with bindings.
+	 *
+	 * @param array<class-string, array<string, callable>> $bindings
 	 */
 	static private function update_bindings(array $bindings): void
 	{
@@ -92,6 +101,8 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 
 	/**
 	 * Updates instances with bindings.
+	 *
+	 * @param array<class-string, array<string, callable>> $bindings
 	 */
 	static private function update_instances(array $bindings): void
 	{
@@ -111,33 +122,35 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	/**
 	 * Class associated with the prototype.
 	 *
-	 * @var string
+	 * @var class-string
 	 */
 	private $class;
 
 	/**
 	 * Parent prototype.
 	 *
-	 * @var Prototype
+	 * @var Prototype|null
 	 */
 	private $parent;
 
 	/**
 	 * Methods defined by the prototype.
 	 *
-	 * @var callable[]
+	 * @var array<string, callable>
 	 */
 	private $methods = [];
 
 	/**
 	 * Methods defined by the prototypes chain.
 	 *
-	 * @var callable[]|null
+	 * @var array<string, callable>|null
 	 */
 	private $consolidated_methods;
 
 	/**
 	 * Creates a prototype for the specified class.
+	 *
+	 * @param class-string $class
 	 */
 	private function __construct(string $class)
 	{
@@ -146,7 +159,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 
 		if ($parent_class)
 		{
-			$this->parent = static::from($parent_class);
+			$this->parent = self::from($parent_class);
 		}
 
 		if (isset(self::$bindings[$class]))
@@ -158,7 +171,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	/**
 	 * Returns the consolidated methods of the prototype.
 	 *
-	 * @return callable[]
+	 * @return array<string, callable>
 	 */
 	private function get_consolidated_methods(): array
 	{
@@ -177,7 +190,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	 *
 	 * The method creates a single array from the prototype methods and those of its parents.
 	 *
-	 * @return callable[]
+	 * @return array<string, callable>
 	 */
 	private function consolidate_methods(): array
 	{
@@ -246,7 +259,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	 *
 	 * @return bool
 	 */
-	public function offsetExists($method)
+	public function offsetExists($method): bool
 	{
 		$methods = &$this->consolidated_methods;
 
@@ -285,7 +298,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	/**
 	 * Returns an iterator for the prototype methods.
 	 */
-	public function getIterator()
+	public function getIterator(): Traversable
 	{
 		$methods = &$this->consolidated_methods;
 

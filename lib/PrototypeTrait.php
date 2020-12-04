@@ -14,6 +14,7 @@ namespace ICanBoogie;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
+
 use function array_unshift;
 use function is_callable;
 use function method_exists;
@@ -121,9 +122,6 @@ trait PrototypeTrait
 		return isset($prototype[$method]);
 	}
 
-	/**
-	 * @inheritdoc
-	 */
 	protected function accessor_get($property)
 	{
 		$method = 'get_' . $property;
@@ -171,9 +169,6 @@ trait PrototypeTrait
 		$this->assert_property_is_readable($property);
 	} //@codeCoverageIgnore
 
-	/**
-	 * @inheritdoc
-	 */
 	protected function accessor_set($property, $value)
 	{
 		$method = 'set_' . $property;

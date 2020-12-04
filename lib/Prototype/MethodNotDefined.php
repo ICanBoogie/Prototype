@@ -14,15 +14,18 @@ namespace ICanBoogie\Prototype;
 use BadMethodCallException;
 use ICanBoogie\Accessor\AccessorTrait;
 use Throwable;
+
+use function assert;
 use function get_class;
 use function ICanBoogie\format;
 use function is_object;
+use function is_string;
 
 /**
  * Exception thrown in attempt to access a method that is not defined.
  *
  * @property-read string $method The method that is not defined.
- * @property-read string $class The class of the instance on which the method was invoked.
+ * @property-read class-string $class The class of the instance on which the method was invoked.
  * @property-read object|null $instance Instance on which the method was invoked, or `null` if
  * only the class is available.
  */
@@ -46,7 +49,7 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 	}
 
 	/**
-	 * @var string
+	 * @var class-string
 	 */
 	private $class;
 
@@ -56,7 +59,7 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 	}
 
 	/**
-	 * @return object|null
+	 * @var object|null
 	 */
 	private $instance;
 
@@ -69,7 +72,7 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 	 * @inheritdoc
 	 *
 	 * @param string $method The method that is not defined.
-	 * @param string|object $class_or_instance The name of the class or one of its instances.
+	 * @param class-string|object $class_or_instance The name of the class or one of its instances.
 	 * @param string|null $message If `null` a message is formatted with $method and $class.
 	 */
 	public function __construct(string $method, $class_or_instance, string $message = null, Throwable $previous = null)
@@ -82,12 +85,17 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 			$class = get_class($class_or_instance);
 		}
 
+		assert(is_string($class));
+
 		$this->method = $method;
 		$this->class = $class;
 
 		parent::__construct($message ?: $this->format_message($method, $class), 0, $previous);
 	}
 
+	/**
+	 * @param class-string $class
+	 */
 	private function format_message(string $method, string $class): string
 	{
 		return format('The method %method is not defined by the prototype of class %class.', [

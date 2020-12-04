@@ -18,6 +18,7 @@ use ICanBoogie\Prototype\UnableToInstantiate;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
+
 use function array_fill_keys;
 use function array_intersect_key;
 use function array_keys;
@@ -50,9 +51,9 @@ class Prototyped implements ToArrayRecursive
 	 * [PDO](http://www.php.net/manual/en/book.pdo.php) with the `FETCH_CLASS` mode, that is the
 	 * properties of the instance are set *before* its constructor is invoked.
 	 *
-	 * @param array $properties Properties to be set before the constructor is invoked.
-	 * @param array $construct_args Arguments passed to the constructor.
-	 * @param string|null $class_name The name of the instance class. If empty, the name of the
+	 * @param array<string, mixed> $properties Properties to be set before the constructor is invoked.
+	 * @param mixed[] $construct_args Arguments passed to the constructor.
+	 * @param class-string|null $class_name The name of the instance class. If empty, the name of the
 	 * called class is used.
 	 *
 	 * @return object The new instance.
@@ -99,16 +100,23 @@ class Prototyped implements ToArrayRecursive
 
 	/**
 	 * Returns assignable properties.
+	 *
+	 * @return string[]
 	 */
 	static public function assignable(): array
 	{
 		return [];
 	}
 
+	/**
+	 * @var array<class-string, ReflectionClass>
+	 */
 	static private $class_reflection_cache = [];
 
 	/**
 	 * Returns cached class reflection.
+	 *
+	 * @param class-string $class_name
 	 *
 	 * @throws ReflectionException
 	 */
@@ -121,6 +129,8 @@ class Prototyped implements ToArrayRecursive
 
 	/**
 	 * Returns the public properties of an instance.
+	 *
+	 * @return array<string, mixed>
 	 */
 	static private function get_object_vars(object $object): array
 	{
@@ -151,7 +161,7 @@ class Prototyped implements ToArrayRecursive
 	 * session close. If you encounter this problem you might want to override the method. Don't
 	 * forget to remove the prototype property!
 	 *
-	 * @return array
+	 * @return array<string, mixed>
 	 *
 	 * @throws ReflectionException
 	 */
@@ -167,7 +177,7 @@ class Prototyped implements ToArrayRecursive
 	/**
 	 * Assigns properties to an object.
 	 *
-	 * @param array $properties The properties to assign.
+	 * @param array<string, mixed> $properties The properties to assign.
 	 * @param bool $unsafe The properties are not filtered if `true`.
 	 *
 	 * @return $this
@@ -191,6 +201,8 @@ class Prototyped implements ToArrayRecursive
 	 * Converts the object into an array.
 	 *
 	 * Only public properties and façade properties are included.
+	 *
+	 * @return array<string, mixed>
 	 *
 	 * @throws ReflectionException
 	 */
