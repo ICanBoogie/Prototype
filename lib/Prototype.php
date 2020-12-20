@@ -231,11 +231,11 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	 *
 	 * @param string $method The name of the method.
 	 *
-	 * @param callable $callback
+	 * @param callable $value
 	 */
-	public function offsetSet($method, $callback)
+	public function offsetSet($method, $value)
 	{
-		self::$prototypes[$this->class]->methods[$method] = $callback;
+		self::$prototypes[$this->class]->methods[$method] = $value;
 
 		$this->revoke_consolidated_methods();
 	}
@@ -256,8 +256,6 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	 * Checks if the prototype defines the specified method.
 	 *
 	 * @param string $method The name of the method.
-	 *
-	 * @return bool
 	 */
 	public function offsetExists($method): bool
 	{

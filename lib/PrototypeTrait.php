@@ -15,6 +15,8 @@ use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
 
+use ReflectionException;
+
 use function array_unshift;
 use function is_callable;
 use function method_exists;
@@ -46,12 +48,9 @@ trait PrototypeTrait
 	 * implements `__invoke` then the object is called with the arguments. Otherwise, calls are
 	 * forwarded to the {@link $prototype}.
 	 *
-	 * @param string $method
-	 * @param array $arguments
-	 *
 	 * @return mixed
 	 */
-	public function __call($method, $arguments)
+	public function __call(string $method, array $arguments)
 	{
 		if (isset($this->$method) && is_callable([ $this->$method, '__invoke' ]))
 		{
@@ -62,7 +61,7 @@ trait PrototypeTrait
 
 		try
 		{
-			$prototype = $this->prototype ?: $this->get_prototype();
+			$prototype = $this->prototype ?? $this->get_prototype();
 			$callable = $prototype[$method];
 
 			return $callable(...$arguments);
@@ -117,12 +116,15 @@ trait PrototypeTrait
 			return true;
 		}
 
-		$prototype = $this->prototype ?: $this->get_prototype();
+		$prototype = $this->prototype ?? $this->get_prototype();
 
 		return isset($prototype[$method]);
 	}
 
-	protected function accessor_get($property)
+	/**
+	 * @return mixed|null
+	 */
+	protected function accessor_get(string $property)
 	{
 		$method = 'get_' . $property;
 
@@ -142,7 +144,7 @@ trait PrototypeTrait
 		# we didn't find a suitable method in the class, maybe the prototype has one.
 		#
 
-		$prototype = $this->prototype ?: $this->get_prototype();
+		$prototype = $this->prototype ?? $this->get_prototype();
 
 		$method = 'get_' . $property;
 
@@ -169,7 +171,12 @@ trait PrototypeTrait
 		$this->assert_property_is_readable($property);
 	} //@codeCoverageIgnore
 
-	protected function accessor_set($property, $value)
+	/**
+	 * @param mixed $value
+	 *
+	 * @throws ReflectionException
+	 */
+	protected function accessor_set(string $property, $value): void
 	{
 		$method = 'set_' . $property;
 

@@ -124,7 +124,7 @@ class Prototyped implements ToArrayRecursive
 	{
 		$reflection = &self::$class_reflection_cache[$class_name];
 
-		return $reflection ?: $reflection = new ReflectionClass($class_name);
+		return $reflection ?? $reflection = new ReflectionClass($class_name);
 	}
 
 	/**
