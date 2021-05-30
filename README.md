@@ -1,7 +1,7 @@
 # Prototype
 
 [![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
+[![Build Status](https://img.shields.io/github/workflow/status/ICanBoogie/Prototype/test)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Atest)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
@@ -401,7 +401,7 @@ of the instance are set *before* its constructor is invoked.
 
 
 
- 
+
 
 ## Exceptions
 
