@@ -27,8 +27,7 @@
 	"require": {
 		"php": ">=7.2.5",
 		"ext-json": "*",
-		"icanboogie/accessor": "^4.0",
-		"icanboogie/common": "^1.2|^2.0"
+		"icanboogie/accessor": "^4.0"
 	},
 	"require-dev": {
 		"phpstan/phpstan": "^0.12.63",
