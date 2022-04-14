@@ -33,10 +33,7 @@ trait PrototypeTrait
 		AccessorTrait::has_property as private accessor_has_property;
 	}
 
-	/**
-	 * @var Prototype|null
-	 */
-	private $prototype;
+	private ?Prototype $prototype = null;
 
 	protected function get_prototype(): Prototype
 	{

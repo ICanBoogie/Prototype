@@ -15,6 +15,7 @@ use Closure;
 use ICanBoogie\Accessor\AccessorReflection;
 use ICanBoogie\Accessor\SerializableTrait;
 use ICanBoogie\Prototype\UnableToInstantiate;
+use JsonException;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -26,6 +27,8 @@ use function get_called_class;
 use function get_object_vars;
 use function is_callable;
 use function json_encode;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * Together with the {@link Prototype} class the {@link Prototyped} class provides means to
@@ -109,22 +112,22 @@ class Prototyped implements ToArrayRecursive
 	}
 
 	/**
-	 * @var array<class-string, ReflectionClass>
+	 * @var array<class-string, ReflectionClass<object>>
 	 */
-	static private $class_reflection_cache = [];
+	static private array $class_reflection_cache = [];
 
 	/**
 	 * Returns cached class reflection.
 	 *
 	 * @param class-string $class_name
 	 *
+	 * @return ReflectionClass<object>
+	 *
 	 * @throws ReflectionException
 	 */
 	static private function get_class_reflection(string $class_name): ReflectionClass
 	{
-		$reflection = &self::$class_reflection_cache[$class_name];
-
-		return $reflection ?? $reflection = new ReflectionClass($class_name);
+		return self::$class_reflection_cache[$class_name] ??= new ReflectionClass($class_name);
 	}
 
 	/**
@@ -220,9 +223,11 @@ class Prototyped implements ToArrayRecursive
 
 	/**
 	 * Converts the object into a JSON string.
+	 *
+	 * @throws JsonException
 	 */
 	public function to_json(): string
 	{
-		return json_encode($this->to_array_recursive());
+		return json_encode($this->to_array_recursive(), JSON_THROW_ON_ERROR);
 	}
 }

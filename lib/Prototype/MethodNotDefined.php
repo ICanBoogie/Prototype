@@ -27,7 +27,7 @@ use function is_string;
  * @property-read string $method The method that is not defined.
  * @property-read class-string $class The class of the instance on which the method was invoked.
  * @property-read object|null $instance Instance on which the method was invoked, or `null` if
- * only the class is available.
+ *     only the class is available.
  */
 class MethodNotDefined extends BadMethodCallException implements Exception
 {
@@ -38,10 +38,7 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 	 */
 	use AccessorTrait;
 
-	/**
-	 * @var string
-	 */
-	private $method;
+	private readonly string $method;
 
 	private function get_method(): string
 	{
@@ -51,17 +48,14 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 	/**
 	 * @var class-string
 	 */
-	private $class;
+	private readonly string $class;
 
 	private function get_class(): string
 	{
 		return $this->class;
 	}
 
-	/**
-	 * @var object|null
-	 */
-	private $instance;
+	private readonly ?object $instance;
 
 	private function get_instance(): ?object
 	{
@@ -75,12 +69,15 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 	 * @param class-string|object $class_or_instance The name of the class or one of its instances.
 	 * @param string|null $message If `null` a message is formatted with $method and $class.
 	 */
-	public function __construct(string $method, $class_or_instance, string $message = null, Throwable $previous = null)
-	{
+	public function __construct(
+		string $method,
+		string|object $class_or_instance,
+		string $message = null,
+		Throwable $previous = null
+	) {
 		$class = $class_or_instance;
 
-		if (is_object($class_or_instance))
-		{
+		if (is_object($class_or_instance)) {
 			$this->instance = $class_or_instance;
 			$class = get_class($class_or_instance);
 		}
@@ -90,7 +87,7 @@ class MethodNotDefined extends BadMethodCallException implements Exception
 		$this->method = $method;
 		$this->class = $class;
 
-		parent::__construct($message ?: $this->format_message($method, $class), 0, $previous);
+		parent::__construct($message ?? $this->format_message($method, $class), 0, $previous);
 	}
 
 	/**

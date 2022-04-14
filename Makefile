@@ -20,7 +20,7 @@ update:
 test-dependencies: vendor
 
 test-container:
-	@docker-compose run --rm app sh
+	@docker-compose run --rm app bash
 	@docker-compose down
 
 test: test-dependencies
