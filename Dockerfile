@@ -1,5 +1,16 @@
-ARG PHP_VERSION
-FROM php:${PHP_VERSION}-cli-buster
+FROM php:8.1-cli-buster
+
+RUN apt-get update && \
+	apt-get install -y autoconf pkg-config && \
+	pecl channel-update pecl.php.net && \
+	pecl install xdebug && \
+	docker-php-ext-enable opcache xdebug
+
+RUN echo '\
+xdebug.client_host=host.docker.internal\n\
+xdebug.mode=develop\n\
+xdebug.start_with_request=yes\n\
+' >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
 RUN echo '\
 display_errors=On\n\

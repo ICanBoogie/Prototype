@@ -16,6 +16,7 @@ use Closure;
 use ICanBoogie\Accessor\AccessorReflection;
 use ICanBoogie\Accessor\SerializableTrait;
 use ICanBoogie\Prototype\UnableToInstantiate;
+use JsonException;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -28,6 +29,8 @@ use function get_object_vars;
 use function is_callable;
 use function is_string;
 use function json_encode;
+
+use const JSON_THROW_ON_ERROR;
 
 /**
  * Together with the {@link Prototype} class the {@link Prototyped} class provides means to
@@ -106,29 +109,24 @@ class Prototyped implements ToArrayRecursive
         return [];
     }
 
-    /**
-     * @var array<class-string, ReflectionClass<object>>
-     */
-    private static $class_reflection_cache = [];
+	/**
+	 * @var array<class-string, ReflectionClass<object>>
+	 */
+	private static array $class_reflection_cache = [];
 
-    /**
-     * Returns cached class reflection.
-     *
-     * @template T of object
-     *
-     * @param class-string<T> $class_name
-     *
-     * @throws ReflectionException
-     *
-     * @return ReflectionClass<T>
-     */
-    private static function get_class_reflection(string $class_name): ReflectionClass
-    {
-        $reflection = &self::$class_reflection_cache[$class_name];
-
-        /** @phpstan-ignore-next-line */
-        return $reflection ?? $reflection = new ReflectionClass($class_name);
-    }
+	/**
+	 * Returns cached class reflection.
+	 *
+	 * @param class-string $class_name
+	 *
+	 * @return ReflectionClass<object>
+	 *
+	 * @throws ReflectionException
+	 */
+	private static function get_class_reflection(string $class_name): ReflectionClass
+	{
+		return self::$class_reflection_cache[$class_name] ??= new ReflectionClass($class_name);
+	}
 
     /**
      * Returns the public properties of an instance.
@@ -223,10 +221,12 @@ class Prototyped implements ToArrayRecursive
 
     /**
      * Converts the object into a JSON string.
-     */
-    public function to_json(): string
-    {
-        $json = json_encode($this->to_array_recursive());
+     *
+	 * @throws JsonException
+	 */
+	public function to_json(): string
+	{
+		$json = json_encode($this->to_array_recursive(), JSON_THROW_ON_ERROR);
 
         assert(is_string($json));
 

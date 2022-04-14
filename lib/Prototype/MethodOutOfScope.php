@@ -32,35 +32,26 @@ class MethodOutOfScope extends BadMethodCallException implements Exception
      */
     use AccessorTrait;
 
-    /**
-     * @var string
-     */
-    private $method;
-
     private function get_method(): string
-    {
-        return $this->method;
-    }
-
-    /**
-     * @var object
-     */
-    private $instance;
+	{
+		return $this->method;
+	}
 
     private function get_instance(): object
-    {
-        return $this->instance;
-    }
+	{
+		return $this->instance;
+	}
 
-    /**
-     * @inheritdoc
-     */
-    public function __construct(string $method, object $instance, string $message = null, Throwable $previous = null)
-    {
-        $this->method = $method;
-        $this->instance = $instance;
-
-        parent::__construct($message ?: $this->format_message($method, $instance), 0, $previous);
+	/**
+	 * @inheritdoc
+	 */
+	public function __construct(
+		private readonly string $method,
+		private readonly object $instance,
+		string $message = null,
+		Throwable $previous = null
+	) {
+        parent::__construct($message ?? $this->format_message($method, $instance), 0, $previous);
     }
 
     private function format_message(string $method, object $instance): string
