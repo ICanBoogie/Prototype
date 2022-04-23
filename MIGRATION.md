@@ -1,23 +1,39 @@
 # Migration
 
-## v5.x to v5.1
+## v5.x to v6.x
 
-### New Requirements
+### Breaking changes
 
-None
+- `Prototype::bind()` requires a `Config` objects instead of an array.
 
-### New features
+```php
+<?php
 
-None
+namespace ICanBoogie;
 
-### Backward Incompatible Changes
+Prototype::bind([
+	Cat::class => [
+		'meow' => fn(Cat $cat) => 'Meow'
+    ],
 
-None
+	FierceCat::class => [
+		'meow' => fn(FierceCat $cat) => 'MEOOOW !'
+	]
+]);
 
-### Deprecated Features
+```
 
-None
+```php
+<?php
 
-### Other Changes
+namespace ICanBoogie;
 
-- Compatible with PHP 8.2
+use ICanBoogie\Prototype\ConfigBuilder;use ICanBoogie\PrototypeTest\FierceCat;
+
+$config = (new ConfigBuilder())
+    ->bind(Cat::class, 'meom', fn(Cat $cat) => 'Meow')
+    ->bind(FierceCat::class, 'meow', fn(FierceCat $cat) => 'MEOOOW !')
+    ->build();
+
+ICanBoogie\Prototype::bind($config);
+```
