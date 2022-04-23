@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Prototype\MethodNotDefinedTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
 use ICanBoogie\PrototypeTrait;
 
-class A
+class SampleMethodNotDefined
 {
 	use PrototypeTrait;
 

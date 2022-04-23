@@ -9,22 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypedTest;
+namespace Test\ICanBoogie\PrototypedCases;
 
 use ICanBoogie\Prototyped;
 
-/**
- * The `value` property CAN be read but MUST NOT be set.
- */
-class ReadOnlyProperty extends Prototyped
-{
-	protected function get_property()
-	{
-		return 'value';
-	}
-}
-
-class ReadOnlyPropertyExtended extends ReadOnlyProperty
+class ReadOnlyPropertyExtended extends \Test\ICanBoogie\PrototypedCases\ReadOnlyProperty
 {
 }
 

@@ -41,7 +41,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"ICanBoogie\\": "tests"
+			"Test\\ICanBoogie\\": "tests"
 		}
 	},
 	"config": {

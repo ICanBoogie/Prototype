@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypedTest;
+namespace Test\ICanBoogie\PrototypedCases;
 
 use DateTime;
 use ICanBoogie\Prototyped;

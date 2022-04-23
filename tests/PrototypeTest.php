@@ -9,34 +9,35 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace Test\ICanBoogie;
 
+use ICanBoogie\Prototype;
 use ICanBoogie\Prototype\Config;
 use ICanBoogie\Prototype\MethodNotDefined;
-use ICanBoogie\PrototypeTest\A;
-use ICanBoogie\PrototypeTest\B;
-use ICanBoogie\PrototypeTest\BindCase;
-use ICanBoogie\PrototypeTest\Cat;
-use ICanBoogie\PrototypeTest\FierceCat;
-use ICanBoogie\PrototypeTest\NormalCat;
-use ICanBoogie\PrototypeTest\UnsetCase;
 use PHPUnit\Framework\TestCase;
+use Test\ICanBoogie\Prototype\Cat;
+use Test\ICanBoogie\Prototype\FierceCat;
+use Test\ICanBoogie\Prototype\NormalCat;
+use Test\ICanBoogie\PrototypedCases\SampleA;
+use Test\ICanBoogie\PrototypedCases\SampleB;
+use Test\ICanBoogie\PrototypeTraitCases\BindCase;
+use Test\ICanBoogie\PrototypeTraitCases\UnsetCase;
 
-class PrototypeTest extends TestCase
+final class PrototypeTest extends TestCase
 {
 	private $a;
 	private $b;
 
 	protected function setUp(): void
 	{
-		$this->a = $a = new A;
-		$this->b = $b = new B;
+		$this->a = $a = new SampleA;
+		$this->b = $b = new SampleB;
 
-		$a->prototype['set_minutes'] = function (A $self, $minutes) {
+		$a->prototype['set_minutes'] = function (SampleA $self, $minutes) {
 			$self->seconds = $minutes * 60;
 		};
 
-		$a->prototype['get_minutes'] = function (A $self) {
+		$a->prototype['get_minutes'] = function (SampleA $self) {
 			return $self->seconds / 60;
 		};
 	}
@@ -94,7 +95,7 @@ class PrototypeTest extends TestCase
 	{
 		$a = $this->a;
 
-		$a->prototype['format'] = function (A $self, $format) {
+		$a->prototype['format'] = function (SampleA $self, $format) {
 			return date($format, $self->seconds);
 		};
 
@@ -118,11 +119,11 @@ class PrototypeTest extends TestCase
 	{
 		$b = $this->b;
 
-		$b->prototype['set_hours'] = function (B $self, $hours) {
+		$b->prototype['set_hours'] = function (SampleB $self, $hours) {
 			$self->seconds = $hours * 3600;
 		};
 
-		$b->prototype['get_hours'] = function (B $self, $hours) {
+		$b->prototype['get_hours'] = function (SampleB $self, $hours) {
 			return $self->seconds / 3600;
 		};
 

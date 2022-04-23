@@ -1,10 +1,10 @@
 <?php
 
-namespace ICanBoogie\PrototypeTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
 use ICanBoogie\PrototypeTrait;
 
-class UnsetCase
+class BindCase
 {
 	use PrototypeTrait;
 }

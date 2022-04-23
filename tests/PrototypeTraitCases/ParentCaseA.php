@@ -9,17 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypedTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
-use ICanBoogie\Prototyped;
-use Throwable;
+use ICanBoogie\PrototypeTrait;
 
-final class FailingCase extends Prototyped
+/**
+ * @method url(string $type)
+ */
+class ParentCaseA
 {
-	/**
-	 * @throws Throwable
-	 */
-	public function __construct(Throwable $e) {
-		throw $e;
-	}
+	use PrototypeTrait;
 }

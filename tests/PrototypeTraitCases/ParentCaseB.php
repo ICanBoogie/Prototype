@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypeTraitTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
 class ParentCaseB extends ParentCaseA
 {

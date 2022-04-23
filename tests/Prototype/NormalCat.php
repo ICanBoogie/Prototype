@@ -9,9 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypedTest;
+namespace Test\ICanBoogie\Prototype;
 
-class CreatedAtCaseExtended extends CreatedAtCase
+class NormalCat extends Cat
 {
 
 }

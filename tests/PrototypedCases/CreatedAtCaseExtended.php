@@ -9,14 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Test\ICanBoogie;
+namespace Test\ICanBoogie\PrototypedCases;
 
-use Test\ICanBoogie\PrototypedCases\Sample;
-
-final class SampleHooks
+class CreatedAtCaseExtended extends CreatedAtCase
 {
-	static public function sample_method(Sample $sample): string
-	{
-		return "sample result";
-	}
+
 }

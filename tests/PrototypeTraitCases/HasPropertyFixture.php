@@ -9,26 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Prototype\MethodOutOfScopeTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
 use ICanBoogie\PrototypeTrait;
 
-class A
+class HasPropertyFixture
 {
 	use PrototypeTrait;
 
-	public function public_method()
-	{
-		return __FUNCTION__;
-	}
-
-	protected function protected_method()
-	{
-		return __FUNCTION__;
-	}
-
-	private function private_method()
-	{
-		return __FUNCTION__;
-	}
+	public $public;
+	protected $protected;
+	private $private;
 }
