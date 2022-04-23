@@ -1,50 +1,46 @@
 # customization
 
 PACKAGE_NAME = icanboogie/prototype
-PACKAGE_VERSION = 5.0
 PHPUNIT = vendor/bin/phpunit
 
 # do not edit the following lines
 
+.PHONY: usage
 usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
-	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer install
-
-update:
-	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer update
+	@composer install
 
 # testing
 
+.PHONY: test-dependencies
 test-dependencies: vendor
 
-test-container:
-	@docker-compose run --rm app bash
-	@docker-compose down
-
-test: test-dependencies
+.PHONY: test
+test: test-dependencies clean-sandbox
 	@$(PHPUNIT)
 
+.PHONY: test-coverage
 test-coverage: test-dependencies
 	@mkdir -p build/coverage
-	@$(PHPUNIT) --coverage-html build/coverage --coverage-text
+	@XDEBUG_MODE=coverage $(PHPUNIT) --coverage-html build/coverage --coverage-text
 
-#doc
+.PHONY: test-coveralls
+test-coveralls: test-dependencies
+	@mkdir -p build/logs
+	@$(PHPUNIT) --coverage-clover build/logs/clover.xml
 
-doc: vendor
-	@mkdir -p build/docs
-	@apigen generate \
-	--source lib \
-	--destination build/docs/ \
-	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
-	--template-theme "bootstrap"
+.PHONY: test-container
+test-container:
+	@docker-compose run --rm app bash
+	@docker-compose down -v
 
-# utils
+.PHONY: lint
+lint:
+	@XDEBUG_MODE=off phpcs -s
+	@XDEBUG_MODE=off vendor/bin/phpstan
 
-clean:
-	@rm -fR build
-	@rm -fR vendor
-	@rm -f composer.lock
-
-.PHONY: all autoload doc clean test test-coverage test-coveralls test-dependencies update
+.PHONY: clean-sandbox
+clean-sandbox:
+	@rm ./tests/sandbox/*

@@ -13,6 +13,7 @@ namespace ICanBoogie;
 
 use ArrayAccess;
 use ArrayIterator;
+use ICanBoogie\Prototype\Config;
 use ICanBoogie\Prototype\MethodNotDefined;
 use IteratorAggregate;
 use Traversable;
@@ -61,13 +62,12 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 
 	/**
 	 * Defines prototype methods.
-	 *
-	 * @param array<class-string, array<string, callable>> $bindings
 	 */
-	static public function bind(array $bindings): void
+	static public function bind(Config $config): void
 	{
-		if (!$bindings)
-		{
+		$bindings = $config->bindings;
+
+		if (!$bindings) {
 			return;
 		}
 
@@ -84,16 +84,14 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	{
 		$current = &self::$bindings;
 
-		if (!$current)
-		{
+		if (!$current) {
 			$current = $bindings;
 		}
 
 		$intersect = array_intersect_key($bindings, $current);
 		$current += array_diff_key($bindings, $current);
 
-		foreach ($intersect as $class => $methods)
-		{
+		foreach ($intersect as $class => $methods) {
 			$current[$class] = array_merge($current[$class], $methods);
 		}
 	}
@@ -105,12 +103,10 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	 */
 	static private function update_instances(array $bindings): void
 	{
-		foreach (self::$prototypes as $class => $prototype)
-		{
+		foreach (self::$prototypes as $class => $prototype) {
 			$prototype->consolidated_methods = null;
 
-			if (empty($bindings[$class]))
-			{
+			if (empty($bindings[$class])) {
 				continue;
 			}
 
@@ -150,8 +146,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 		$parent_class = get_parent_class($class);
 		$this->parent = $parent_class ? self::from($parent_class) : null;
 
-		if (isset(self::$bindings[$class]))
-		{
+		if (isset(self::$bindings[$class])) {
 			$this->methods = self::$bindings[$class];
 		}
 	}
@@ -177,8 +172,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	{
 		$methods = $this->methods;
 
-		if ($this->parent)
-		{
+		if ($this->parent) {
 			$methods += $this->parent->get_consolidated_methods();
 		}
 
@@ -194,10 +188,8 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	{
 		$class = $this->class;
 
-		foreach (self::$prototypes as $prototype)
-		{
-			if (!is_subclass_of($prototype->class, $class))
-			{
+		foreach (self::$prototypes as $prototype) {
+			if (!is_subclass_of($prototype->class, $class)) {
 				continue;
 			}
 
@@ -258,8 +250,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
 	{
 		$methods = $this->consolidated_methods ??= $this->consolidate_methods();
 
-		if (!isset($methods[$offset]))
-		{
+		if (!isset($methods[$offset])) {
 			throw new MethodNotDefined($offset, $this->class);
 		}
 

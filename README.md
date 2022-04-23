@@ -12,6 +12,12 @@ getters and setters.
 
 
 
+#### Installation
+
+```bash
+composer require icanboogie/prototype
+```
+
 
 
 ## Defining methods at runtime
@@ -35,18 +41,10 @@ $fierce_cat = new FierceCat;
 $second_fierce_cat = new FierceCat;
 
 // define the 'meow' prototype method for Cat class
-Prototype::from(Cat::class)['meow'] = function(Cat $cat) {
-
-	return 'Meow';
-
-};
+Prototype::from(Cat::class)['meow'] = fn(Cat $cat) => 'Meow';
 
 // override the 'meow' prototype method for FierceCat class
-Prototype::from(FierceCat::class)['meow'] = function(Cat $cat) {
-
-	return 'MEOOOW !';
-
-};
+Prototype::from(FierceCat::class)['meow'] = fn(Cat $cat) => 'MEOOOW !';
 
 echo $cat->meow();               // Meow
 echo $other_cat->meow();         // Meow
@@ -123,13 +121,8 @@ class Article
 
 // …
 
-Prototype::from(Article::class)['get_image'] = function(Article $target) use ($image_model) {
-
-	return $target->image_id
-		? $image_model[$target->image_id]
-		: null;
-
-};
+Prototype::from(Article::class)['get_image']
+    = fn(Article $target) => $image_model[$target->image_id] ?? null;
 
 $article = new Article;
 $article->image_id = 12;
@@ -166,11 +159,7 @@ class News extends Node
 	}
 }
 
-Prototype::from(Node::class)['url'] = function($node, $type) {
-
-	return "/path/to/$type.html";
-
-};
+Prototype::from(Node::class)['url'] = fn(Node $node, string $type) => "/path/to/$type.html";
 
 $node = new Node;
 $news = new News;
@@ -205,27 +194,16 @@ defined using any callable such as `"App\Hooks::cat_meow"`.
 ```php
 <?php
 
-ICanBoogie\Prototype::bind([
+namespace ICanBoogie;
 
-	Cat::class => [
+use ICanBoogie\Prototype\ConfigBuilder;use ICanBoogie\PrototypeTest\FierceCat;
 
-		'meow' => function(Cat $cat) {
+$config = (new ConfigBuilder())
+    ->bind(Cat::class, 'meom', fn(Cat $cat) => 'Meow')
+    ->bind(FierceCat::class, 'meow', fn(FierceCat $cat) => 'MEOOOW !')
+    ->build();
 
-			return 'Meow';
-
-		}
-	],
-
-	FierceCat::class => [
-
-		'meow' => function(FierceCat $cat) {
-
-			return 'MEOOOW !';
-
-		}
-	]
-
-]);
+ICanBoogie\Prototype::bind($config);
 ```
 
 
@@ -248,11 +226,7 @@ class Cat
 
 $cat = new Cat;
 
-$cat->prototype['meow'] = function(Cat $cat) {
-
-	return 'Meow';
-
-};
+$cat->prototype['meow'] = fn(Cat $cat) => 'Meow';
 
 echo $cat->meow();
 ```
@@ -270,35 +244,7 @@ Prototype methods may be defined using the `Prototype` instance of a class:
 
 use ICanBoogie\Prototype;
 
-Prototype::from(Cat::class)['meow'] = function(Cat $cat) {
-
-	return 'Meow';
-
-};
-```
-
-
-
-
-
-### Defining prototypes methods using config fragments
-
-If the package is bound to [ICanBoogie][] using [icanboogie/bind-prototype][], prototype methods may be defined
-using `prototype` configuration fragments:
-
-```php
-<?php
-
-use Article;
-
-// config/prototype.php
-
-return [
-
-	Article::class . '::url' => 'App\Hooks::article_url',
-	Article::class . '::get_url' => 'App\Hooks::article_get_url'
-
-];
+Prototype::from(Cat::class)['meow'] = fn(Cat $cat) => 'Meow';
 ```
 
 
@@ -420,26 +366,6 @@ The following exceptions are defined:
 
 
 
-## Requirements
-
-The package requires PHP 7.2 or later.
-
-
-
-
-
-## Installation
-
-The recommended way to install this package is through [Composer](http://getcomposer.org/):
-
-```bash
-$ composer require icanboogie/prototype
-```
-
-
-
-
-
 ## Documentation
 
 The package is documented as part of the [ICanBoogie][] framework [documentation][]. You can
@@ -471,13 +397,9 @@ The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
 
 
 
-
-
 ## License
 
 **icanboogie/prototype** is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
-
-
 
 
 
