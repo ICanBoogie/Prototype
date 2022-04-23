@@ -9,23 +9,24 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Prototype;
+namespace Test\ICanBoogie\Prototype;
 
 use Exception;
-use ICanBoogie\Prototype\MethodOutOfScopeTest\A;
+use ICanBoogie\Prototype\MethodOutOfScope;
 use PHPUnit\Framework\TestCase;
+use Test\ICanBoogie\PrototypeTraitCases\SampleMethodOutOfScope;
 
 final class MethodOutOfScopeTest extends TestCase
 {
-    public function test_invoke_public_method()
-    {
-        $a = new A();
-        $this->assertEquals('public_method', $a->public_method());
-    }
+	public function test_invoke_public_method()
+	{
+		$a = new SampleMethodOutOfScope;
+		$this->assertEquals('public_method', $a->public_method());
+	}
 
-    public function test_invoke_protected_method()
-    {
-        $a = new A();
+	public function test_invoke_protected_method()
+	{
+		$a = new SampleMethodOutOfScope;
 
         try {
             $a->protected_method();
@@ -39,9 +40,9 @@ final class MethodOutOfScopeTest extends TestCase
         }
     }
 
-    public function test_invoke_private_method()
-    {
-        $a = new A();
+	public function test_invoke_private_method()
+	{
+		$a = new SampleMethodOutOfScope;
 
         try {
             $a->private_method();

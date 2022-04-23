@@ -9,14 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypeTraitTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
-use ICanBoogie\PrototypeTrait;
-
-/**
- * @method url(string $type)
- */
-class ParentCaseA
+class ParentCaseB extends ParentCaseA
 {
-    use PrototypeTrait;
+    public function url($type)
+    {
+        return parent::url("another/$type");
+    }
 }

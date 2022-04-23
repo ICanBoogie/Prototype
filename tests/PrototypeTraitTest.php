@@ -9,21 +9,23 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace Test\ICanBoogie;
 
-use Exception;
-use ICanBoogie\PrototypeTraitTest\AccessorCase;
-use ICanBoogie\PrototypeTraitTest\HasPropertyFixture;
-use ICanBoogie\PrototypeTraitTest\ParentCaseA;
-use ICanBoogie\PrototypeTraitTest\ParentCaseB;
+use ICanBoogie\PropertyNotDefined;
+use ICanBoogie\PropertyNotWritable;
+use ICanBoogie\Prototype;
 use PHPUnit\Framework\TestCase;
+use Test\ICanBoogie\PrototypeTraitCases\AccessorCase;
+use Test\ICanBoogie\PrototypeTraitCases\HasPropertyFixture;
+use Test\ICanBoogie\PrototypeTraitCases\ParentCaseA;
+use Test\ICanBoogie\PrototypeTraitCases\ParentCaseB;
 
 final class PrototypeTraitTest extends TestCase
 {
-    public function test_accessor()
+    public function test_accessor(): void
     {
         $code = 404;
-        $previous = new Exception();
+        $previous = new \Exception();
         $a = new AccessorCase('A', 'B', 'message', $code, $previous);
 
         $this->assertEquals('A', $a->a);
@@ -32,35 +34,35 @@ final class PrototypeTraitTest extends TestCase
         $this->assertSame($previous, $a->previous);
     }
 
-    public function test_set_a()
+    public function test_set_a(): void
     {
         $a = new AccessorCase('A', 'B', 'message');
         $this->expectException(PropertyNotWritable::class);
         $a->a = null;
     }
 
-    public function test_set_b()
+    public function test_set_b(): void
     {
         $a = new AccessorCase('A', 'B', 'message');
         $this->expectException(PropertyNotWritable::class);
         $a->b = null;
     }
 
-    public function test_set_code()
+    public function test_set_code(): void
     {
         $a = new AccessorCase('A', 'B', 'message');
         $this->expectException(PropertyNotWritable::class);
         $a->code = null;
     }
 
-    public function test_set_previous()
+    public function test_set_previous(): void
     {
         $a = new AccessorCase('A', 'B', 'message');
         $this->expectException(PropertyNotWritable::class);
         $a->previous = null;
     }
 
-    public function test_get_undefined()
+    public function test_get_undefined(): void
     {
         $a = new AccessorCase('A', 'B', 'message');
         $p = 'undefined' . uniqid();
@@ -68,12 +70,10 @@ final class PrototypeTraitTest extends TestCase
         $a->$p;
     }
 
-    public function test_parent_invoke()
+    public function test_parent_invoke(): void
     {
         $prototype = Prototype::from(ParentCaseA::class);
-        $prototype['url'] = function ($instance, $type) {
-            return "/path/to/$type.html";
-        };
+        $prototype['url'] = fn($instance, $type) => "/path/to/$type.html";
 
         $a = new ParentCaseA();
         $this->assertEquals("/path/to/madonna.html", $a->url('madonna'));
@@ -82,17 +82,18 @@ final class PrototypeTraitTest extends TestCase
         $this->assertEquals("/path/to/another/madonna.html", $b->url('madonna'));
     }
 
-    public function test_should_have_property()
+    public function test_should_have_property(): void
     {
         $a = new HasPropertyFixture();
+        $prototype = Prototype::from($a);
 
-        $a->prototype['get_readonly'] = function () {
+        $prototype['get_readonly'] = function () {
         };
-        $a->prototype['lazy_get_lazy_readonly'] = function () {
+        $prototype['lazy_get_lazy_readonly'] = function () {
         };
-        $a->prototype['set_writeonly'] = function () {
+        $prototype['set_writeonly'] = function () {
         };
-        $a->prototype['lazy_set_lazy_writeonly'] = function () {
+        $prototype['lazy_set_lazy_writeonly'] = function () {
         };
 
         $this->assertTrue($a->has_property('public'));

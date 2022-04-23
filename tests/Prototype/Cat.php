@@ -9,14 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Test\ICanBoogie;
+namespace Test\ICanBoogie\Prototype;
 
-use Test\ICanBoogie\PrototypedCases\Sample;
+use ICanBoogie\Prototyped;
 
-final class SampleHooks
+class Cat extends Prototyped
 {
-	static public function sample_method(Sample $sample): string
-	{
-		return "sample result";
-	}
+
 }

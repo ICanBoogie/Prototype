@@ -9,40 +9,37 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie;
+namespace Test\ICanBoogie;
 
-use DateTime;
 use Exception;
+use ICanBoogie\PropertyNotDefined;
+use ICanBoogie\PropertyNotReadable;
+use ICanBoogie\PropertyNotWritable;
 use ICanBoogie\Prototype\UnableToInstantiate;
-use ICanBoogie\PrototypedTest\A;
-use ICanBoogie\PrototypedTest\AssignableCase;
-use ICanBoogie\PrototypedTest\CreatedAtCase;
-use ICanBoogie\PrototypedTest\CreatedAtCaseExtended;
-use ICanBoogie\PrototypedTest\ExportCase;
-use ICanBoogie\PrototypedTest\FailingCase;
-use ICanBoogie\PrototypedTest\ToArrayCase;
-use ICanBoogie\PrototypedTest\ToArrayWithFacadePropertyCase;
+use ICanBoogie\Prototyped;
 use PHPUnit\Framework\TestCase;
+use Test\ICanBoogie\Prototype\ExportCase;
+use Test\ICanBoogie\Prototype\ToArrayCase;
+use Test\ICanBoogie\PrototypedCases\AssignableCase;
+use Test\ICanBoogie\PrototypedCases\CreatedAtCase;
+use Test\ICanBoogie\PrototypedCases\CreatedAtCaseExtended;
+use Test\ICanBoogie\PrototypedCases\FailingCase;
+use Test\ICanBoogie\PrototypedCases\ReadOnlyProperty;
+use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyExtended;
+use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyPrivate;
+use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyPrivateExtended;
+use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyProtected;
+use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyProtectedExtended;
+use Test\ICanBoogie\PrototypedCases\SampleA;
+use Test\ICanBoogie\PrototypedCases\SampleD;
+use Test\ICanBoogie\PrototypedCases\ToArrayWithFacadePropertyCase;
 use Throwable;
 
 use function get_class;
 
 final class PrototypedTest extends TestCase
 {
-    public function test_get_prototype()
-    {
-        $o = new Prototyped();
-        $this->assertInstanceOf(Prototype::class, $o->prototype);
-    }
-
-    public function test_set_prototype()
-    {
-        $o = new Prototyped();
-        $this->expectException(PropertyNotWritable::class);
-        $o->prototype = null;
-    }
-
-    public function test_export_empty()
+    public function test_export_empty(): void
     {
         $o = new Prototyped();
 
@@ -55,7 +52,7 @@ final class PrototypedTest extends TestCase
      *
      * @param class-string $class
      */
-    public function test_readonly(string $class)
+    public function test_readonly(string $class): void
     {
         $o = new $class();
         $this->assertEquals('value', $o->property);
@@ -70,12 +67,12 @@ final class PrototypedTest extends TestCase
     {
         return [
 
-            [ PrototypedTest\ReadOnlyProperty::class ],
-            [ PrototypedTest\ReadOnlyPropertyExtended::class ],
-            [ PrototypedTest\ReadOnlyPropertyProtected::class ],
-            [ PrototypedTest\ReadOnlyPropertyProtectedExtended::class ],
-            [ PrototypedTest\ReadOnlyPropertyPrivate::class ],
-            [ PrototypedTest\ReadOnlyPropertyPrivateExtended::class ],
+            [ ReadOnlyProperty::class ],
+            [ ReadOnlyPropertyExtended::class ],
+            [ ReadOnlyPropertyProtected::class ],
+            [ ReadOnlyPropertyProtectedExtended::class ],
+            [ ReadOnlyPropertyPrivate::class ],
+            [ ReadOnlyPropertyPrivateExtended::class ],
 
         ];
     }
@@ -85,7 +82,7 @@ final class PrototypedTest extends TestCase
      *
      * @param class-string $class
      */
-    public function test_write_only(string $class)
+    public function test_write_only(string $class): void
     {
         $o = new $class();
         $o->property = true;
@@ -100,26 +97,26 @@ final class PrototypedTest extends TestCase
     {
         return [
 
-            [ PrototypedTest\WriteOnlyProperty::class ],
-            [ PrototypedTest\WriteOnlyPropertyExtended::class ],
-            [ PrototypedTest\WriteOnlyPropertyProtected::class ],
-            [ PrototypedTest\WriteOnlyPropertyProtectedExtended::class ],
-            [ PrototypedTest\WriteOnlyPropertyPrivate::class ],
-            [ PrototypedTest\WriteOnlyPropertyPrivateExtended::class ],
+            [ PrototypedCases\WriteOnlyProperty::class ],
+            [ PrototypedCases\WriteOnlyPropertyExtended::class ],
+            [ PrototypedCases\WriteOnlyPropertyProtected::class ],
+            [ PrototypedCases\WriteOnlyPropertyProtectedExtended::class ],
+            [ PrototypedCases\WriteOnlyPropertyPrivate::class ],
+            [ PrototypedCases\WriteOnlyPropertyPrivateExtended::class ],
 
         ];
     }
 
-    public function test_set_undefined()
+    public function test_set_undefined(): void
     {
-        $o = new Prototyped();
+        $o = new SampleA();
         $v = uniqid();
         $p = 'property' . uniqid();
         $o->$p = $v;
         $this->assertSame($v, $o->$p);
     }
 
-    public function test_get_undefined()
+    public function test_get_undefined(): void
     {
         $o = new Prototyped();
         $p = 'property' . uniqid();
@@ -127,7 +124,7 @@ final class PrototypedTest extends TestCase
         $o->$p;
     }
 
-    public function test_to_array()
+    public function test_to_array(): void
     {
         $o = new Prototyped();
         $this->assertEmpty($o->to_array());
@@ -147,7 +144,7 @@ final class PrototypedTest extends TestCase
         $this->assertArrayHasKey('private_with_getter_and_setter', $array);
     }
 
-    public function test_sleep()
+    public function test_sleep(): void
     {
         $o = new Prototyped();
         $this->assertEmpty($o->__sleep());
@@ -168,19 +165,19 @@ final class PrototypedTest extends TestCase
         $this->assertArrayNotHasKey('private_with_lazy_getter', $properties);
     }
 
-    public function test_to_array2()
+    public function test_to_array2(): void
     {
         $a = new ToArrayCase(1, 2, 3);
         $this->assertEquals([ 'a' => 1, 'b' => 2, 'c' => 3 ], $a->to_array());
     }
 
-    public function test_to_array_with_property_facade()
+    public function test_to_array_with_property_facade(): void
     {
         $a = new ToArrayWithFacadePropertyCase(1, 2, 3);
         $this->assertEquals([ 'a' => 1, 'c' => 3 ], $a->to_array());
     }
 
-    public function test_to_array_recursive()
+    public function test_to_array_recursive(): void
     {
         $a = new ToArrayCase(1, new ToArrayCase(11, 12, 13), [ 1, 2, 3 ]);
         $this->assertEquals(
@@ -189,28 +186,28 @@ final class PrototypedTest extends TestCase
         );
     }
 
-    public function test_to_json()
+    public function test_to_json(): void
     {
         $a = new ToArrayCase(1, new ToArrayCase(11, 12, 13), [ 1, 2, 3 ]);
         $this->assertEquals('{"a":1,"b":{"a":11,"b":12,"c":13},"c":[1,2,3]}', $a->to_json());
     }
 
-    public function testDefaultValueForUnsetProperty()
+    public function testDefaultValueForUnsetProperty(): void
     {
-        $o = new PrototypedTest\DefaultValueForUnsetProperty();
+        $o = new PrototypedCases\DefaultValueForUnsetProperty();
         $o->title = 'The quick brown fox';
         $this->assertEquals('the-quick-brown-fox', $o->slug);
         $this->assertArrayNotHasKey('slug', (array)$o);
         $this->assertArrayNotHasKey('slug', $o->to_array());
         $this->assertNotContains('slug', $o->__sleep());
 
-        $o = PrototypedTest\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox' ]);
+        $o = PrototypedCases\DefaultValueForUnsetProperty::from([ 'title' => 'The quick brown fox' ]);
         $this->assertEquals('the-quick-brown-fox', $o->slug);
         $this->assertArrayNotHasKey('slug', (array)$o);
         $this->assertArrayNotHasKey('slug', $o->to_array());
         $this->assertNotContains('slug', $o->__sleep());
 
-        $o = new PrototypedTest\DefaultValueForUnsetProperty();
+        $o = new PrototypedCases\DefaultValueForUnsetProperty();
         $o->title = 'The quick brown fox';
         $o->slug = 'brown-fox';
         $this->assertEquals('brown-fox', $o->slug);
@@ -218,7 +215,7 @@ final class PrototypedTest extends TestCase
         $this->assertArrayHasKey('slug', $o->to_array());
         $this->assertContains('slug', $o->__sleep());
 
-        $o = PrototypedTest\DefaultValueForUnsetProperty::from(
+        $o = PrototypedCases\DefaultValueForUnsetProperty::from(
             [ 'title' => 'The quick brown fox', 'slug' => 'brown-fox' ]
         );
         $this->assertEquals('brown-fox', $o->slug);
@@ -227,38 +224,38 @@ final class PrototypedTest extends TestCase
         $this->assertContains('slug', $o->__sleep());
     }
 
-    public function testDefaultValueForUnsetProtectedProperty()
+    public function testDefaultValueForUnsetProtectedProperty(): void
     {
-        $o = new PrototypedTest\DefaultValueForUnsetProtectedProperty();
+        $o = new PrototypedCases\DefaultValueForUnsetProtectedProperty();
         $o->title = 'Testing';
         $this->assertEquals('testing', $o->slug);
         # slug comes from the volatile getter, the property must *not* be set.
         $this->assertArrayNotHasKey('slug', (array)$o);
     }
 
-    public function testInvalidUseOfDefaultValueForUnsetProtectedProperty()
+    public function testInvalidUseOfDefaultValueForUnsetProtectedProperty(): void
     {
-        $o = new PrototypedTest\DefaultValueForUnsetProtectedProperty();
+        $o = new PrototypedCases\DefaultValueForUnsetProtectedProperty();
         $this->expectException(PropertyNotWritable::class);
         $o->slug = 'madonna';
     }
 
-    public function testInvalidProtectedPropertyGetter()
+    public function testInvalidProtectedPropertyGetter(): void
     {
-        $o = new PrototypedTest\InvalidProtectedPropertyGetter();
+        $o = new PrototypedCases\InvalidProtectedPropertyGetter();
         $this->expectException(PropertyNotWritable::class);
         $a = $o->value;
     }
 
-    public function testValidProtectedPropertyGetter()
+    public function testValidProtectedPropertyGetter(): void
     {
-        $o = new PrototypedTest\ValidProtectedPropertyGetter();
+        $o = new PrototypedCases\ValidProtectedPropertyGetter();
         $this->assertNotNull($o->value);
     }
 
-    public function testVirtualProperty()
+    public function testVirtualProperty(): void
     {
-        $o = new PrototypedTest\VirtualProperty();
+        $o = new PrototypedCases\VirtualProperty();
 
         $o->minutes = 1;
         $this->assertEquals(1, $o->minutes);
@@ -276,38 +273,38 @@ final class PrototypedTest extends TestCase
         $this->assertArrayNotHasKey('minutes', $o->to_array());
     }
 
-    public function testGetUnsetPublicProperty()
+    public function testGetUnsetPublicProperty(): void
     {
-        $fixture = new A();
+        $fixture = new SampleD();
         $this->expectException(PropertyNotDefined::class);
         $fixture->unset;
     }
 
-    public function testGetUnsetProtectedProperty()
+    public function testGetUnsetProtectedProperty(): void
     {
-        $fixture = new A();
+        $fixture = new SampleD();
         $this->expectException(PropertyNotReadable::class);
         $fixture->unset_protected;
     }
 
-    public function testGetUndefinedProperty()
+    public function testGetUndefinedProperty(): void
     {
-        $fixture = new A();
+        $fixture = new SampleD();
         $this->expectException(PropertyNotDefined::class);
         $fixture->madonna;
     }
 
-    public function testProtectedProperty()
+    public function testProtectedProperty(): void
     {
-        $fixture = new A();
+        $fixture = new SampleD();
         $fixture->c = 'c';
 
         $this->assertEquals('c', $fixture->c);
     }
 
-    public function testProtectedVolatileProperty()
+    public function testProtectedVolatileProperty(): void
     {
-        $fixture = new A();
+        $fixture = new SampleD();
         $fixture->d = 'd';
 
         $this->assertEquals('d', $fixture->d);
@@ -316,9 +313,9 @@ final class PrototypedTest extends TestCase
     /**
      * Properties with getters should be removed before serialization.
      */
-    public function testSleepAndGetters()
+    public function testSleepAndGetters(): void
     {
-        $fixture = new A();
+        $fixture = new SampleD();
 
         $this->assertEquals('a', $fixture->a);
         $this->assertEquals('b', $fixture->b);
@@ -329,7 +326,7 @@ final class PrototypedTest extends TestCase
         $this->assertArrayNotHasKey('b', $fixture);
     }
 
-    public function test_prototype_is_not_exported()
+    public function test_prototype_is_not_exported(): void
     {
         $o = new Prototyped();
         $this->assertNotContains('prototype', $o->__sleep());
@@ -345,14 +342,14 @@ final class PrototypedTest extends TestCase
      * - A \DateTime instance is always obtained through `created_at`.
      * - The `created_at` property MUST be preserved by serialization.
      */
-    public function test_created_at_case(string $class)
+    public function test_created_at_case(string $class): void
     {
         /* @var $o CreatedAtCase */
         $o = new $class();
 
-        $now = new DateTime();
+        $now = new \DateTime();
         $o->created_at = $now;
-        $this->assertInstanceOf(DateTime::class, $o->created_at);
+        $this->assertInstanceOf(\DateTime::class, $o->created_at);
 
         $sleep = $o->__sleep();
         $this->assertArrayHasKey('created_at', $sleep);
@@ -361,11 +358,11 @@ final class PrototypedTest extends TestCase
         $serialized = serialize($o);
         $unserialized = unserialize($serialized);
 
-        $this->assertInstanceOf(DateTime::class, $unserialized->created_at);
+        $this->assertInstanceOf(\DateTime::class, $unserialized->created_at);
         $this->assertTrue($unserialized->created_at == $now);
     }
 
-    public function provide_test_created_at_case()
+    public static function provide_test_created_at_case(): array
     {
         return [
 
@@ -375,7 +372,7 @@ final class PrototypedTest extends TestCase
         ];
     }
 
-    public function test_assign_safe()
+    public function test_assign_safe(): void
     {
         $case = new AssignableCase();
         $case->assign([
@@ -391,7 +388,7 @@ final class PrototypedTest extends TestCase
         $this->assertSame($color, $case->color);
     }
 
-    public function test_assign_unsafe()
+    public function test_assign_unsafe(): void
     {
         $case = new AssignableCase();
         $case->assign([
@@ -407,7 +404,7 @@ final class PrototypedTest extends TestCase
         $this->assertSame($color, $case->color);
     }
 
-    public function test_from_is_unsafe()
+    public function test_from_is_unsafe(): void
     {
         $case = AssignableCase::from([
 
@@ -422,7 +419,7 @@ final class PrototypedTest extends TestCase
         $this->assertSame($color, $case->color);
     }
 
-    public function test_from_should_decorate_failures()
+    public function test_from_should_decorate_failures(): void
     {
         $cause = new Exception();
 

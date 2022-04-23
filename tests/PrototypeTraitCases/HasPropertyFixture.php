@@ -9,14 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Test\ICanBoogie;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
-use Test\ICanBoogie\PrototypedCases\Sample;
+use ICanBoogie\PrototypeTrait;
 
-final class SampleHooks
+class HasPropertyFixture
 {
-	static public function sample_method(Sample $sample): string
-	{
-		return "sample result";
-	}
+    use PrototypeTrait;
+
+    public $public;
+    protected $protected;
+    private $private;
 }

@@ -27,7 +27,6 @@
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
-	"prefer-dist": true,
 	"require": {
 		"php": ">=8.1",
 		"ext-json": "*",
@@ -45,7 +44,7 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"ICanBoogie\\": "tests"
+			"Test\\ICanBoogie\\": "tests"
 		},
         "classmap": [
             "tests/cases.php"

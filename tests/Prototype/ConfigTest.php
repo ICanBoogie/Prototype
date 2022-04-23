@@ -9,12 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Prototype;
+namespace Test\ICanBoogie\Prototype;
 
-use ICanBoogie\Sample;
-use ICanBoogie\SampleHooks;
-use ICanBoogie\SetStateHelper;
+use ICanBoogie\Prototype\Config;
 use PHPUnit\Framework\TestCase;
+use Test\ICanBoogie\PrototypedCases\Sample;
+use Test\ICanBoogie\SampleHooks;
+use Test\ICanBoogie\SetStateHelper;
 
 final class ConfigTest extends TestCase
 {

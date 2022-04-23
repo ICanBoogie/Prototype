@@ -9,25 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypedTest;
+namespace Test\ICanBoogie\Prototype;
 
 use ICanBoogie\Prototyped;
 
-class ToArrayWithFacadePropertyCase extends Prototyped
+class ToArrayCase extends Prototyped
 {
     public $a;
-    protected $b;
-    private $c;
-
-    protected function get_c()
-    {
-        return $this->c;
-    }
-
-    protected function set_c($value)
-    {
-        $this->c = $value;
-    }
+    public $b;
+    public $c;
 
     public function __construct($a, $b, $c)
     {

@@ -9,12 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypeTraitTest;
+namespace Test\ICanBoogie\Prototype;
 
-class ParentCaseB extends ParentCaseA
+class NormalCat extends Cat
 {
-    public function url($type)
-    {
-        return parent::url("another/$type");
-    }
+
 }

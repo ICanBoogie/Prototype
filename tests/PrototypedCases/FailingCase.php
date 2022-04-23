@@ -9,20 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypedTest;
+namespace Test\ICanBoogie\PrototypedCases;
 
+use AllowDynamicProperties;
 use ICanBoogie\Prototyped;
+use Throwable;
 
-class ToArrayCase extends Prototyped
+#[AllowDynamicProperties]
+final class FailingCase extends Prototyped
 {
-    public $a;
-    public $b;
-    public $c;
-
-    public function __construct($a, $b, $c)
+    /**
+     * @throws Throwable
+     */
+    public function __construct(Throwable $e)
     {
-        $this->a = $a;
-        $this->b = $b;
-        $this->c = $c;
+        throw $e;
     }
 }

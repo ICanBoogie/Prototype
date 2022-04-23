@@ -9,15 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypeTraitTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
 use ICanBoogie\PrototypeTrait;
 
-class HasPropertyFixture
+/**
+ * @method url(string $type)
+ */
+class ParentCaseA
 {
     use PrototypeTrait;
-
-    public $public;
-    protected $protected;
-    private $private;
 }

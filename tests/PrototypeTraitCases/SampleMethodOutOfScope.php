@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\Prototype\MethodOutOfScopeTest;
+namespace Test\ICanBoogie\PrototypeTraitCases;
 
 use ICanBoogie\PrototypeTrait;
 
-class A
+class SampleMethodOutOfScope
 {
     use PrototypeTrait;
 

@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace ICanBoogie\PrototypedTest;
+namespace Test\ICanBoogie\PrototypedCases;
 
 use AllowDynamicProperties;
 use ICanBoogie\Prototyped;
 
 #[AllowDynamicProperties]
-class A extends Prototyped
+class SampleD extends Prototyped
 {
     public $a;
     public $b;
@@ -30,12 +30,12 @@ class A extends Prototyped
         unset($this->unset_protected);
     }
 
-    protected function lazy_get_a()
+    protected function lazy_get_a(): string
     {
         return 'a';
     }
 
-    protected function get_b()
+    protected function get_b(): string
     {
         return 'b';
     }
