@@ -1,50 +1,54 @@
 # customization
 
 PACKAGE_NAME = icanboogie/prototype
-PACKAGE_VERSION = 5.0
 PHPUNIT = vendor/bin/phpunit
 
 # do not edit the following lines
 
+.PHONY: usage
 usage:
 	@echo "test:  Runs the test suite.\ndoc:   Creates the documentation.\nclean: Removes the documentation, the dependencies and the Composer files."
 
 vendor:
-	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer install
-
-update:
-	@COMPOSER_ROOT_VERSION=$(PACKAGE_VERSION) composer update
+	@composer install
 
 # testing
 
-test-dependencies: vendor
+.PHONY: test-dependencies
+test-dependencies: vendor test-cleanup
 
-test-container:
-	@docker-compose run --rm app sh
-	@docker-compose down
-
+.PHONY: test
 test: test-dependencies
 	@$(PHPUNIT)
 
+.PHONY: test-coverage
 test-coverage: test-dependencies
 	@mkdir -p build/coverage
-	@$(PHPUNIT) --coverage-html build/coverage --coverage-text
+	@XDEBUG_MODE=coverage $(PHPUNIT) --coverage-html build/coverage
 
-#doc
+.PHONY: test-coveralls
+test-coveralls: test-dependencies
+	@mkdir -p build/logs
+	@XDEBUG_MODE=coverage $(PHPUNIT) --coverage-clover build/logs/clover.xml
 
-doc: vendor
-	@mkdir -p build/docs
-	@apigen generate \
-	--source lib \
-	--destination build/docs/ \
-	--title "$(PACKAGE_NAME) v$(PACKAGE_VERSION)" \
-	--template-theme "bootstrap"
+.PHONY: test-cleanup
+test-cleanup:
+	@rm -rf tests/sandbox/*
 
-# utils
+.PHONY: test-container
+test-container: test-container-72
 
-clean:
-	@rm -fR build
-	@rm -fR vendor
-	@rm -f composer.lock
+.PHONY: test-container-72
+test-container-72:
+	@-docker-compose run --rm app72 bash
+	@docker-compose down -v
 
-.PHONY: all autoload doc clean test test-coverage test-coveralls test-dependencies update
+.PHONY: test-container-82
+test-container-82:
+	@-docker-compose run --rm app82 bash
+	@docker-compose down -v
+
+.PHONY: lint
+lint:
+	@XDEBUG_MODE=off phpcs -s
+	@XDEBUG_MODE=off vendor/bin/phpstan

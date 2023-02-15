@@ -22,15 +22,19 @@
 		"issues": "https://github.com/ICanBoogie/Prototype/issues",
 		"source": "https://github.com/ICanBoogie/Prototype"
 	},
+	"config": {
+		"sort-packages": true
+	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,
+	"prefer-dist": true,
 	"require": {
 		"php": ">=7.2.5",
 		"ext-json": "*",
 		"icanboogie/accessor": "^4.0"
 	},
 	"require-dev": {
-		"phpstan/phpstan": "^0.12.63",
+		"phpstan/phpstan": "^1.9",
 		"phpunit/phpunit": "^8.5"
 	},
 	"autoload": {
@@ -42,9 +46,9 @@
 	"autoload-dev": {
 		"psr-4": {
 			"ICanBoogie\\": "tests"
-		}
-	},
-	"config": {
-		"sort-packages": true
+		},
+        "classmap": [
+            "tests/cases.php"
+        ]
 	}
 }

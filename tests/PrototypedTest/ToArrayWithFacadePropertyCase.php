@@ -15,24 +15,24 @@ use ICanBoogie\Prototyped;
 
 class ToArrayWithFacadePropertyCase extends Prototyped
 {
-	public $a;
-	protected $b;
-	private $c;
+    public $a;
+    protected $b;
+    private $c;
 
-	protected function get_c()
-	{
-		return $this->c;
-	}
+    protected function get_c()
+    {
+        return $this->c;
+    }
 
-	protected function set_c($value)
-	{
-		$this->c = $value;
-	}
+    protected function set_c($value)
+    {
+        $this->c = $value;
+    }
 
-	public function __construct($a, $b, $c)
-	{
-		$this->a = $a;
-		$this->b = $b;
-		$this->c = $c;
-	}
+    public function __construct($a, $b, $c)
+    {
+        $this->a = $a;
+        $this->b = $b;
+        $this->c = $c;
+    }
 }

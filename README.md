@@ -1,7 +1,6 @@
 # Prototype
 
 [![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
-[![Build Status](https://img.shields.io/github/workflow/status/ICanBoogie/Prototype/test)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Atest)
 [![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
 [![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
 [![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
@@ -9,6 +8,13 @@
 The **icanboogie/prototype** package allows methods of classes using the [PrototypeTrait][] to be
 defined at runtime, and since the [icanboogie/accessor][] package is used, this also includes
 getters and setters.
+
+
+#### Installation
+
+```bash
+composer require icanboogie/prototype
+```
 
 
 
@@ -418,64 +424,32 @@ The following exceptions are defined:
 
 
 
+## Continuous Integration
 
+The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Prototype/actions).
 
-## Requirements
-
-The package requires PHP 7.2 or later.
-
-
-
-
-
-## Installation
-
-The recommended way to install this package is through [Composer](http://getcomposer.org/):
-
-```bash
-$ composer require icanboogie/prototype
-```
+[![Tests](https://github.com/ICanBoogie/Prototype/workflows/test/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Atest)
+[![Static Analysis](https://github.com/ICanBoogie/Prototype/workflows/static-analysis/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Astatic-analysis)
+[![Code Style](https://github.com/ICanBoogie/Prototype/workflows/code-style/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Acode-style)
 
 
 
+## Code of Conduct
 
-
-## Documentation
-
-The package is documented as part of the [ICanBoogie][] framework [documentation][]. You can
-generate the documentation for the package and its dependencies with the `make doc` command. The
-documentation is generated in the `docs` directory. [ApiGen](http://apigen.org/) is required. The
-directory can later by cleaned with the `make clean` command.
+This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in
+this project and its community, you are expected to uphold this code.
 
 
 
+## Contributing
 
-
-## Testing
-
-The test suite is ran with the `make test` command. [PHPUnit](https://phpunit.de/) and
-[Composer](http://getcomposer.org/) need to be globally available to run the suite.
-The command installs dependencies as required. The `make test-coverage` command runs test suite and
-also creates an HTML coverage report in "build/coverage". The directory can later be cleaned with
-the `make clean` command.
-
-To ensure tests are running with the minimum requirements, it is advised to run them inside the
-provided container. The container is started with the `make test-container` command. Once inside the
-container, `make test` and `make test-coverage` can be used. Xdebug is available in the container
-and ready for debugging, it uses the servername `icanboogie-tests` and the absolute path `/app`.
-
-The package is continuously tested by [Travis CI](http://about.travis-ci.org/).
-
-[![Build Status](https://img.shields.io/travis/ICanBoogie/Prototype/master.svg)](http://travis-ci.org/ICanBoogie/Prototype)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
-
-
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
 
 ## License
 
-**icanboogie/prototype** is licensed under the New BSD License - See the [LICENSE](LICENSE) file for details.
+**icanboogie/prototype** is released under the [BSD-3-Clause](LICENSE).
 
 
 

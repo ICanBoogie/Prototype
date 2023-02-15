@@ -13,5 +13,4 @@ namespace ICanBoogie\PrototypedTest;
 
 class CreatedAtCaseExtended extends CreatedAtCase
 {
-
 }

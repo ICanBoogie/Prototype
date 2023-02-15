@@ -13,15 +13,17 @@ namespace ICanBoogie\PrototypedTest;
 
 use ICanBoogie\Prototyped;
 
+use function ICanBoogie\normalize;
+
 /**
  * The `value` property CAN be read but MUST NOT be set.
  */
 class ReadOnlyProperty extends Prototyped
 {
-	protected function get_property()
-	{
-		return 'value';
-	}
+    protected function get_property()
+    {
+        return 'value';
+    }
 }
 
 class ReadOnlyPropertyExtended extends ReadOnlyProperty
@@ -33,12 +35,12 @@ class ReadOnlyPropertyExtended extends ReadOnlyProperty
  */
 class ReadOnlyPropertyProtected extends Prototyped
 {
-	protected $property = 'value';
+    protected $property = 'value';
 
-	protected function get_property()
-	{
-		return $this->property;
-	}
+    protected function get_property()
+    {
+        return $this->property;
+    }
 }
 
 class ReadOnlyPropertyProtectedExtended extends ReadOnlyPropertyProtected
@@ -50,12 +52,12 @@ class ReadOnlyPropertyProtectedExtended extends ReadOnlyPropertyProtected
  */
 class ReadOnlyPropertyPrivate extends Prototyped
 {
-	private $property = 'value';
+    private $property = 'value';
 
-	protected function get_property()
-	{
-		return $this->property;
-	}
+    protected function get_property()
+    {
+        return $this->property;
+    }
 }
 
 class ReadOnlyPropertyPrivateExtended extends ReadOnlyPropertyPrivate
@@ -67,10 +69,10 @@ class ReadOnlyPropertyPrivateExtended extends ReadOnlyPropertyPrivate
  */
 class WriteOnlyProperty extends Prototyped
 {
-	protected function set_property($value)
-	{
-		// …
-	}
+    protected function set_property($value)
+    {
+        // …
+    }
 }
 
 class WriteOnlyPropertyExtended extends WriteOnlyProperty
@@ -82,12 +84,12 @@ class WriteOnlyPropertyExtended extends WriteOnlyProperty
  */
 class WriteOnlyPropertyProtected extends Prototyped
 {
-	protected $property;
+    protected $property;
 
-	protected function set_property($value)
-	{
-		$this->property = $value;
-	}
+    protected function set_property($value)
+    {
+        $this->property = $value;
+    }
 }
 
 class WriteOnlyPropertyProtectedExtended extends WriteOnlyPropertyProtected
@@ -99,12 +101,12 @@ class WriteOnlyPropertyProtectedExtended extends WriteOnlyPropertyProtected
  */
 class WriteOnlyPropertyPrivate extends Prototyped
 {
-	private $property;
+    private $property;
 
-	protected function set_property($value)
-	{
-		$this->property = $value;
-	}
+    protected function set_property($value)
+    {
+        $this->property = $value;
+    }
 }
 
 class WriteOnlyPropertyPrivateExtended extends WriteOnlyPropertyPrivate
@@ -118,21 +120,20 @@ class WriteOnlyPropertyPrivateExtended extends WriteOnlyPropertyPrivate
  */
 class DefaultValueForUnsetProperty extends Prototyped
 {
-	public $title;
-	public $slug;
+    public $title;
+    public $slug;
 
-	public function __construct()
-	{
-		if (!$this->slug)
-		{
-			unset($this->slug);
-		}
-	}
+    public function __construct()
+    {
+        if (!$this->slug) {
+            unset($this->slug);
+        }
+    }
 
-	protected function get_slug()
-	{
-		return \ICanBoogie\normalize($this->title);
-	}
+    protected function get_slug()
+    {
+        return normalize($this->title);
+    }
 }
 
 /**
@@ -144,21 +145,20 @@ class DefaultValueForUnsetProperty extends Prototyped
  */
 class DefaultValueForUnsetProtectedProperty extends Prototyped
 {
-	public $title;
-	protected $slug;
+    public $title;
+    protected $slug;
 
-	public function __construct()
-	{
-		if (empty($this->slug))
-		{
-			unset($this->slug);
-		}
-	}
+    public function __construct()
+    {
+        if (empty($this->slug)) {
+            unset($this->slug);
+        }
+    }
 
-	protected function get_slug()
-	{
-		return \ICanBoogie\normalize($this->title);
-	}
+    protected function get_slug()
+    {
+        return normalize($this->title);
+    }
 }
 
 /**
@@ -167,17 +167,17 @@ class DefaultValueForUnsetProtectedProperty extends Prototyped
  */
 class InvalidProtectedPropertyGetter extends Prototyped
 {
-	protected $value;
+    protected $value;
 
-	public function __construct()
-	{
-		unset($this->value);
-	}
+    public function __construct()
+    {
+        unset($this->value);
+    }
 
-	protected function get_value()
-	{
-		return $this->value = uniqid();
-	}
+    protected function get_value()
+    {
+        return $this->value = uniqid();
+    }
 }
 
 /**
@@ -188,17 +188,17 @@ class InvalidProtectedPropertyGetter extends Prototyped
  */
 class ValidProtectedPropertyGetter extends Prototyped
 {
-	protected $value;
+    protected $value;
 
-	public function __construct()
-	{
-		unset($this->value);
-	}
+    public function __construct()
+    {
+        unset($this->value);
+    }
 
-	protected function lazy_get_value()
-	{
-		return uniqid();
-	}
+    protected function lazy_get_value()
+    {
+        return uniqid();
+    }
 }
 
 /**
@@ -206,15 +206,15 @@ class ValidProtectedPropertyGetter extends Prototyped
  */
 class VirtualProperty extends Prototyped
 {
-	public $seconds;
+    public $seconds;
 
-	protected function set_minutes($minutes)
-	{
-		$this->seconds = $minutes * 60;
-	}
+    protected function set_minutes($minutes)
+    {
+        $this->seconds = $minutes * 60;
+    }
 
-	protected function get_minutes()
-	{
-		return $this->seconds / 60;
-	}
+    protected function get_minutes()
+    {
+        return $this->seconds / 60;
+    }
 }

@@ -18,5 +18,4 @@ use RuntimeException;
  */
 class UnableToInstantiate extends RuntimeException implements Exception
 {
-
 }

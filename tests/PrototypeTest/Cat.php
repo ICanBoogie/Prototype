@@ -6,5 +6,4 @@ use ICanBoogie\Prototyped;
 
 class Cat extends Prototyped
 {
-
 }

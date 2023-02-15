@@ -11,54 +11,55 @@
 
 namespace ICanBoogie\PrototypeTraitTest;
 
+use Exception;
 use ICanBoogie\PrototypeTrait;
 
 /**
  * @property-read mixed $a
  * @property-read mixed $b
  * @property-read int $code
- * @property-read \Exception $previous
+ * @property-read Exception $previous
  */
-class AccessorCase extends \Exception
+class AccessorCase extends Exception
 {
-	use PrototypeTrait;
+    use PrototypeTrait;
 
-	private $a;
+    private $a;
 
-	protected function get_a()
-	{
-		return $this->a;
-	}
+    protected function get_a()
+    {
+        return $this->a;
+    }
 
-	private $b;
+    private $b;
 
-	protected function get_b()
-	{
-		return $this->b;
-	}
+    protected function get_b()
+    {
+        return $this->b;
+    }
 
-	protected function get_code()
-	{
-		return $this->getCode();
-	}
+    protected function get_code()
+    {
+        return $this->getCode();
+    }
 
-	protected function get_previous()
-	{
-		return $this->getPrevious();
-	}
+    protected function get_previous()
+    {
+        return $this->getPrevious();
+    }
 
-	/**
-	 * @param string $a
-	 * @param int $b
-	 * @param string $message
-	 * @param int $code
-	 * @param \Exception|null $previous
-	 */
-	public function __construct($a, $b, $message, $code = 500, \Exception $previous = null)
-	{
-		$this->a = $a;
-		$this->b = $b;
+    /**
+     * @param string $a
+     * @param int $b
+     * @param string $message
+     * @param int $code
+     * @param Exception|null $previous
+     */
+    public function __construct($a, $b, $message, $code = 500, Exception $previous = null)
+    {
+        $this->a = $a;
+        $this->b = $b;
 
-		parent::__construct($message, $code, $previous);
-	}
+        parent::__construct($message, $code, $previous);
+    }
 }

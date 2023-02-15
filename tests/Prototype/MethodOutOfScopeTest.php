@@ -15,49 +15,43 @@ use Exception;
 use ICanBoogie\Prototype\MethodOutOfScopeTest\A;
 use PHPUnit\Framework\TestCase;
 
-class MethodOutOfScopeTest extends TestCase
+final class MethodOutOfScopeTest extends TestCase
 {
-	public function test_invoke_public_method()
-	{
-		$a = new A;
-		$this->assertEquals('public_method', $a->public_method());
-	}
+    public function test_invoke_public_method()
+    {
+        $a = new A();
+        $this->assertEquals('public_method', $a->public_method());
+    }
 
-	public function test_invoke_protected_method()
-	{
-		$a = new A;
+    public function test_invoke_protected_method()
+    {
+        $a = new A();
 
-		try
-		{
-			$a->protected_method();
+        try {
+            $a->protected_method();
 
-			$this->fail('Excepted MethodOutOfScope exception.');
-		}
-		catch (Exception $e)
-		{
-			$this->assertInstanceOf(MethodOutOfScope::class, $e);
-			/* @var $e MethodOutOfScope */
-			$this->assertEquals('protected_method', $e->method);
-			$this->assertSame($a, $e->instance);
-		}
-	}
+            $this->fail('Excepted MethodOutOfScope exception.');
+        } catch (Exception $e) {
+            $this->assertInstanceOf(MethodOutOfScope::class, $e);
+            /* @var $e MethodOutOfScope */
+            $this->assertEquals('protected_method', $e->method);
+            $this->assertSame($a, $e->instance);
+        }
+    }
 
-	public function test_invoke_private_method()
-	{
-		$a = new A;
+    public function test_invoke_private_method()
+    {
+        $a = new A();
 
-		try
-		{
-			$a->private_method();
+        try {
+            $a->private_method();
 
-			$this->fail('Excepted MethodOutOfScope exception.');
-		}
-		catch (Exception $e)
-		{
-			$this->assertInstanceOf(MethodOutOfScope::class, $e);
-			/* @var $e MethodOutOfScope */
-			$this->assertEquals('private_method', $e->method);
-			$this->assertSame($a, $e->instance);
-		}
-	}
+            $this->fail('Excepted MethodOutOfScope exception.');
+        } catch (Exception $e) {
+            $this->assertInstanceOf(MethodOutOfScope::class, $e);
+            /* @var $e MethodOutOfScope */
+            $this->assertEquals('private_method', $e->method);
+            $this->assertSame($a, $e->instance);
+        }
+    }
 }

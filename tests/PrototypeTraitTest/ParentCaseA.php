@@ -18,5 +18,5 @@ use ICanBoogie\PrototypeTrait;
  */
 class ParentCaseA
 {
-	use PrototypeTrait;
+    use PrototypeTrait;
 }

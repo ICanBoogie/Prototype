@@ -11,15 +11,18 @@
 
 namespace ICanBoogie\PrototypedTest;
 
+use AllowDynamicProperties;
 use ICanBoogie\Prototyped;
 use Throwable;
 
+#[AllowDynamicProperties]
 final class FailingCase extends Prototyped
 {
-	/**
-	 * @throws Throwable
-	 */
-	public function __construct(Throwable $e) {
-		throw $e;
-	}
+    /**
+     * @throws Throwable
+     */
+    public function __construct(Throwable $e)
+    {
+        throw $e;
+    }
 }

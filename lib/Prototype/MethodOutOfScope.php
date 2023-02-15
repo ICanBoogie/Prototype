@@ -26,50 +26,50 @@ use function ICanBoogie\format;
  */
 class MethodOutOfScope extends BadMethodCallException implements Exception
 {
-	/**
-	 * @uses get_method
-	 * @uses get_instance
-	 */
-	use AccessorTrait;
+    /**
+     * @uses get_method
+     * @uses get_instance
+     */
+    use AccessorTrait;
 
-	/**
-	 * @var string
-	 */
-	private $method;
+    /**
+     * @var string
+     */
+    private $method;
 
-	private function get_method(): string
-	{
-		return $this->method;
-	}
+    private function get_method(): string
+    {
+        return $this->method;
+    }
 
-	/**
-	 * @var object
-	 */
-	private $instance;
+    /**
+     * @var object
+     */
+    private $instance;
 
-	private function get_instance(): object
-	{
-		return $this->instance;
-	}
+    private function get_instance(): object
+    {
+        return $this->instance;
+    }
 
-	/**
-	 * @inheritdoc
-	 */
-	public function __construct(string $method, object $instance, string $message = null, Throwable $previous = null)
-	{
-		$this->method = $method;
-		$this->instance = $instance;
+    /**
+     * @inheritdoc
+     */
+    public function __construct(string $method, object $instance, string $message = null, Throwable $previous = null)
+    {
+        $this->method = $method;
+        $this->instance = $instance;
 
-		parent::__construct($message ?: $this->format_message($method, $instance), 0, $previous);
-	}
+        parent::__construct($message ?: $this->format_message($method, $instance), 0, $previous);
+    }
 
-	private function format_message(string $method, object $instance): string
-	{
-		return format('The method %method is out of scope for class %class.', [
+    private function format_message(string $method, object $instance): string
+    {
+        return format('The method %method is out of scope for class %class.', [
 
-			'method' => $method,
-			'class' => get_class($instance)
+            'method' => $method,
+            'class' => get_class($instance)
 
-		]);
-	}
+        ]);
+    }
 }
