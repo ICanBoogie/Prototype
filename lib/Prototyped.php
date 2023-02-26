@@ -27,9 +27,10 @@ use function array_keys;
 use function get_called_class;
 use function get_object_vars;
 use function is_callable;
-use function is_string;
 use function json_encode;
+use function trigger_error;
 
+use const E_USER_DEPRECATED;
 use const JSON_THROW_ON_ERROR;
 
 /**
@@ -58,36 +59,35 @@ class Prototyped implements ToArrayRecursive
      * properties of the instance are set *before* its constructor is invoked.
      *
      * @param array<string, mixed> $properties Properties to be set before the constructor is invoked.
-     * @param mixed[] $construct_args Arguments passed to the constructor.
+     * @param array<mixed> $construct_args Arguments passed to the constructor.
      * @param class-string|null $class_name The name of the instance class. If empty, the name of the
      * called class is used.
      *
-     * @return object The new instance.
+     * @return static The new instance.
      *
      * @throws UnableToInstantiate
      */
-    public static function from(array $properties = [], array $construct_args = [], string $class_name = null): object
+    public static function from(array $properties = [], array $construct_args = [], string $class_name = null): static
     {
-        if (!$class_name) {
-            $class_name = get_called_class();
+        if ($class_name) {
+            trigger_error("The parameter '\$class_name' is no longer supported", E_USER_DEPRECATED);
         }
+
+        $class_name = get_called_class();
 
         try {
             $class_reflection = self::get_class_reflection($class_name);
 
             if (!$properties) {
+                /** @phpstan-ignore-next-line */
                 return $class_reflection->newInstanceArgs($construct_args);
             }
 
             $instance = $class_reflection->newInstanceWithoutConstructor();
 
-            if ($instance instanceof self) {
-                $instance->assign($properties, self::ASSIGN_UNSAFE);
-            } else {
-                foreach ($properties as $property => $value) {
-                    $instance->$property = $value;
-                }
-            }
+            assert($instance instanceof static);
+
+            $instance->assign($properties, self::ASSIGN_UNSAFE);
 
             if ($class_reflection->hasMethod('__construct') && is_callable([ $instance, '__construct' ])) {
                 $instance->__construct(...$construct_args);
@@ -95,7 +95,7 @@ class Prototyped implements ToArrayRecursive
 
             return $instance;
         } catch (Throwable $e) {
-            throw new UnableToInstantiate("Unable to instantiate `$class_name`.", 0, $e);
+            throw new UnableToInstantiate("Unable to instantiate `$class_name`.", previous: $e);
         }
     }
 
@@ -109,24 +109,24 @@ class Prototyped implements ToArrayRecursive
         return [];
     }
 
-	/**
-	 * @var array<class-string, ReflectionClass<object>>
-	 */
-	private static array $class_reflection_cache = [];
+    /**
+     * @var array<class-string, ReflectionClass<object>>
+     */
+    private static array $class_reflection_cache = [];
 
-	/**
-	 * Returns cached class reflection.
-	 *
-	 * @param class-string $class_name
-	 *
-	 * @return ReflectionClass<object>
-	 *
-	 * @throws ReflectionException
-	 */
-	private static function get_class_reflection(string $class_name): ReflectionClass
-	{
-		return self::$class_reflection_cache[$class_name] ??= new ReflectionClass($class_name);
-	}
+    /**
+     * Returns cached class reflection.
+     *
+     * @param class-string $class_name
+     *
+     * @return ReflectionClass<object>
+     *
+     * @throws ReflectionException
+     */
+    private static function get_class_reflection(string $class_name): ReflectionClass
+    {
+        return self::$class_reflection_cache[$class_name] ??= new ReflectionClass($class_name);
+    }
 
     /**
      * Returns the public properties of an instance.
@@ -222,14 +222,10 @@ class Prototyped implements ToArrayRecursive
     /**
      * Converts the object into a JSON string.
      *
-	 * @throws JsonException
-	 */
-	public function to_json(): string
-	{
-		$json = json_encode($this->to_array_recursive(), JSON_THROW_ON_ERROR);
-
-        assert(is_string($json));
-
-        return $json;
+     * @throws JsonException
+     */
+    public function to_json(): string
+    {
+        return json_encode($this->to_array_recursive(), JSON_THROW_ON_ERROR);
     }
 }
