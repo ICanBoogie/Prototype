@@ -43,4 +43,4 @@ lint:
 
 .PHONY: clean-sandbox
 clean-sandbox:
-	@rm ./tests/sandbox/*
+	@rm -rf ./tests/sandbox/*

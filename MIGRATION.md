@@ -1,6 +1,10 @@
 # Migration
 
-## v5.x to v6.x
+## v5.x to v6.0
+
+### New requirements
+
+- PHP 8.1+
 
 ### Breaking changes
 
@@ -37,3 +41,9 @@ $config = (new ConfigBuilder())
 
 ICanBoogie\Prototype::bind($config);
 ```
+
+- The parameter `$class_name` is no longer supported on `Prototyped::from()`.
+
+### Other changes
+
+- `Prototyped::from()` returns `static`.
