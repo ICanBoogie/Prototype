@@ -25,24 +25,28 @@ use Test\ICanBoogie\PrototypeTraitCases\UnsetCase;
 
 final class PrototypeTest extends TestCase
 {
-    private $a;
-    private $b;
+    private SampleA $a;
+    private SampleB $b;
 
     protected function setUp(): void
     {
-        $this->a = $a = new SampleA();
-        $this->b = $b = new SampleB();
+        $this->a = new SampleA();
+        $this->b = new SampleB();
 
-        $a->prototype['set_minutes'] = function (SampleA $self, $minutes) {
-            $self->seconds = $minutes * 60;
-        };
+        Prototype::set_method(
+            SampleA::class,
+            'set_minutes',
+            fn(SampleA $self, int $minutes) => $self->seconds = $minutes * 60
+        );
 
-        $a->prototype['get_minutes'] = function (SampleA $self) {
-            return $self->seconds / 60;
-        };
+        Prototype::set_method(
+            SampleA::class,
+            'get_minutes',
+            fn(SampleA $self) => $self->seconds / 60
+        );
     }
 
-    public function testBind()
+    public function testBind(): void
     {
         $method1 = 'm' . uniqid();
         $method2 = 'm' . uniqid();
@@ -50,17 +54,9 @@ final class PrototypeTest extends TestCase
         $value2 = uniqid();
         $value3 = uniqid();
 
-        $callback1 = function (BindCase $case) use ($value1) {
-            return $value1;
-        };
-
-        $callback2 = function (BindCase $case) use ($value2) {
-            return $value2;
-        };
-
-        $callback3 = function (BindCase $case) use ($value3) {
-            return $value3;
-        };
+        $callback1 = fn(BindCase $case) => $value1;
+        $callback2 = fn(BindCase $case) => $value2;
+        $callback3 = fn(BindCase $case) => $value3;
 
         Prototype::bind(new Config([ BindCase::class => [ $method1 => $callback1 ] ]));
         Prototype::bind(new Config([ BindCase::class => [ $method2 => $callback2 ] ]));
@@ -86,26 +82,24 @@ final class PrototypeTest extends TestCase
         $this->assertSame($value2, $case->$method2());
     }
 
-    public function testPrototype()
-    {
-        $this->assertInstanceOf(Prototype::class, $this->a->prototype);
-    }
-
-    public function testMethod()
+    public function testMethod(): void
     {
         $a = $this->a;
 
-        $a->prototype['format'] = function (SampleA $self, $format) {
-            return date($format, $self->seconds);
-        };
+        Prototype::set_method(
+            $a,
+            'format',
+            fn (SampleA $self, string $format) => date($format, $self->seconds)
+        );
 
         $a->seconds = time();
         $format = 'H:i:s';
 
+        /** @phpstan-ignore-next-line */
         $this->assertEquals(date($format, $a->seconds), $a->format($format));
     }
 
-    public function testSetterGetter()
+    public function testSetterGetter(): void
     {
         $a = $this->a;
 
@@ -115,17 +109,12 @@ final class PrototypeTest extends TestCase
         $this->assertEquals(2, $a->minutes);
     }
 
-    public function testPrototypeChain()
+    public function testPrototypeChain(): void
     {
         $b = $this->b;
-
-        $b->prototype['set_hours'] = function (SampleB $self, $hours) {
-            $self->seconds = $hours * 3600;
-        };
-
-        $b->prototype['get_hours'] = function (SampleB $self, $hours) {
-            return $self->seconds / 3600;
-        };
+        $prototype = Prototype::from($b);
+        $prototype['set_hours'] = fn(SampleB $self, $hours) => $self->seconds = $hours * 3600;
+        $prototype['get_hours'] = fn(SampleB $self, $hours) => $self->seconds / 3600;
 
         $b->minutes = 4;
 
@@ -148,34 +137,34 @@ final class PrototypeTest extends TestCase
         $this->assertEquals(1, $a->hours);
     }
 
-    public function testPrototypeChainWithCats()
+    public function testPrototypeChainWithCats(): void
     {
         $cat = new Cat();
         $normal_cat = new NormalCat();
         $fierce_cat = new FierceCat();
         $other_fierce_cat = new FierceCat();
 
-        $cat->prototype['meow'] = function ($target) {
-            return 'Meow';
-        };
+        Prototype::from($cat)['meow'] = fn($target) => 'Meow';
+        Prototype::from($fierce_cat)['meow'] = fn($target) => 'MEOOOW !';
 
-        $fierce_cat->prototype['meow'] = function ($target) {
-            return 'MEOOOW !';
-        };
-
+        /** @phpstan-ignore-next-line */
         $this->assertEquals('Meow', $cat->meow());
+        /** @phpstan-ignore-next-line */
         $this->assertEquals('Meow', $normal_cat->meow());
+        /** @phpstan-ignore-next-line */
         $this->assertEquals('MEOOOW !', $fierce_cat->meow());
+        /** @phpstan-ignore-next-line */
         $this->assertEquals('MEOOOW !', $other_fierce_cat->meow());
     }
 
-    public function testMethodNotDefined()
+    public function testMethodNotDefined(): void
     {
         $this->expectException(MethodNotDefined::class);
+        /** @phpstan-ignore-next-line */
         $this->a->undefined_method();
     }
 
-    public function testUnset()
+    public function testUnset(): void
     {
         $value = uniqid();
         $method = 'm' . uniqid();

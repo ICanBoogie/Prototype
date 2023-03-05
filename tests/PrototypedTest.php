@@ -15,7 +15,6 @@ use Exception;
 use ICanBoogie\PropertyNotDefined;
 use ICanBoogie\PropertyNotReadable;
 use ICanBoogie\PropertyNotWritable;
-use ICanBoogie\Prototype;
 use ICanBoogie\Prototype\UnableToInstantiate;
 use ICanBoogie\Prototyped;
 use PHPUnit\Framework\TestCase;
@@ -37,22 +36,9 @@ use Throwable;
 
 use function get_class;
 
-class PrototypedTest extends TestCase
+final class PrototypedTest extends TestCase
 {
-    public function test_get_prototype()
-    {
-        $o = new Prototyped();
-        $this->assertInstanceOf(Prototype::class, $o->prototype);
-    }
-
-    public function test_set_prototype()
-    {
-        $o = new Prototyped();
-        $this->expectException(PropertyNotWritable::class);
-        $o->prototype = null;
-    }
-
-    public function test_export_empty()
+    public function test_export_empty(): void
     {
         $o = new Prototyped();
 
@@ -64,7 +50,7 @@ class PrototypedTest extends TestCase
      * @dataProvider provide_test_readonly
      *
      */
-    public function test_readonly($class)
+    public function test_readonly($class): void
     {
         $o = new $class();
         $this->assertEquals('value', $o->property);
@@ -92,7 +78,7 @@ class PrototypedTest extends TestCase
     /**
      * @dataProvider provide_test_write_only
      */
-    public function test_write_only(string $class)
+    public function test_write_only(string $class): void
     {
         $o = new $class();
         $o->property = true;

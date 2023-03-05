@@ -73,10 +73,7 @@ final class PrototypeTraitTest extends TestCase
     public function test_parent_invoke(): void
     {
         $prototype = Prototype::from(ParentCaseA::class);
-        $prototype['url'] = function ($instance, $type) {
-
-            return "/path/to/$type.html";
-        };
+        $prototype['url'] = fn($instance, $type) => "/path/to/$type.html";
 
         $a = new ParentCaseA();
         $this->assertEquals("/path/to/madonna.html", $a->url('madonna'));
@@ -88,14 +85,15 @@ final class PrototypeTraitTest extends TestCase
     public function test_should_have_property(): void
     {
         $a = new HasPropertyFixture();
+        $prototype = Prototype::from($a);
 
-        $a->prototype['get_readonly'] = function () {
+        $prototype['get_readonly'] = function () {
         };
-        $a->prototype['lazy_get_lazy_readonly'] = function () {
+        $prototype['lazy_get_lazy_readonly'] = function () {
         };
-        $a->prototype['set_writeonly'] = function () {
+        $prototype['set_writeonly'] = function () {
         };
-        $a->prototype['lazy_set_lazy_writeonly'] = function () {
+        $prototype['lazy_set_lazy_writeonly'] = function () {
         };
 
         $this->assertTrue($a->has_property('public'));

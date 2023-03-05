@@ -9,6 +9,7 @@
 ### New features
 
 - Added `Prototype::has_method()`.
+- Added `Prototype::add_method()`.
 - Added `Prototype::call()`.
 
 ### Backward Incompatible Changes
@@ -48,6 +49,8 @@ ICanBoogie\Prototype::bind($config);
 ```
 
 - The parameter `$class_name` is no longer supported on `Prototyped::from()`.
+
+- Removed the `prototype` property from `PrototypeTrait`.
 
 ### Deprecated Features
 

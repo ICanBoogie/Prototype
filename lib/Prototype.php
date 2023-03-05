@@ -83,6 +83,14 @@ final class Prototype implements ArrayAccess, IteratorAggregate
     }
 
     /**
+     * @param object|class-string $class_or_object
+     */
+    public static function set_method(object|string $class_or_object, string $method, callable $callback): void
+    {
+        self::from($class_or_object)->offsetSet($method, $callback);
+    }
+
+    /**
      * @param array<int|string, mixed> $arguments
      */
     public static function call(object $object, string $method, array $arguments): mixed

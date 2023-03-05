@@ -30,13 +30,6 @@ trait PrototypeTrait
         AccessorTrait::has_property as private accessor_has_property;
     }
 
-    private Prototype $prototype;
-
-    protected function get_prototype(): Prototype
-    {
-        return $this->prototype ??= Prototype::from($this);
-    }
-
     /**
      * If a property exists with the name specified by `$method` and holds an object which class
      * implements `__invoke` then the object is called with the arguments. Otherwise, calls are
@@ -104,6 +97,10 @@ trait PrototypeTrait
      */
     protected function accessor_get(string $property)
     {
+        #
+        # First, we try the class' methods.
+        #
+
         $method = 'get_' . $property;
 
         if (method_exists($this, $method)) {
@@ -117,21 +114,19 @@ trait PrototypeTrait
         }
 
         #
-        # we didn't find a suitable method in the class, maybe the prototype has one.
+        # We didn't find a suitable method in the class, maybe the prototype has one.
         #
-
-        $prototype = $this->prototype ?? $this->get_prototype();
 
         $method = 'get_' . $property;
 
-        if (isset($prototype[$method])) {
-            return $prototype[$method]($this, $property);
+        if (Prototype::has_method($this, $method)) {
+            return Prototype::call($this, $method, [ $property ]);
         }
 
-        $method  = 'lazy_get_' . $property;
+        $method = 'lazy_get_' . $property;
 
-        if (isset($prototype[$method])) {
-            return $this->$property = $prototype[$method]($this, $property);
+        if (Prototype::has_method($this, $method)) {
+            return $this->$property = Prototype::call($this, $method, [ $property ]);
         }
 
         $success = false;
