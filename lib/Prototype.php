@@ -75,6 +75,14 @@ final class Prototype implements ArrayAccess, IteratorAggregate
     }
 
     /**
+     * @param object|class-string $class_or_object
+     */
+    public static function has_method(object|string $class_or_object, string $method): bool
+    {
+        return self::from($class_or_object)->offsetExists($method);
+    }
+
+    /**
      * Updates prototype methods with bindings.
      *
      * @param array<class-string, array<string, callable>> $bindings
