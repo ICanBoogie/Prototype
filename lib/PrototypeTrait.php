@@ -16,7 +16,6 @@ use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
 use ReflectionException;
 
-use function assert;
 use function is_callable;
 use function method_exists;
 
@@ -29,13 +28,6 @@ trait PrototypeTrait
 {
     use AccessorTrait {
         AccessorTrait::has_property as private accessor_has_property;
-    }
-
-    private Prototype $prototype;
-
-    protected function get_prototype(): Prototype
-    {
-        return $this->prototype ??= Prototype::from($this);
     }
 
     /**
@@ -109,6 +101,10 @@ trait PrototypeTrait
      */
     protected function accessor_get(string $property)
     {
+        #
+        # First, we try the class' methods.
+        #
+
         $method = 'get_' . $property;
 
         if (method_exists($this, $method)) {
@@ -122,23 +118,19 @@ trait PrototypeTrait
         }
 
         #
-        # we didn't find a suitable method in the class, maybe the prototype has one.
+        # We didn't find a suitable method in the class, maybe the prototype has one.
         #
-
-        $prototype = $this->prototype ?? $this->get_prototype();
 
         $method = 'get_' . $property;
 
-        if (isset($prototype[$method])) {
-            assert(is_callable($prototype[$method]));
-            return $prototype[$method]($this, $property);
+        if (Prototype::has_method($this, $method)) {
+            return Prototype::call($this, $method, [ $property ]);
         }
 
         $method = 'lazy_get_' . $property;
 
-        if (isset($prototype[$method])) {
-            assert(is_callable($prototype[$method]));
-            return $this->$property = $prototype[$method]($this, $property);
+        if (Prototype::has_method($this, $method)) {
+            return $this->$property = Prototype::call($this, $method, [ $property ]);
         }
 
         $success = false;
