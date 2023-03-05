@@ -83,6 +83,16 @@ final class Prototype implements ArrayAccess, IteratorAggregate
     }
 
     /**
+     * @param array<int|string, mixed> $arguments
+     */
+    public static function call(object $object, string $method, array $arguments): mixed
+    {
+        $callable = self::from($object)[$method];
+
+        return $callable($object, ...$arguments);
+    }
+
+    /**
      * Updates prototype methods with bindings.
      *
      * @param array<class-string, array<string, callable>> $bindings

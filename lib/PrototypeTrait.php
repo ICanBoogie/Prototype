@@ -16,7 +16,6 @@ use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
 use ReflectionException;
 
-use function array_unshift;
 use function is_callable;
 use function method_exists;
 
@@ -49,13 +48,8 @@ trait PrototypeTrait
             return $this->$method(...$arguments);
         }
 
-        array_unshift($arguments, $this);
-
         try {
-            $prototype = $this->prototype ?? $this->get_prototype();
-            $callable = $prototype[$method];
-
-            return $callable(...$arguments);
+            return Prototype::call($this, $method, $arguments);
         } catch (MethodNotDefined $e) {
             if (method_exists($this, $method)) {
                 throw new MethodOutOfScope($method, $this);
