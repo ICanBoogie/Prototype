@@ -107,9 +107,7 @@ trait PrototypeTrait
             return true;
         }
 
-        $prototype = $this->prototype ?? $this->get_prototype();
-
-        return isset($prototype[$method]);
+        return Prototype::has_method($this, $method);
     }
 
     /**

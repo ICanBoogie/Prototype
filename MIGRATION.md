@@ -8,7 +8,7 @@
 
 ### New features
 
-None
+- Added `Prototype::has_method()`.
 
 ### Backward Incompatible Changes
 
