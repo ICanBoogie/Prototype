@@ -21,7 +21,7 @@ class CreatedAtCase extends Prototyped
 {
     private $created_at;
 
-    protected function get_created_at()
+    protected function get_created_at(): DateTime
     {
         $created_at = $this->created_at;
 

@@ -15,5 +15,4 @@ use ICanBoogie\Prototyped;
 
 class Sample extends Prototyped
 {
-
 }

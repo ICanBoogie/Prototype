@@ -36,11 +36,11 @@ test-cleanup:
 	@rm -rf tests/sandbox/*
 
 .PHONY: test-container
-test-container: test-container-72
+test-container: test-container-81
 
-.PHONY: test-container-72
-test-container-72:
-	@-docker-compose run --rm app72 bash
+.PHONY: test-container-81
+test-container-81:
+	@-docker-compose run --rm app81 bash
 	@docker-compose down -v
 
 .PHONY: test-container-82

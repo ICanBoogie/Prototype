@@ -2,11 +2,15 @@
 
 ## v5.x to v6.0
 
-### New requirements
+### New Requirements
 
 - PHP 8.1+
 
-### Breaking changes
+### New features
+
+None
+
+### Backward Incompatible Changes
 
 - `Prototype::bind()` requires a `Config` objects instead of an array.
 
@@ -44,6 +48,10 @@ ICanBoogie\Prototype::bind($config);
 
 - The parameter `$class_name` is no longer supported on `Prototyped::from()`.
 
-### Other changes
+### Deprecated Features
+
+None
+
+### Other Changes
 
 - `Prototyped::from()` returns `static`.

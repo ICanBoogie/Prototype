@@ -15,8 +15,8 @@ use Test\ICanBoogie\PrototypedCases\Sample;
 
 final class SampleHooks
 {
-	static public function sample_method(Sample $sample): string
-	{
-		return "sample result";
-	}
+    public static function sample_method(Sample $sample): string
+    {
+        return "sample result";
+    }
 }

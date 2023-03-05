@@ -22,7 +22,6 @@ use Traversable;
 use function array_diff_key;
 use function array_intersect_key;
 use function array_merge;
-use function get_class;
 use function get_parent_class;
 use function is_object;
 use function is_subclass_of;
@@ -35,19 +34,19 @@ use function is_subclass_of;
  */
 final class Prototype implements ArrayAccess, IteratorAggregate
 {
-	/**
-	 * Prototypes instances per class.
-	 *
-	 * @var array<string, Prototype>
-	 */
-	private static array $prototypes = [];
+    /**
+     * Prototypes instances per class.
+     *
+     * @var array<string, Prototype>
+     */
+    private static array $prototypes = [];
 
-	/**
-	 * Prototype methods per class.
-	 *
-	 * @var array<class-string, array<string, callable>>|null
-	 */
-	private static ?array $bindings = null;
+    /**
+     * Prototype methods per class.
+     *
+     * @var array<class-string, array<string, callable>>|null
+     */
+    private static ?array $bindings = null;
 
     /**
      * Returns the prototype associated with the specified class or object.
@@ -55,23 +54,22 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      * @param object|class-string $class_or_object Class name or object.
      */
     public static function from(object|string $class_or_object): Prototype
-	{
-		$class = is_object($class_or_object) ? get_class($class_or_object) : $class_or_object;
+    {
+        $class = is_object($class_or_object) ? $class_or_object::class : $class_or_object;
 
-        /** @phpstan-ignore-next-line */
         return self::$prototypes[$class] ??= new self($class);
     }
 
-	/**
-	 * Defines prototype methods.
-	 */
-	public static function bind(Config $config): void
-	{
-		$bindings = $config->bindings;
+    /**
+     * Defines prototype methods.
+     */
+    public static function bind(Config $config): void
+    {
+        $bindings = $config->bindings;
 
-		if (!$bindings) {
-			return;
-		}
+        if (!$bindings) {
+            return;
+        }
 
         self::update_bindings($bindings);
         self::update_instances($bindings);
@@ -86,17 +84,17 @@ final class Prototype implements ArrayAccess, IteratorAggregate
     {
         $current = &self::$bindings;
 
-		if (!$current) {
-			$current = $bindings;
-		}
+        if (!$current) {
+            $current = $bindings;
+        }
 
         $intersect = array_intersect_key($bindings, $current);
         $current += array_diff_key($bindings, $current);
 
-		foreach ($intersect as $class => $methods) {
-			$current[$class] = array_merge($current[$class], $methods);
-		}
-	}
+        foreach ($intersect as $class => $methods) {
+            $current[$class] = array_merge($current[$class], $methods);
+        }
+    }
 
     /**
      * Updates instances with bindings.
@@ -104,22 +102,20 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      * @param array<class-string, array<string, callable>> $bindings
      */
     private static function update_instances(array $bindings): void
-	{
-		foreach (self::$prototypes as $class => $prototype) {
-			$prototype->consolidated_methods = null;
+    {
+        foreach (self::$prototypes as $class => $prototype) {
+            $prototype->consolidated_methods = null;
 
-			if (empty($bindings[$class])) {
-				continue;
-			}
+            if (empty($bindings[$class])) {
+                continue;
+            }
 
             $prototype->methods = $bindings[$class] + $prototype->methods;
         }
     }
 
-	/**
+    /**
      * Parent prototype.
-     *
-     * @var Prototype|null
      */
     private readonly ?Prototype $parent;
 
@@ -137,21 +133,21 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      */
     private ?array $consolidated_methods = null;
 
-	/**
-	 * Creates a prototype for the specified class.
-	 *
-	 * @param class-string $class
-	 */
-	private function __construct(
-		private readonly string $class
+    /**
+     * Creates a prototype for the specified class.
+     *
+     * @param class-string $class
+     */
+    private function __construct(
+        private readonly string $class
     ) {
-		$parent_class = get_parent_class($class);
-		$this->parent = $parent_class ? self::from($parent_class) : null;
+        $parent_class = get_parent_class($class);
+        $this->parent = $parent_class ? self::from($parent_class) : null;
 
-		if (isset(self::$bindings[$class])) {
-			$this->methods = self::$bindings[$class];
-		}
-	}
+        if (isset(self::$bindings[$class])) {
+            $this->methods = self::$bindings[$class];
+        }
+    }
 
     /**
      * Returns the consolidated methods of the prototype.
@@ -174,9 +170,9 @@ final class Prototype implements ArrayAccess, IteratorAggregate
     {
         $methods = $this->methods;
 
-		if ($this->parent) {
-			$methods += $this->parent->get_consolidated_methods();
-		}
+        if ($this->parent) {
+            $methods += $this->parent->get_consolidated_methods();
+        }
 
         return $methods;
     }
@@ -190,10 +186,10 @@ final class Prototype implements ArrayAccess, IteratorAggregate
     {
         $class = $this->class;
 
-		foreach (self::$prototypes as $prototype) {
-			if (!is_subclass_of($prototype->class, $class)) {
-				continue;
-			}
+        foreach (self::$prototypes as $prototype) {
+            if (!is_subclass_of($prototype->class, $class)) {
+                continue;
+            }
 
             $prototype->consolidated_methods = null;
         }
@@ -208,8 +204,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      *
      * @param callable $value
      */
-    #[ReturnTypeWillChange]
-    public function offsetSet(mixed $offset, mixed $value): void
+    #[ReturnTypeWillChange]public function offsetSet(mixed $offset, mixed $value): void
     {
         self::$prototypes[$this->class]->methods[$offset] = $value;
 
@@ -221,8 +216,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      *
      * @param string $offset The name of the method.
      */
-    #[ReturnTypeWillChange]
-    public function offsetUnset(mixed $offset): void
+    #[ReturnTypeWillChange]public function offsetUnset(mixed $offset): void
     {
         unset(self::$prototypes[$this->class]->methods[$offset]);
 
@@ -234,30 +228,27 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      *
      * @param string $offset The name of the method.
      */
-    #[ReturnTypeWillChange]
-    public function offsetExists(mixed $offset): bool
+    #[ReturnTypeWillChange]public function offsetExists(mixed $offset): bool
     {
         $methods = $this->consolidated_methods ??= $this->consolidate_methods();
 
         return isset($methods[$offset]);
     }
 
-	/**
-	 * Returns the callback associated with the specified method.
-	 *
-	 * @param string $offset The name of the method.
-	 *
-	 * @return callable
-	 *
-	 * @throws MethodNotDefined if the method is not defined.
-	 */
-	public function offsetGet(mixed $offset): mixed
-	{
-		$methods = $this->consolidated_methods ??= $this->consolidate_methods();
+    /**
+     * Returns the callback associated with the specified method.
+     *
+     * @param string $offset The name of the method.
+     *
+     * @throws MethodNotDefined if the method is not defined.
+     */
+    public function offsetGet(mixed $offset): callable
+    {
+        $methods = $this->consolidated_methods ??= $this->consolidate_methods();
 
-		if (!isset($methods[$offset])) {
-			throw new MethodNotDefined($offset, $this->class);
-		}
+        if (!isset($methods[$offset])) {
+            throw new MethodNotDefined($offset, $this->class);
+        }
 
         return $methods[$offset];
     }

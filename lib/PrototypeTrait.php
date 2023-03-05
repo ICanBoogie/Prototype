@@ -32,11 +32,11 @@ trait PrototypeTrait
         AccessorTrait::has_property as private accessor_has_property;
     }
 
-    private ?Prototype $prototype = null;
+    private Prototype $prototype;
 
     protected function get_prototype(): Prototype
     {
-        return $this->prototype ?? $this->prototype = Prototype::from($this);
+        return $this->prototype ??= Prototype::from($this);
     }
 
     /**
@@ -60,9 +60,7 @@ trait PrototypeTrait
             $prototype = $this->prototype ?? $this->get_prototype();
             $callable = $prototype[$method];
 
-            assert(is_callable($callable));
-
-            return $callable(...$arguments);
+            assert(is_callable($callable));return $callable(...$arguments);
         } catch (MethodNotDefined $e) {
             if (method_exists($this, $method)) {
                 throw new MethodOutOfScope($method, $this);
@@ -162,11 +160,9 @@ trait PrototypeTrait
     }
 
     /**
-     * @param mixed $value
-     *
      * @throws ReflectionException
      */
-    protected function accessor_set(string $property, $value): void
+    protected function accessor_set(string $property, mixed $value): void
     {
         $method = 'set_' . $property;
 
@@ -202,10 +198,8 @@ trait PrototypeTrait
      *
      * @param string $property Property to get.
      * @param bool $success If the _last chance get_ was successful.
-     *
-     * @return mixed
      */
-    protected function last_chance_get(string $property, bool &$success)
+    protected function last_chance_get(string $property, bool &$success): mixed
     {
         $success = false;
 
@@ -220,7 +214,7 @@ trait PrototypeTrait
      * @param mixed $value Value of the property.
      * @param bool $success If the _last chance set_ was successful.
      */
-    protected function last_chance_set(string $property, $value, bool &$success): void
+    protected function last_chance_set(string $property, mixed $value, bool &$success): void
     {
         $success = false;
     }

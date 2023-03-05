@@ -18,15 +18,15 @@ use Test\ICanBoogie\PrototypeTraitCases\SampleMethodOutOfScope;
 
 final class MethodOutOfScopeTest extends TestCase
 {
-	public function test_invoke_public_method()
-	{
-		$a = new SampleMethodOutOfScope;
-		$this->assertEquals('public_method', $a->public_method());
-	}
+    public function test_invoke_public_method()
+    {
+        $a = new SampleMethodOutOfScope();
+        $this->assertEquals('public_method', $a->public_method());
+    }
 
-	public function test_invoke_protected_method()
-	{
-		$a = new SampleMethodOutOfScope;
+    public function test_invoke_protected_method()
+    {
+        $a = new SampleMethodOutOfScope();
 
         try {
             $a->protected_method();
@@ -40,9 +40,9 @@ final class MethodOutOfScopeTest extends TestCase
         }
     }
 
-	public function test_invoke_private_method()
-	{
-		$a = new SampleMethodOutOfScope;
+    public function test_invoke_private_method()
+    {
+        $a = new SampleMethodOutOfScope();
 
         try {
             $a->private_method();

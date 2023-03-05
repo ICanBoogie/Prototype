@@ -2,5 +2,8 @@ parameters:
   level: max
   paths:
     - lib
+  excludePaths:
+  - tests/sandbox/*
   ignoreErrors:
   - '#get_.*is unused#'
+  - '#Method ICanBoogie\\Prototyped::__call#'

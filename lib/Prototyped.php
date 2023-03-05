@@ -139,13 +139,10 @@ class Prototyped implements ToArrayRecursive
 
         if (!$get_object_vars) {
             $get_object_vars = Closure::bind(function (object $object) {
+
                 return get_object_vars($object);
-            },
-                null,
-                get_class(
-                    new class {
-                    }
-                )); // Because `stdClass` is a no-no in PHP7
+            }, null, get_class(new class {
+            })); // Because `stdClass` is a no-no in PHP7
         }
 
         return $get_object_vars($object);

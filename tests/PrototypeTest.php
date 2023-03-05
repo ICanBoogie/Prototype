@@ -28,10 +28,10 @@ final class PrototypeTest extends TestCase
     private $a;
     private $b;
 
-	protected function setUp(): void
-	{
-		$this->a = $a = new SampleA;
-		$this->b = $b = new SampleB;
+    protected function setUp(): void
+    {
+        $this->a = $a = new SampleA();
+        $this->b = $b = new SampleB();
 
         $a->prototype['set_minutes'] = function (SampleA $self, $minutes) {
             $self->seconds = $minutes * 60;
@@ -50,21 +50,21 @@ final class PrototypeTest extends TestCase
         $value2 = uniqid();
         $value3 = uniqid();
 
-		$callback1 = function (BindCase $case) use ($value1) {
-			return $value1;
-		};
+        $callback1 = function (BindCase $case) use ($value1) {
+            return $value1;
+        };
 
-		$callback2 = function (BindCase $case) use ($value2) {
-			return $value2;
-		};
+        $callback2 = function (BindCase $case) use ($value2) {
+            return $value2;
+        };
 
-		$callback3 = function (BindCase $case) use ($value3) {
-			return $value3;
-		};
+        $callback3 = function (BindCase $case) use ($value3) {
+            return $value3;
+        };
 
         Prototype::bind(new Config([ BindCase::class => [ $method1 => $callback1 ] ]));
-		Prototype::bind(new Config([ BindCase::class => [ $method2 => $callback2 ] ]));
-		Prototype::bind(new Config([]));
+        Prototype::bind(new Config([ BindCase::class => [ $method2 => $callback2 ] ]));
+        Prototype::bind(new Config([]));
 
         $case = new BindCase();
 
@@ -95,9 +95,9 @@ final class PrototypeTest extends TestCase
     {
         $a = $this->a;
 
-		$a->prototype['format'] = function (SampleA $self, $format) {
-			return date($format, $self->seconds);
-		};
+        $a->prototype['format'] = function (SampleA $self, $format) {
+            return date($format, $self->seconds);
+        };
 
         $a->seconds = time();
         $format = 'H:i:s';
@@ -119,13 +119,13 @@ final class PrototypeTest extends TestCase
     {
         $b = $this->b;
 
-		$b->prototype['set_hours'] = function (SampleB $self, $hours) {
-			$self->seconds = $hours * 3600;
-		};
+        $b->prototype['set_hours'] = function (SampleB $self, $hours) {
+            $self->seconds = $hours * 3600;
+        };
 
-		$b->prototype['get_hours'] = function (SampleB $self, $hours) {
-			return $self->seconds / 3600;
-		};
+        $b->prototype['get_hours'] = function (SampleB $self, $hours) {
+            return $self->seconds / 3600;
+        };
 
         $b->minutes = 4;
 
@@ -155,13 +155,13 @@ final class PrototypeTest extends TestCase
         $fierce_cat = new FierceCat();
         $other_fierce_cat = new FierceCat();
 
-		$cat->prototype['meow'] = function ($target) {
-			return 'Meow';
-		};
+        $cat->prototype['meow'] = function ($target) {
+            return 'Meow';
+        };
 
-		$fierce_cat->prototype['meow'] = function ($target) {
-			return 'MEOOOW !';
-		};
+        $fierce_cat->prototype['meow'] = function ($target) {
+            return 'MEOOOW !';
+        };
 
         $this->assertEquals('Meow', $cat->meow());
         $this->assertEquals('Meow', $normal_cat->meow());
@@ -180,10 +180,10 @@ final class PrototypeTest extends TestCase
         $value = uniqid();
         $method = 'm' . uniqid();
 
-		$prototype = Prototype::from(UnsetCase::class);
-		$prototype[$method] = function () use ($value) {
-			return $value;
-		};
+        $prototype = Prototype::from(UnsetCase::class);
+        $prototype[$method] = function () use ($value) {
+            return $value;
+        };
 
         $case = new UnsetCase();
 

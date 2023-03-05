@@ -75,6 +75,7 @@ final class PrototypeTraitTest extends TestCase
         $prototype = Prototype::from(ParentCaseA::class);
         $prototype['url'] = fn($instance, $type) => "/path/to/$type.html";
 
+
         $a = new ParentCaseA();
         $this->assertEquals("/path/to/madonna.html", $a->url('madonna'));
 

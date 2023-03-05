@@ -80,7 +80,7 @@ final class PrototypedTest extends TestCase
     /**
      * @dataProvider provide_test_write_only
      *
-     * @param class-string $class
+    * @param class-string $class
      */
     public function test_write_only(string $class): void
     {

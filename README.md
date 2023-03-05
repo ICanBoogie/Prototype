@@ -1,9 +1,9 @@
 # Prototype
 
 [![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype/master.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype/master.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
-[![Packagist](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
+[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
+[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
+[![Downloads](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
 The **icanboogie/prototype** package allows methods of classes using the [PrototypeTrait][] to be
 defined at runtime, and since the [icanboogie/accessor][] package is used, this also includes
@@ -378,7 +378,10 @@ The project is continuously tested by [GitHub actions](https://github.com/ICanBo
 [![Static Analysis](https://github.com/ICanBoogie/Prototype/workflows/static-analysis/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Astatic-analysis)
 [![Code Style](https://github.com/ICanBoogie/Prototype/workflows/code-style/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Acode-style)
 
+## Code of Conduct
 
+This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in
+this project and its community, you are expected to uphold this code.
 
 ## Code of Conduct
 

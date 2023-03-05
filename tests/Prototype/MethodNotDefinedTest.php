@@ -34,30 +34,30 @@ final class MethodNotDefinedTest extends TestCase
         $this->assertSame($object, $instance->instance);
     }
 
-	public function test_invoke_public_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$this->assertEquals('public_method', $a->public_method());
-	}
+    public function test_invoke_public_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $this->assertEquals('public_method', $a->public_method());
+    }
 
-	public function test_invoke_protected_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$this->expectException(MethodOutOfScope::class);
-		$a->protected_method();
-	}
+    public function test_invoke_protected_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $this->expectException(MethodOutOfScope::class);
+        $a->protected_method();
+    }
 
-	public function test_invoke_private_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$this->expectException(MethodOutOfScope::class);
-		$a->private_method();
-	}
+    public function test_invoke_private_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $this->expectException(MethodOutOfScope::class);
+        $a->private_method();
+    }
 
-	public function test_undefined_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$m = 'method' . uniqid();
+    public function test_undefined_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $m = 'method' . uniqid();
 
         try {
             $a->$m();

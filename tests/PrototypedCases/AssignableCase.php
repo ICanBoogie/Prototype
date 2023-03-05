@@ -27,9 +27,9 @@ final class AssignableCase extends Prototyped
     {
         return parent::assignable() + [
 
-                self::PROPERTY_COMMENT,
-                self::PROPERTY_COLOR,
+            self::PROPERTY_COMMENT,
+            self::PROPERTY_COLOR,
 
-            ];
+        ];
     }
 }

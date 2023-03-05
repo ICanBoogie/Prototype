@@ -13,5 +13,4 @@ namespace Test\ICanBoogie\Prototype;
 
 class NormalCat extends Cat
 {
-
 }
