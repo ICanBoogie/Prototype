@@ -14,7 +14,6 @@ namespace ICanBoogie;
 use ICanBoogie\Accessor\AccessorTrait;
 use ICanBoogie\Prototype\MethodNotDefined;
 use ICanBoogie\Prototype\MethodOutOfScope;
-
 use ReflectionException;
 
 use function array_unshift;
@@ -28,210 +27,188 @@ use function method_exists;
  */
 trait PrototypeTrait
 {
-	use AccessorTrait
-	{
-		AccessorTrait::has_property as private accessor_has_property;
-	}
+    use AccessorTrait {
+        AccessorTrait::has_property as private accessor_has_property;
+    }
 
-	private ?Prototype $prototype = null;
+    private Prototype $prototype;
 
-	protected function get_prototype(): Prototype
-	{
-		return $this->prototype ?: $this->prototype = Prototype::from($this);
-	}
+    protected function get_prototype(): Prototype
+    {
+        return $this->prototype ??= Prototype::from($this);
+    }
 
-	/**
-	 * If a property exists with the name specified by `$method` and holds an object which class
-	 * implements `__invoke` then the object is called with the arguments. Otherwise, calls are
-	 * forwarded to the {@link $prototype}.
-	 *
-	 * @return mixed
-	 */
-	public function __call(string $method, array $arguments)
-	{
-		if (isset($this->$method) && is_callable([ $this->$method, '__invoke' ]))
-		{
-			return $this->$method(...$arguments);
-		}
+    /**
+     * If a property exists with the name specified by `$method` and holds an object which class
+     * implements `__invoke` then the object is called with the arguments. Otherwise, calls are
+     * forwarded to the {@link $prototype}.
+     */
+    public function __call(string $method, array $arguments)
+    {
+        if (isset($this->$method) && is_callable([ $this->$method, '__invoke' ])) {
+            return $this->$method(...$arguments);
+        }
 
-		array_unshift($arguments, $this);
+        array_unshift($arguments, $this);
 
-		try
-		{
-			$prototype = $this->prototype ?? $this->get_prototype();
-			$callable = $prototype[$method];
+        try {
+            $prototype = $this->prototype ?? $this->get_prototype();
+            $callable = $prototype[$method];
 
-			return $callable(...$arguments);
-		}
-		catch (MethodNotDefined $e)
-		{
-			if (method_exists($this, $method))
-			{
-				throw new MethodOutOfScope($method, $this);
-			}
+            return $callable(...$arguments);
+        } catch (MethodNotDefined $e) {
+            if (method_exists($this, $method)) {
+                throw new MethodOutOfScope($method, $this);
+            }
 
-			throw $e;
-		}
-	}
+            throw $e;
+        }
+    }
 
-	/**
-	 * Checks if the object has the specified property.
-	 *
-	 * The difference with the `property_exists()` function is that this method also checks for
-	 * getters defined by the class or the prototype.
-	 *
-	 * @param string $property The property to check.
-	 *
-	 * @return bool `true` if the object has the property, `false` otherwise.
-	 */
-	public function has_property(string $property): bool
-	{
-		if ($this->accessor_has_property($property))
-		{
-			return true;
-		}
+    /**
+     * Checks if the object has the specified property.
+     *
+     * The difference with the `property_exists()` function is that this method also checks for
+     * getters defined by the class or the prototype.
+     *
+     * @param string $property The property to check.
+     *
+     * @return bool `true` if the object has the property, `false` otherwise.
+     */
+    public function has_property(string $property): bool
+    {
+        if ($this->accessor_has_property($property)) {
+            return true;
+        }
 
-		$success = false;
-		$this->last_chance_get($property, $success);
+        $success = false;
+        $this->last_chance_get($property, $success);
 
-		return $success;
-	}
+        return $success;
+    }
 
-	/**
-	 * Checks whether this object supports the specified method.
-	 *
-	 * The method checks for methods defined by the class and the prototype.
-	 *
-	 * @param string $method Name of the method.
-	 *
-	 * @return bool `true` if the method is defined, `false` otherwise.
-	 */
-	public function has_method(string $method): bool
-	{
-		if (method_exists($this, $method))
-		{
-			return true;
-		}
+    /**
+     * Checks whether this object supports the specified method.
+     *
+     * The method checks for methods defined by the class and the prototype.
+     *
+     * @param string $method Name of the method.
+     *
+     * @return bool `true` if the method is defined, `false` otherwise.
+     */
+    public function has_method(string $method): bool
+    {
+        if (method_exists($this, $method)) {
+            return true;
+        }
 
-		$prototype = $this->prototype ?? $this->get_prototype();
+        $prototype = $this->prototype ?? $this->get_prototype();
 
-		return isset($prototype[$method]);
-	}
+        return isset($prototype[$method]);
+    }
 
-	/**
-	 * @return mixed|null
-	 */
-	protected function accessor_get(string $property)
-	{
-		$method = 'get_' . $property;
+    /**
+     * @return mixed|null
+     */
+    protected function accessor_get(string $property)
+    {
+        $method = 'get_' . $property;
 
-		if (method_exists($this, $method))
-		{
-			return $this->$method();
-		}
+        if (method_exists($this, $method)) {
+            return $this->$method();
+        }
 
-		$method = 'lazy_get_' . $property;
+        $method = 'lazy_get_' . $property;
 
-		if (method_exists($this, $method))
-		{
-			return $this->$property = $this->$method();
-		}
+        if (method_exists($this, $method)) {
+            return $this->$property = $this->$method();
+        }
 
-		#
-		# we didn't find a suitable method in the class, maybe the prototype has one.
-		#
+        #
+        # we didn't find a suitable method in the class, maybe the prototype has one.
+        #
 
-		$prototype = $this->prototype ?? $this->get_prototype();
+        $prototype = $this->prototype ?? $this->get_prototype();
 
-		$method = 'get_' . $property;
+        $method = 'get_' . $property;
 
-		if (isset($prototype[$method]))
-		{
-			return $prototype[$method]($this, $property);
-		}
+        if (isset($prototype[$method])) {
+            return $prototype[$method]($this, $property);
+        }
 
-		$method  = 'lazy_get_' . $property;
+        $method  = 'lazy_get_' . $property;
 
-		if (isset($prototype[$method]))
-		{
-			return $this->$property = $prototype[$method]($this, $property);
-		}
+        if (isset($prototype[$method])) {
+            return $this->$property = $prototype[$method]($this, $property);
+        }
 
-		$success = false;
-		$value = $this->last_chance_get($property, $success);
+        $success = false;
+        $value = $this->last_chance_get($property, $success);
 
-		if ($success)
-		{
-			return $value;
-		}
+        if ($success) {
+            return $value;
+        }
 
-		$this->assert_property_is_readable($property);
-	} //@codeCoverageIgnore
+        $this->assert_property_is_readable($property);
+    }
 
-	/**
-	 * @param mixed $value
-	 *
-	 * @throws ReflectionException
-	 */
-	protected function accessor_set(string $property, $value): void
-	{
-		$method = 'set_' . $property;
+    /**
+     * @throws ReflectionException
+     */
+    protected function accessor_set(string $property, mixed $value): void
+    {
+        $method = 'set_' . $property;
 
-		if ($this->has_method($method))
-		{
-			$this->$method($value);
+        if ($this->has_method($method)) {
+            $this->$method($value);
 
-			return;
-		}
+            return;
+        }
 
-		$method = 'lazy_set_' . $property;
+        $method = 'lazy_set_' . $property;
 
-		if ($this->has_method($method))
-		{
-			$this->$property = $this->$method($value);
+        if ($this->has_method($method)) {
+            $this->$property = $this->$method($value);
 
-			return;
-		}
+            return;
+        }
 
-		$success = false;
-		$this->last_chance_set($property, $value, $success);
+        $success = false;
+        $this->last_chance_set($property, $value, $success);
 
-		if ($success)
-		{
-			return;
-		}
+        if ($success) {
+            return;
+        }
 
-		$this->assert_property_is_writable($property);
+        $this->assert_property_is_writable($property);
 
-		$this->$property = $value;
-	}
+        $this->$property = $value;
+    }
 
-	/**
-	 * The method is invoked as a last chance to get a property,
-	 * just before an exception is thrown.
-	 *
-	 * @param string $property Property to get.
-	 * @param bool $success If the _last chance get_ was successful.
-	 *
-	 * @return mixed
-	 */
-	protected function last_chance_get(string $property, bool &$success)
-	{
-		$success = false;
+    /**
+     * The method is invoked as a last chance to get a property,
+     * just before an exception is thrown.
+     *
+     * @param string $property Property to get.
+     * @param bool $success If the _last chance get_ was successful.
+     */
+    protected function last_chance_get(string $property, bool &$success): mixed
+    {
+        $success = false;
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * The method is invoked as a last chance to set a property,
-	 * just before an exception is thrown.
-	 *
-	 * @param string $property Property to set.
-	 * @param mixed $value Value of the property.
-	 * @param bool $success If the _last chance set_ was successful.
-	 */
-	protected function last_chance_set(string $property, $value, bool &$success): void
-	{
-		$success = false;
-	}
+    /**
+     * The method is invoked as a last chance to set a property,
+     * just before an exception is thrown.
+     *
+     * @param string $property Property to set.
+     * @param mixed $value Value of the property.
+     * @param bool $success If the _last chance set_ was successful.
+     */
+    protected function last_chance_set(string $property, mixed $value, bool &$success): void
+    {
+        $success = false;
+    }
 }

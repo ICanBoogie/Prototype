@@ -16,10 +16,11 @@ use Throwable;
 
 final class FailingCase extends Prototyped
 {
-	/**
-	 * @throws Throwable
-	 */
-	public function __construct(Throwable $e) {
-		throw $e;
-	}
+    /**
+     * @throws Throwable
+     */
+    public function __construct(Throwable $e)
+    {
+        throw $e;
+    }
 }

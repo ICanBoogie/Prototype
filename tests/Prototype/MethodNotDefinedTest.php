@@ -19,58 +19,55 @@ use Test\ICanBoogie\PrototypeTraitCases\SampleMethodNotDefined;
 
 final class MethodNotDefinedTest extends TestCase
 {
-	public function test_instance(): void
-	{
-		$method = 'method' . uniqid();
-		$object = $this
-			->getMockBuilder(Prototyped::class)
-			->disableOriginalConstructor()
-			->getMock();
+    public function test_instance(): void
+    {
+        $method = 'method' . uniqid();
+        $object = $this
+            ->getMockBuilder(Prototyped::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-		$instance = new MethodNotDefined($method, $object);
+        $instance = new MethodNotDefined($method, $object);
 
-		$this->assertSame($method, $instance->method);
-		$this->assertSame(get_class($object), $instance->class);
-		$this->assertSame($object, $instance->instance);
-	}
+        $this->assertSame($method, $instance->method);
+        $this->assertSame(get_class($object), $instance->class);
+        $this->assertSame($object, $instance->instance);
+    }
 
-	public function test_invoke_public_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$this->assertEquals('public_method', $a->public_method());
-	}
+    public function test_invoke_public_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $this->assertEquals('public_method', $a->public_method());
+    }
 
-	public function test_invoke_protected_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$this->expectException(MethodOutOfScope::class);
-		$a->protected_method();
-	}
+    public function test_invoke_protected_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $this->expectException(MethodOutOfScope::class);
+        $a->protected_method();
+    }
 
-	public function test_invoke_private_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$this->expectException(MethodOutOfScope::class);
-		$a->private_method();
-	}
+    public function test_invoke_private_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $this->expectException(MethodOutOfScope::class);
+        $a->private_method();
+    }
 
-	public function test_undefined_method(): void
-	{
-		$a = new SampleMethodNotDefined;
-		$m = 'method' . uniqid();
+    public function test_undefined_method(): void
+    {
+        $a = new SampleMethodNotDefined();
+        $m = 'method' . uniqid();
 
-		try
-		{
-			$a->$m();
-		}
-		catch (MethodNotDefined $e)
-		{
-			$this->assertEquals($m, $e->method);
-			$this->assertEquals(get_class($a), $e->class);
+        try {
+            $a->$m();
+        } catch (MethodNotDefined $e) {
+            $this->assertEquals($m, $e->method);
+            $this->assertEquals(get_class($a), $e->class);
 
-			return;
-		}
+            return;
+        }
 
-		$this->fail("Expected MethodNotDefined");
-	}
+        $this->fail("Expected MethodNotDefined");
+    }
 }

@@ -13,32 +13,32 @@ namespace ICanBoogie\Prototype;
 
 final class ConfigBuilder
 {
-	/**
-	 * @var array<class-string, array<string, callable>>
-	 *     Where _key_ is a target class and _value_ is an array of method bindings,
-	 *     where _key_ is a method and _value_ a callable.
-	 */
-	private array $bindings = [];
+    /**
+     * @var array<class-string, array<string, callable>>
+     *     Where _key_ is a target class and _value_ is an array of method bindings,
+     *     where _key_ is a method and _value_ a callable.
+     */
+    private array $bindings = [];
 
-	/**
-	 * Build the configuration.
-	 */
-	public function build(): Config
-	{
-		return new Config($this->bindings);
-	}
+    /**
+     * Build the configuration.
+     */
+    public function build(): Config
+    {
+        return new Config($this->bindings);
+    }
 
-	/**
-	 * @param class-string $target_class The class that will receive the method extension.
-	 * @param string $method The name of the method to add to the class.
-	 * @param callable $callable The handler for the method.
-	 *
-	 * @return $this
-	 */
-	public function bind(string $target_class, string $method, callable $callable): self
-	{
-		$this->bindings[$target_class][$method] = $callable;
+    /**
+     * @param class-string $target_class The class that will receive the method extension.
+     * @param string $method The name of the method to add to the class.
+     * @param callable $callable The handler for the method.
+     *
+     * @return $this
+     */
+    public function bind(string $target_class, string $method, callable $callable): self
+    {
+        $this->bindings[$target_class][$method] = $callable;
 
-		return $this;
-	}
+        return $this;
+    }
 }

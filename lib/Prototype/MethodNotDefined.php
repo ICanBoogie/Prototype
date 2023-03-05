@@ -12,94 +12,66 @@
 namespace ICanBoogie\Prototype;
 
 use BadMethodCallException;
-use ICanBoogie\Accessor\AccessorTrait;
 use Throwable;
 
 use function assert;
-use function get_class;
 use function ICanBoogie\format;
 use function is_object;
 use function is_string;
 
 /**
  * Exception thrown in attempt to access a method that is not defined.
- *
- * @property-read string $method The method that is not defined.
- * @property-read class-string $class The class of the instance on which the method was invoked.
- * @property-read object|null $instance Instance on which the method was invoked, or `null` if
- *     only the class is available.
  */
 class MethodNotDefined extends BadMethodCallException implements Exception
 {
-	/**
-	 * @uses get_method
-	 * @uses get_class
-	 * @uses get_instance
-	 */
-	use AccessorTrait;
+    /**
+     * @var class-string
+     */
+    public readonly string $class;
 
-	private readonly string $method;
+    /**
+     * Instance on which the method was invoked, or `null` if it's not available.
+     */
+    public readonly ?object $instance;
 
-	private function get_method(): string
-	{
-		return $this->method;
-	}
+    /**
+     * @param string $method
+     *     The method that is not defined.
+     * @param class-string|object $class_or_instance
+     *     The name of the class or one of its instances.
+     * @param string|null $message
+     *     If `null` a message is formatted with $method and $class.
+     */
+    public function __construct(
+        public readonly string $method,
+        string|object $class_or_instance,
+        string $message = null,
+        Throwable $previous = null
+    ) {
+        $class = $class_or_instance;
 
-	/**
-	 * @var class-string
-	 */
-	private readonly string $class;
+        if (is_object($class_or_instance)) {
+            $this->instance = $class_or_instance;
+            $class = $class_or_instance::class;
+        }
 
-	private function get_class(): string
-	{
-		return $this->class;
-	}
+        assert(is_string($class));
 
-	private readonly ?object $instance;
+        $this->class = $class;
 
-	private function get_instance(): ?object
-	{
-		return $this->instance;
-	}
+        parent::__construct($message ?? $this->format_message($method, $class), previous: $previous);
+    }
 
-	/**
-	 * @inheritdoc
-	 *
-	 * @param string $method The method that is not defined.
-	 * @param class-string|object $class_or_instance The name of the class or one of its instances.
-	 * @param string|null $message If `null` a message is formatted with $method and $class.
-	 */
-	public function __construct(
-		string $method,
-		string|object $class_or_instance,
-		string $message = null,
-		Throwable $previous = null
-	) {
-		$class = $class_or_instance;
+    /**
+     * @param class-string $class
+     */
+    private function format_message(string $method, string $class): string
+    {
+        return format('The method %method is not defined by the prototype of class %class.', [
 
-		if (is_object($class_or_instance)) {
-			$this->instance = $class_or_instance;
-			$class = get_class($class_or_instance);
-		}
+            'method' => $method,
+            'class' => $class
 
-		assert(is_string($class));
-
-		$this->method = $method;
-		$this->class = $class;
-
-		parent::__construct($message ?? $this->format_message($method, $class), 0, $previous);
-	}
-
-	/**
-	 * @param class-string $class
-	 */
-	private function format_message(string $method, string $class): string
-	{
-		return format('The method %method is not defined by the prototype of class %class.', [
-
-			'method' => $method,
-			'class' => $class
-
-		]);
-	}
+        ]);
+    }
 }

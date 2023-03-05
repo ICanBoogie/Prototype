@@ -1,8 +1,8 @@
 name: test
 
 on:
-  push:
-  pull_request:
+- push
+- pull_request
 
 jobs:
   phpunit:
@@ -10,11 +10,9 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        dependencies:
-        - lowest
-        - highest
         php-version:
         - "8.1"
+        - "8.2"
     steps:
     - name: Checkout
       uses: actions/checkout@v2
@@ -34,18 +32,11 @@ jobs:
         key: "php-${{ matrix.php-version }}"
         restore-keys: "php-${{ matrix.php-version }}"
 
-    - name: Install dependencies, lowest
-      if: ${{ matrix.dependencies == 'lowest' }}
-      run: composer update --prefer-lowest --no-interaction --no-progress
-
-    - name: Install dependencies, highest
-      if: ${{ matrix.dependencies == 'highest' }}
-      run: composer update --no-interaction --no-progress
+    - name: Install dependencies
+      run: composer install --no-interaction --no-progress
 
     - name: Run PHPUnit
-      run: |
-        mkdir -p build/logs
-        vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+      run: make test-coveralls
 
     - name: Upload code coverage
       if: ${{ matrix.php-version == '8.1' }}

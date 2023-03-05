@@ -19,22 +19,21 @@ use ICanBoogie\Prototyped;
  */
 class CreatedAtCase extends Prototyped
 {
-	private $created_at;
+    private $created_at;
 
-	protected function get_created_at()
-	{
-		$created_at = $this->created_at;
+    protected function get_created_at(): DateTime
+    {
+        $created_at = $this->created_at;
 
-		if ($created_at instanceof DateTime)
-		{
-			return $created_at;
-		}
+        if ($created_at instanceof DateTime) {
+            return $created_at;
+        }
 
-		return new DateTime($created_at);
-	}
+        return new DateTime($created_at);
+    }
 
-	protected function set_created_at($created_at)
-	{
-		$this->created_at = $created_at;
-	}
+    protected function set_created_at($created_at)
+    {
+        $this->created_at = $created_at;
+    }
 }

@@ -1,9 +1,0 @@
----
-version: "3.0"
-services:
-  app:
-    build: .
-    volumes:
-    - .:/app:delegated
-    - ~/.composer:/root/.composer:delegated
-    working_dir: /app

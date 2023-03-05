@@ -13,8 +13,8 @@ namespace Test\ICanBoogie\PrototypeTraitCases;
 
 class ParentCaseB extends ParentCaseA
 {
-	public function url($type)
-	{
-		return parent::url("another/$type");
-	}
+    public function url($type)
+    {
+        return parent::url("another/$type");
+    }
 }

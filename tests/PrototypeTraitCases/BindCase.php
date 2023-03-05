@@ -6,5 +6,5 @@ use ICanBoogie\PrototypeTrait;
 
 class BindCase
 {
-	use PrototypeTrait;
+    use PrototypeTrait;
 }

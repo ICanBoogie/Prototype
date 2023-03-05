@@ -2,3 +2,7 @@ parameters:
   level: max
   paths:
     - lib
+  excludePaths:
+  - tests/sandbox/*
+  ignoreErrors:
+  - '#Method ICanBoogie\\Prototyped::__call#'

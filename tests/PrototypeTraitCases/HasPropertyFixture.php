@@ -15,9 +15,9 @@ use ICanBoogie\PrototypeTrait;
 
 class HasPropertyFixture
 {
-	use PrototypeTrait;
+    use PrototypeTrait;
 
-	public $public;
-	protected $protected;
-	private $private;
+    public $public;
+    protected $protected;
+    private $private;
 }

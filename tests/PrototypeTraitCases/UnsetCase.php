@@ -6,5 +6,5 @@ use ICanBoogie\PrototypeTrait;
 
 class UnsetCase
 {
-	use PrototypeTrait;
+    use PrototypeTrait;
 }

@@ -19,14 +19,14 @@ use Test\ICanBoogie\SetStateHelper;
 
 final class ConfigTest extends TestCase
 {
-	public function test_export(): void
-	{
-		$config = new Config([
-			Sample::class => [ 'get_message' => [ SampleHooks::class, 'sample_method' ] ],
-		]);
+    public function test_export(): void
+    {
+        $config = new Config([
+            Sample::class => [ 'get_message' => [ SampleHooks::class, 'sample_method' ] ],
+        ]);
 
-		$actual = SetStateHelper::export_import($config);
+        $actual = SetStateHelper::export_import($config);
 
-		$this->assertEquals($config, $actual);
-	}
+        $this->assertEquals($config, $actual);
+    }
 }

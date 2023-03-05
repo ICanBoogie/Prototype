@@ -15,14 +15,14 @@ use ICanBoogie\Prototyped;
 
 class ToArrayCase extends Prototyped
 {
-	public $a;
-	public $b;
-	public $c;
+    public $a;
+    public $b;
+    public $c;
 
-	public function __construct($a, $b, $c)
-	{
-		$this->a = $a;
-		$this->b = $b;
-		$this->c = $c;
-	}
+    public function __construct($a, $b, $c)
+    {
+        $this->a = $a;
+        $this->b = $b;
+        $this->c = $c;
+    }
 }

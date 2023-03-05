@@ -6,5 +6,4 @@ use ICanBoogie\Prototyped;
 
 class SampleA extends Prototyped
 {
-
 }

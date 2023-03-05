@@ -15,103 +15,103 @@ use ICanBoogie\Prototyped;
 
 class SampleD extends Prototyped
 {
-	public $a;
-	public $b;
-	public $unset;
-	protected $unset_protected;
+    public $a;
+    public $b;
+    public $unset;
+    protected $unset_protected;
 
-	public function __construct()
-	{
-		unset($this->a);
-		unset($this->b);
-		unset($this->unset);
-		unset($this->unset_protected);
-	}
+    public function __construct()
+    {
+        unset($this->a);
+        unset($this->b);
+        unset($this->unset);
+        unset($this->unset_protected);
+    }
 
-	protected function lazy_get_a(): string
-	{
-		return 'a';
-	}
+    protected function lazy_get_a(): string
+    {
+        return 'a';
+    }
 
-	protected function get_b(): string
-	{
-		return 'b';
-	}
+    protected function get_b(): string
+    {
+        return 'b';
+    }
 
-	protected $c;
+    protected $c;
 
-	protected function lazy_set_c($value)
-	{
-		return $value;
-	}
+    protected function lazy_set_c($value)
+    {
+        return $value;
+    }
 
-	protected function lazy_get_c()
-	{
-		return $this->c;
-	}
+    protected function lazy_get_c()
+    {
+        return $this->c;
+    }
 
-	protected $d;
+    protected $d;
 
-	protected function set_d($value)
-	{
-		$this->d = $value;
-	}
+    protected function set_d($value)
+    {
+        $this->d = $value;
+    }
 
-	protected function get_d()
-	{
-		return $this->d;
-	}
+    protected function get_d()
+    {
+        return $this->d;
+    }
 
-	private $e;
+    private $e;
 
-	protected function lazy_set_e($value)
-	{
-		return $value;
-	}
+    protected function lazy_set_e($value)
+    {
+        return $value;
+    }
 
-	protected function lazy_get_e()
-	{
-		return $this->e;
-	}
+    protected function lazy_get_e()
+    {
+        return $this->e;
+    }
 
-	protected $f;
+    protected $f;
 
-	protected function set_f($value)
-	{
-		$this->f = $value;
-	}
+    protected function set_f($value)
+    {
+        $this->f = $value;
+    }
 
-	protected function get_f()
-	{
-		return $this->f;
-	}
+    protected function get_f()
+    {
+        return $this->f;
+    }
 
-	private $readonly = 'readonly';
+    private $readonly = 'readonly';
 
-	protected function get_readonly()
-	{
-		return $this->readonly;
-	}
+    protected function get_readonly()
+    {
+        return $this->readonly;
+    }
 
-	private $writeonly;
+    private $writeonly;
 
-	protected function set_writeonly($value)
-	{
-		$this->writeonly = $value;
-	}
+    protected function set_writeonly($value)
+    {
+        $this->writeonly = $value;
+    }
 
-	protected function get_read_writeonly()
-	{
-		return $this->writeonly;
-	}
+    protected function get_read_writeonly()
+    {
+        return $this->writeonly;
+    }
 
-	protected function lazy_get_pseudo_uniq()
-	{
-		return uniqid();
-	}
+    protected function lazy_get_pseudo_uniq()
+    {
+        return uniqid();
+    }
 
-	protected function lazy_set_with_parent($value)
-	{
-		return $value + 1;
-	}
+    protected function lazy_set_with_parent($value)
+    {
+        return $value + 1;
+    }
 }

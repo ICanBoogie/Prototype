@@ -12,7 +12,6 @@
 namespace ICanBoogie\Prototype;
 
 use BadMethodCallException;
-use ICanBoogie\Accessor\AccessorTrait;
 use Throwable;
 
 use function get_class;
@@ -20,47 +19,33 @@ use function ICanBoogie\format;
 
 /**
  * Exception thrown in attempt to invoke a method that is out of scope.
- *
- * @property-read string $method The method that is out of scope.
- * @property-read object $instance The instance on which the method was invoked.
  */
 class MethodOutOfScope extends BadMethodCallException implements Exception
 {
-	/**
-	 * @uses get_method
-	 * @uses get_instance
-	 */
-	use AccessorTrait;
+    /**
+     * @param string $method
+     *     The method that is out of scope.
+     * @param object $instance
+     *     The instance on which the method was invoked.
+     * @param string|null $message
+     * @param Throwable|null $previous
+     */
+    public function __construct(
+        public readonly string $method,
+        public readonly object $instance,
+        string $message = null,
+        Throwable $previous = null
+    ) {
+        parent::__construct($message ?? $this->format_message($method, $instance), 0, $previous);
+    }
 
-	private function get_method(): string
-	{
-		return $this->method;
-	}
+    private function format_message(string $method, object $instance): string
+    {
+        return format('The method %method is out of scope for class %class.', [
 
-	private function get_instance(): object
-	{
-		return $this->instance;
-	}
+            'method' => $method,
+            'class' => get_class($instance)
 
-	/**
-	 * @inheritdoc
-	 */
-	public function __construct(
-		private readonly string $method,
-		private readonly object $instance,
-		string $message = null,
-		Throwable $previous = null
-	) {
-		parent::__construct($message ?? $this->format_message($method, $instance), 0, $previous);
-	}
-
-	private function format_message(string $method, object $instance): string
-	{
-		return format('The method %method is out of scope for class %class.', [
-
-			'method' => $method,
-			'class' => get_class($instance)
-
-		]);
-	}
+        ]);
+    }
 }
