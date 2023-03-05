@@ -9,6 +9,7 @@
 ### New features
 
 - Added `Prototype::has_method()`.
+- Added `Prototype::call()`.
 
 ### Backward Incompatible Changes
 
