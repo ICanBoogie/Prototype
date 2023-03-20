@@ -11,7 +11,6 @@
 
 namespace ICanBoogie;
 
-use AllowDynamicProperties;
 use Closure;
 use ICanBoogie\Accessor\AccessorReflection;
 use ICanBoogie\Accessor\SerializableTrait;
@@ -41,7 +40,6 @@ use const JSON_THROW_ON_ERROR;
  * with the `FETCH_CLASS` mode, that is the properties of the instance are set *before* its
  * constructor is invoked.
  */
-#[AllowDynamicProperties]
 class Prototyped implements ToArrayRecursive
 {
     use ToArrayRecursiveTrait;
@@ -59,7 +57,7 @@ class Prototyped implements ToArrayRecursive
      * properties of the instance are set *before* its constructor is invoked.
      *
      * @param array<string, mixed> $properties Properties to be set before the constructor is invoked.
-     * @param array<mixed> $construct_args Arguments passed to the constructor.
+     * @param array<int|string, mixed> $construct_args Arguments passed to the constructor.
      * @param class-string|null $class_name The name of the instance class. If empty, the name of the
      * called class is used.
      *
@@ -137,13 +135,14 @@ class Prototyped implements ToArrayRecursive
     {
         static $get_object_vars;
 
-        if (!$get_object_vars) {
-            $get_object_vars = Closure::bind(function (object $object) {
-
-                return get_object_vars($object);
-            }, null, get_class(new class {
-            })); // Because `stdClass` is a no-no in PHP7
-        }
+        $get_object_vars ??= Closure::bind(
+            fn(object $object) => get_object_vars($object),
+            null,
+            get_class(
+                new class {
+                }
+            )
+        ); // Because `stdClass` is a no-no in PHP7
 
         return $get_object_vars($object);
     }
@@ -167,11 +166,7 @@ class Prototyped implements ToArrayRecursive
      */
     public function __sleep()
     {
-        $keys = $this->accessor_sleep();
-
-        unset($keys['prototype']);
-
-        return $keys;
+        return $this->accessor_sleep();
     }
 
     /**
