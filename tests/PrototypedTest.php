@@ -30,6 +30,7 @@ use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyPrivate;
 use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyPrivateExtended;
 use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyProtected;
 use Test\ICanBoogie\PrototypedCases\ReadOnlyPropertyProtectedExtended;
+use Test\ICanBoogie\PrototypedCases\SampleA;
 use Test\ICanBoogie\PrototypedCases\SampleD;
 use Test\ICanBoogie\PrototypedCases\ToArrayWithFacadePropertyCase;
 use Throwable;
@@ -105,7 +106,7 @@ final class PrototypedTest extends TestCase
 
     public function test_set_undefined(): void
     {
-        $o = new Prototyped();
+        $o = new SampleA();
         $v = uniqid();
         $p = 'property' . uniqid();
         $o->$p = $v;

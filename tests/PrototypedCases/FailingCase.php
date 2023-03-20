@@ -11,9 +11,11 @@
 
 namespace Test\ICanBoogie\PrototypedCases;
 
+use AllowDynamicProperties;
 use ICanBoogie\Prototyped;
 use Throwable;
 
+#[AllowDynamicProperties]
 final class FailingCase extends Prototyped
 {
     /**
