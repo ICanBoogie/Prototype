@@ -36,7 +36,9 @@ class MethodOutOfScope extends BadMethodCallException implements Exception
         string $message = null,
         Throwable $previous = null
     ) {
-        parent::__construct($message ?? $this->format_message($method, $instance), 0, $previous);
+        $message ??= $this->format_message($method, $instance);
+
+        parent::__construct($message, previous: $previous);
     }
 
     private function format_message(string $method, object $instance): string
@@ -44,7 +46,7 @@ class MethodOutOfScope extends BadMethodCallException implements Exception
         return format('The method %method is out of scope for class %class.', [
 
             'method' => $method,
-            'class' => get_class($instance)
+            'class' => $instance::class,
 
         ]);
     }
