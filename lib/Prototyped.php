@@ -65,7 +65,7 @@ class Prototyped implements ToArrayRecursive
      *
      * @throws UnableToInstantiate
      */
-    public static function from(array $properties = [], array $construct_args = [], string $class_name = null): static
+    public static function from(array $properties = [], array $construct_args = [], ?string $class_name = null): static
     {
         if ($class_name) {
             trigger_error("The parameter '\$class_name' is no longer supported", E_USER_DEPRECATED);

@@ -20,7 +20,7 @@ use function is_object;
 use function is_string;
 
 /**
- * Exception thrown in attempt to access a method that is not defined.
+ * Exception thrown in an attempt to access a method that is not defined.
  */
 class MethodNotDefined extends BadMethodCallException implements Exception
 {
@@ -45,14 +45,16 @@ class MethodNotDefined extends BadMethodCallException implements Exception
     public function __construct(
         public readonly string $method,
         string|object $class_or_instance,
-        string $message = null,
-        Throwable $previous = null
+        ?string $message = null,
+        ?Throwable $previous = null
     ) {
         $class = $class_or_instance;
 
         if (is_object($class_or_instance)) {
             $this->instance = $class_or_instance;
             $class = $class_or_instance::class;
+        } else {
+            $this->instance = null;
         }
 
         assert(is_string($class));

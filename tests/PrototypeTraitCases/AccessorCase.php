@@ -55,7 +55,7 @@ class AccessorCase extends Exception
      * @param int $code
      * @param Exception|null $previous
      */
-    public function __construct($a, $b, $message, $code = 500, Exception $previous = null)
+    public function __construct($a, $b, $message, $code = 500, ?\Exception $previous = null)
     {
         $this->a = $a;
         $this->b = $b;

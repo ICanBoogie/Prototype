@@ -18,7 +18,7 @@ use function get_class;
 use function ICanBoogie\format;
 
 /**
- * Exception thrown in attempt to invoke a method that is out of scope.
+ * Exception thrown in an attempt to invoke a method that is out of scope.
  */
 class MethodOutOfScope extends BadMethodCallException implements Exception
 {
@@ -27,14 +27,12 @@ class MethodOutOfScope extends BadMethodCallException implements Exception
      *     The method that is out of scope.
      * @param object $instance
      *     The instance on which the method was invoked.
-     * @param string|null $message
-     * @param Throwable|null $previous
      */
     public function __construct(
         public readonly string $method,
         public readonly object $instance,
-        string $message = null,
-        Throwable $previous = null
+        ?string $message = null,
+        ?Throwable $previous = null
     ) {
         $message ??= $this->format_message($method, $instance);
 
