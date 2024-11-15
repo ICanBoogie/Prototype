@@ -230,7 +230,8 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      *
      * @param callable $value
      */
-    #[ReturnTypeWillChange]public function offsetSet(mixed $offset, mixed $value): void
+    #[ReturnTypeWillChange]
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         self::$prototypes[$this->class]->methods[$offset] = $value;
 
@@ -242,7 +243,8 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      *
      * @param string $offset The name of the method.
      */
-    #[ReturnTypeWillChange]public function offsetUnset(mixed $offset): void
+    #[ReturnTypeWillChange]
+    public function offsetUnset(mixed $offset): void
     {
         unset(self::$prototypes[$this->class]->methods[$offset]);
 
@@ -254,7 +256,8 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      *
      * @param string $offset The name of the method.
      */
-    #[ReturnTypeWillChange]public function offsetExists(mixed $offset): bool
+    #[ReturnTypeWillChange]
+    public function offsetExists(mixed $offset): bool
     {
         $methods = $this->consolidated_methods ??= $this->consolidate_methods();
 

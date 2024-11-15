@@ -11,10 +11,8 @@
 
 namespace Test\ICanBoogie\PrototypedCases;
 
-use AllowDynamicProperties;
 use ICanBoogie\Prototyped;
 
-#[AllowDynamicProperties]
 class SampleD extends Prototyped
 {
     public $a;

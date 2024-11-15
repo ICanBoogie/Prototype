@@ -1,8 +1,7 @@
 # Prototype
 
 [![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
-[![Code Quality](https://img.shields.io/scrutinizer/g/ICanBoogie/Prototype.svg)](https://scrutinizer-ci.com/g/ICanBoogie/Prototype)
-[![Code Coverage](https://img.shields.io/coveralls/ICanBoogie/Prototype.svg)](https://coveralls.io/r/ICanBoogie/Prototype)
+[![Code Coverage](https://coveralls.io/repos/github/ICanBoogie/Prototype/badge.svg?branch=6.0)](https://coveralls.io/r/ICanBoogie/Prototype?branch=6.0)
 [![Downloads](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
 The **icanboogie/prototype** package allows methods of classes using the [PrototypeTrait][] to be
@@ -12,15 +11,7 @@ getters and setters.
 
 #### Installation
 
-```bash
-composer require icanboogie/prototype
-```
-
-
-
-#### Installation
-
-```bash
+```shell
 composer require icanboogie/prototype
 ```
 
@@ -374,29 +365,22 @@ The following exceptions are defined:
 
 The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Prototype/actions).
 
-[![Tests](https://github.com/ICanBoogie/Prototype/workflows/test/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Atest)
-[![Static Analysis](https://github.com/ICanBoogie/Prototype/workflows/static-analysis/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Astatic-analysis)
-[![Code Style](https://github.com/ICanBoogie/Prototype/workflows/code-style/badge.svg)](https://github.com/ICanBoogie/Prototype/actions?query=workflow%3Acode-style)
+[![Tests](https://github.com/ICanBoogie/Prototype/actions/workflows/test.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/test.yml)
+[![Static Analysis](https://github.com/ICanBoogie/Prototype/actions/workflows/static-analysis.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/static-analysis.yml)
+[![Code Style](https://github.com/ICanBoogie/Prototype/actions/workflows/code-style.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/code-style.yml)
+
+
 
 ## Code of Conduct
 
 This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in
-this project and its community, you are expected to uphold this code.
-
-## Code of Conduct
-
-This project adheres to a [Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in
-this project and its community, you are expected to uphold this code.
+this project and its community, you're expected to uphold this code.
 
 
 
 ## Contributing
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## License
-
-**icanboogie/prototype** is released under the [BSD-3-Clause](LICENSE).
+See [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 
 
