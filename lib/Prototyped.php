@@ -33,7 +33,7 @@ use const E_USER_DEPRECATED;
 use const JSON_THROW_ON_ERROR;
 
 /**
- * Together with the {@link Prototype} class the {@link Prototyped} class provides means to
+ * Together with the {@see Prototype} class the {@see Prototyped} class provides means to
  * define getters and setters, as well as define getters, setters, and method at runtime.
  *
  * The class also provides a method to create instances in the same fashion PDO creates instances

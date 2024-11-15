@@ -27,7 +27,7 @@ use function is_object;
 use function is_subclass_of;
 
 /**
- * Manages the prototype methods that may be bound to classes using {@link PrototypeTrait}.
+ * Manages the prototype methods that may be bound to classes using {@see PrototypeTrait}.
  *
  * @implements ArrayAccess<string, callable>
  * @implements IteratorAggregate<string, callable>

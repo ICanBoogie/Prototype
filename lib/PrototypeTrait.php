@@ -33,7 +33,7 @@ trait PrototypeTrait
     /**
      * If a property exists with the name specified by `$method` and holds an object which class
      * implements `__invoke` then the object is called with the arguments. Otherwise, calls are
-     * forwarded to the {@link $prototype}.
+     * forwarded to the {@see $prototype}.
      *
      * @param array<int, mixed> $arguments
      *
