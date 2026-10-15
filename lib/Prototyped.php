@@ -47,8 +47,8 @@ class Prototyped implements ToArrayRecursive
     use PrototypeTrait;
     use SerializableTrait;
 
-    public const ASSIGN_SAFE = false;
-    public const ASSIGN_UNSAFE = true;
+    public const false ASSIGN_SAFE = false;
+    public const true ASSIGN_UNSAFE = true;
 
     /**
      * Creates a new instance of the class using the supplied properties.
@@ -163,6 +163,8 @@ class Prototyped implements ToArrayRecursive
      * forget to remove the prototype property!
      *
      * @throws ReflectionException
+     *
+     * @return array<int|string, mixed>
      */
     public function __sleep(): array
     {
