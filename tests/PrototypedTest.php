@@ -17,6 +17,7 @@ use ICanBoogie\PropertyNotReadable;
 use ICanBoogie\PropertyNotWritable;
 use ICanBoogie\Prototype\UnableToInstantiate;
 use ICanBoogie\Prototyped;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Test\ICanBoogie\Prototype\ExportCase;
 use Test\ICanBoogie\Prototype\ToArrayCase;
@@ -48,10 +49,9 @@ final class PrototypedTest extends TestCase
     }
 
     /**
-     * @dataProvider provide_test_readonly
-     *
      * @param class-string $class
      */
+    #[DataProvider('provide_test_readonly')]
     public function test_readonly(string $class): void
     {
         $o = new $class();
@@ -78,10 +78,9 @@ final class PrototypedTest extends TestCase
     }
 
     /**
-     * @dataProvider provide_test_write_only
-     *
     * @param class-string $class
      */
+    #[DataProvider('provide_test_write_only')]
     public function test_write_only(string $class): void
     {
         $o = new $class();
@@ -334,14 +333,13 @@ final class PrototypedTest extends TestCase
     }
 
     /**
-     * @dataProvider provide_test_created_at_case
-     *
      * @param class-string $class
      *
      * - A string or a DateTime can be set to `created_at`
      * - A \DateTime instance is always obtained through `created_at`.
      * - The `created_at` property MUST be preserved by serialization.
      */
+    #[DataProvider('provide_test_created_at_case')]
     public function test_created_at_case(string $class): void
     {
         /* @var $o CreatedAtCase */

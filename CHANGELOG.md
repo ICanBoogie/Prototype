@@ -1,6 +1,37 @@
-# Migration
+# CHANGELOG
 
-## v5.x to v6.0
+## v7.0.0
+
+### New Requirements
+
+- PHP 8.4+
+- `icanboogie/config` ^7.0
+
+### New features
+
+- `ConfigBuilder` implements `ICanBoogie\Config\Builder`, its fragments are named `prototype`. It can be used directly
+  as a configuration builder, `icanboogie/bind-prototype` no longer wraps it.
+
+### Deprecated Features
+
+None
+
+### Backward Incompatible Changes
+
+None
+
+### Other Changes
+
+- Replaced PHP Code Sniffer with PHP-CS-Fixer.
+- Tooling updated: PHPUnit 13.4, PHPStan 2.3, CI tests the lowest and the latest dependencies.
+- PHPStan runs at level `max` on `lib` and `tests`, with a baseline for `tests`. The `@phpstan-ignore` comments name the
+  error they ignore and why.
+- The tests use `#[DataProvider]` attributes and test stubs, as PHPUnit 13 requires.
+- Tests run on PHP 8.4 and 8.5.
+
+
+
+## v6.0.0
 
 ### New Requirements
 

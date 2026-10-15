@@ -96,10 +96,7 @@ trait PrototypeTrait
         return Prototype::has_method($this, $method);
     }
 
-    /**
-     * @return mixed|null
-     */
-    protected function accessor_get(string $property)
+    protected function accessor_get(string $property): mixed
     {
         #
         # First, we try the class' methods.

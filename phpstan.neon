@@ -1,6 +1,12 @@
+# $schema: https://phpstan.olvlvl.com/schema.json
+includes:
+  - phpstan-baseline.neon
+
 parameters:
   level: max
+  phpVersion: 80400
   paths:
     - lib
+    - tests
   excludePaths:
     - tests/sandbox/*

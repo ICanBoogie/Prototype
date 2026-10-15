@@ -1,16 +1,12 @@
-ARG PHP_VERSION=8.2
-FROM php:${PHP_VERSION}-cli-bookworm
+ARG PHP_VERSION=8.4
+FROM php:${PHP_VERSION}-cli-trixie
 
 RUN <<-EOF
-	docker-php-ext-enable opcache
-
-	if [ "$PHP_VERSION" \< "8.4" ]; then
-		apt-get update
-		apt-get install -y autoconf pkg-config
-		pecl channel-update pecl.php.net
-		pecl install xdebug
-		docker-php-ext-enable xdebug
-	fi
+	apt-get update
+	apt-get install -y autoconf pkg-config unzip
+	pecl channel-update pecl.php.net
+	pecl install xdebug
+	docker-php-ext-enable xdebug
 EOF
 
 RUN <<-EOF
@@ -27,16 +23,16 @@ RUN <<-EOF
 	SHELL
 EOF
 
+# composer
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV COMPOSER_HOME=/opt/composer
+ENV PATH="/opt/composer/vendor/bin:${PATH}"
 
-RUN <<-EOF
-	apt-get update
-	apt-get install unzip
-	curl -s https://raw.githubusercontent.com/composer/getcomposer.org/76a7060ccb93902cd7576b67264ad91c8a2700e2/web/installer | php -- --quiet
-	mv composer.phar /usr/local/bin/composer
-	cat <<-SHELL >> /root/.bashrc
-	export PATH="$HOME/.composer/vendor/bin:$PATH"
-	SHELL
-EOF
+# lint
 
-RUN composer global require squizlabs/php_codesniffer
+RUN composer global require friendsofphp/php-cs-fixer
+
+# Packages in a dependency cycle must set the root version:
+# ENV COMPOSER_ROOT_VERSION=7.0.x-dev

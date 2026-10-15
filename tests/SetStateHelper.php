@@ -34,6 +34,7 @@ final class SetStateHelper
 
         file_put_contents($pathname, $code);
 
+        /** @var T */
         return require $pathname;
     }
 }

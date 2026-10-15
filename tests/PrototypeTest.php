@@ -89,7 +89,7 @@ final class PrototypeTest extends TestCase
         Prototype::set_method(
             $a,
             'format',
-            fn (SampleA $self, string $format) => date($format, $self->seconds)
+            fn(SampleA $self, string $format) => date($format, $self->seconds)
         );
 
         $a->seconds = time();

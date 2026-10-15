@@ -22,10 +22,7 @@ final class MethodNotDefinedTest extends TestCase
     public function test_instance(): void
     {
         $method = 'method' . uniqid();
-        $object = $this
-            ->getMockBuilder(Prototyped::class)
-            ->disableOriginalConstructor()
-            ->getMock();
+        $object = $this->createStub(Prototyped::class);
 
         $instance = new MethodNotDefined($method, $object);
 

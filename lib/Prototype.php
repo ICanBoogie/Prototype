@@ -46,7 +46,7 @@ final class Prototype implements ArrayAccess, IteratorAggregate
      *
      * @var array<class-string, array<string, callable>>|null
      */
-    private static ?array $bindings = null;
+    private static ?array $bindings = null; // @phpstan-ignore property.unusedType
 
     /**
      * Returns the prototype associated with the specified class or object.

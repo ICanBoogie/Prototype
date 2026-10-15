@@ -1,7 +1,7 @@
 # Prototype
 
 [![Release](https://img.shields.io/packagist/v/ICanBoogie/Prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
-[![Code Coverage](https://coveralls.io/repos/github/ICanBoogie/Prototype/badge.svg?branch=6.0)](https://coveralls.io/r/ICanBoogie/Prototype?branch=6.0)
+[![Code Coverage](https://coveralls.io/repos/github/ICanBoogie/Prototype/badge.svg?branch=7.0)](https://coveralls.io/r/ICanBoogie/Prototype?branch=7.0)
 [![Downloads](https://img.shields.io/packagist/dt/icanboogie/prototype.svg)](https://packagist.org/packages/icanboogie/prototype)
 
 The **icanboogie/prototype** package allows methods of classes using the [PrototypeTrait][] to be
@@ -365,9 +365,9 @@ The following exceptions are defined:
 
 The project is continuously tested by [GitHub actions](https://github.com/ICanBoogie/Prototype/actions).
 
-[![Tests](https://github.com/ICanBoogie/Prototype/actions/workflows/test.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/test.yml)
-[![Static Analysis](https://github.com/ICanBoogie/Prototype/actions/workflows/static-analysis.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/static-analysis.yml)
-[![Code Style](https://github.com/ICanBoogie/Prototype/actions/workflows/code-style.yml/badge.svg?branch=6.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/code-style.yml)
+[![Tests](https://github.com/ICanBoogie/Prototype/actions/workflows/test.yml/badge.svg?branch=7.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/test.yml)
+[![Static Analysis](https://github.com/ICanBoogie/Prototype/actions/workflows/static-analysis.yml/badge.svg?branch=7.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/static-analysis.yml)
+[![Code Style](https://github.com/ICanBoogie/Prototype/actions/workflows/code-style.yml/badge.svg?branch=7.0)](https://github.com/ICanBoogie/Prototype/actions/workflows/code-style.yml)
 
 
 

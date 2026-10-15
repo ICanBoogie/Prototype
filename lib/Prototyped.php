@@ -16,6 +16,7 @@ use ICanBoogie\Accessor\AccessorReflection;
 use ICanBoogie\Accessor\SerializableTrait;
 use ICanBoogie\Prototype\UnableToInstantiate;
 use JsonException;
+use LogicException;
 use ReflectionClass;
 use ReflectionException;
 use Throwable;
@@ -118,8 +119,6 @@ class Prototyped implements ToArrayRecursive
      * @param class-string $class_name
      *
      * @return ReflectionClass<object>
-     *
-     * @throws ReflectionException
      */
     private static function get_class_reflection(string $class_name): ReflectionClass
     {
@@ -133,17 +132,20 @@ class Prototyped implements ToArrayRecursive
      */
     private static function get_object_vars(object $object): array
     {
+        /** @var (Closure(object): array<string, mixed>)|null $get_object_vars */
         static $get_object_vars;
 
         $get_object_vars ??= Closure::bind(
-            fn(object $object) => get_object_vars($object),
+            /** @return array<string, mixed> */
+            fn(object $object): array => get_object_vars($object),
             null,
             get_class(
-                new class {
+                new class () {
                 }
             )
-        ); // Because `stdClass` is a no-no in PHP7
+        ) ?? throw new LogicException("Unable to bind the closure"); // Because `stdClass` is a no-no in PHP7
 
+        // @phpstan-ignore return.type (Closure::bind() loses the signature of the closure)
         return $get_object_vars($object);
     }
 
@@ -160,12 +162,11 @@ class Prototyped implements ToArrayRecursive
      * session close. If you encounter this problem you might want to override the method. Don't
      * forget to remove the prototype property!
      *
-     * @return array<string, mixed>
-     *
      * @throws ReflectionException
      */
-    public function __sleep()
+    public function __sleep(): array
     {
+        // @phpstan-ignore return.type (accessor_sleep() of icanboogie/accessor doesn't describe its array)
         return $this->accessor_sleep();
     }
 
@@ -208,6 +209,7 @@ class Prototyped implements ToArrayRecursive
             $array[$name] = $this->$name;
         }
 
+        /** @var array<string, mixed> */
         return $array;
     }
 

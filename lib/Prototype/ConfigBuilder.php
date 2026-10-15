@@ -11,8 +11,18 @@
 
 namespace ICanBoogie\Prototype;
 
-final class ConfigBuilder
+use ICanBoogie\Config\Builder;
+
+/**
+ * @implements Builder<Config>
+ */
+final class ConfigBuilder implements Builder
 {
+    public static function get_fragment_filename(): string
+    {
+        return 'prototype';
+    }
+
     /**
      * @var array<class-string, array<string, callable>>
      *     Where _key_ is a target class and _value_ is an array of method bindings,
